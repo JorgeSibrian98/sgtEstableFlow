@@ -1,0 +1,45 @@
+{% extends 'index.html'%}
+
+{% block views %}
+<div class="ui container">
+    <div class="ui vertically divided grid">
+        <div class="sixteen wide column">
+            <br>
+            <h1 id="title" class="ui blue dividing header"><i class="print icon"></i>Reportes</h1>
+            <table class="ui celled table datatable" id="mytable" name="mytable" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th style="width: 15em;">ID</th>
+                        <th style="width: 10em;">Nombre</th>
+                        <th style="width: 10em;">Descripción</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in reportes %}
+                    <tr>
+                        <!-- Código del reporte -->
+                        <td>{{r.id}}</td>
+                        <!-- Nombre del reporte -->
+                        <td>{{r.NombreReporte}}</td>
+                        <!-- Descripcion del reporte -->
+                        <td>{{r.DescripcionReporte}}</td>
+                        <td>
+                            <button id="reporteVehiculo" class="ui primary button" value="{{r.id}}"><i
+                                    class="icon print"></i> Imprimir
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- JS principal -->
+<script src="/javascript/reportes/reportes.js"></script>
+<!-- JS principal -->
+
+
+{% endblock %}

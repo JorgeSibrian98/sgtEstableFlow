@@ -1,0 +1,13 @@
+.botonera {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.colorthead {
+    background-color: #f5f6fa;
+}
+
+.ui.table>thead>tr>th {
+    background: darkgray;
+}

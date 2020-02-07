@@ -1,0 +1,213 @@
+{% extends 'index.html'%}
+
+{% block views %}
+
+<div class="ui container" style="margin-top: 2rem;">
+    <form class="ui form" id="nuevo_vehiculo" name="vehiculo" action="/vehiculos/gestionar" method="POST">
+        {% if vehicle %}
+        <h1 class="ui dividing header left aligned blue">Editar Vehículo</h1>
+        {% else %}
+        <h1 class="ui dividing header left aligned blue">Agregar Vehículo</h1>
+        {% endif %}
+
+        <h4 class="ui block header grey">Datos generales (valores únicos)</h4>
+        <div class="two fields">
+            <div class="required field">
+                <label for="code">Código activo fijo</label>
+                <input id="code" name="code" type="text" placeholder="Código activo fijo"
+                    value="{{ vehicle.CodigoActivoFijo }}">
+            </div>
+            <div id="fPlate" class="required field">
+                <label for="plate">Matrícula</label>
+                <input id="vplate" name="plate" type="text" placeholder="AA236963"
+                    value="{{ vehicle.NumeroPlacaVehiculo }}">
+                <input id="old_plate" name="old_plate" type="hidden" value="{{ vehicle.NumeroPlacaVehiculo }}">
+            </div>
+        </div>
+        <div class="three fields">
+            <div class="required field">
+                <label for="chassis">Chasis</label>
+                <input id="chassis" name="chassis" type="text" placeholder="Chasis"
+                    value="{{ vehicle.NumeroChasisVehiculo }}">
+            </div>
+            <div class="required field">
+                <label for="engine">Motor</label>
+                <input id="engine" name="engine" type="text" placeholder="64EKT931230"
+                    value="{{ vehicle.NumeroMotorVehiculo }}">
+            </div>
+            <div class="required field">
+                <label for="vin">Número VIN</label>
+                <input id="vin" name="vin" type="text" placeholder="VIN" value="{{ vehicle.NumeroVINVehiculo }}">
+            </div>
+        </div>
+
+        <h4 class="ui block header grey">Detalles</h4>
+        <div class="fields">
+            <div class="six wide required  field">
+                <label for="brand">Marca</label>
+                <input id="brand" name="brand" type="text" placeholder="Ej.: Toyota"
+                    value="{{ vehicle.MarcaVehiculo }}">
+            </div>
+            <div class="four wide required field">
+                <label for="model">Modelo</label>
+                <input id="model" name="model" type="text" placeholder="Ej. Corolla SE"
+                    value="{{ vehicle.ModeloVehiculo }}">
+            </div>
+            <div class="six wide required field">
+                <label for="type">Tipo de vehículo</label>
+                <select class="ui fluid search dropdown" name="type">
+                    {% for t in types %}
+                    {% if t.CodigoTipoVehiculo == vehicle.CodigoTipoVehiculo %}
+                    <option value="{{t.CodigoTipoVehiculo}}" selected>{{t.TipoVehiculo}}</option>
+                    {% else %}
+                    <option value="{{t.CodigoTipoVehiculo}}">{{t.TipoVehiculo}}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="fields">
+            <div class=" required field">
+                <label for="color">Año del vehículo</label>
+                <div class="ui calendar" id="year">
+                    <div class="ui input left icon">
+                        <i class="calendar icon"></i>
+                        <input name="year" type="text" placeholder="Año" value="{{ (vehicle.AnnoVehiculo|int)+1 }}">
+                    </div>
+                </div>
+            </div>
+            <div class="four wide required field">
+                <label for="color">Color del vehículo</label>
+                <input id="color" name="color" type="text" placeholder="Negro" value="{{ vehicle.ColorVehiculo}}">
+            </div>
+            <div class="four wide required field">
+                <label for="seats">Capidad de personas</label>
+                <input id="seats" name="seats" min="1" max="40" type="number" placeholder="1-40"
+                    value="{{ vehicle.CapacidadPersonaVehiculo }}">
+            </div>
+            <div class="four wide required field">
+                <label for="fuel">Tipo de Combustible</label>
+                <select class="ui fluid search dropdown" name="fuel">
+                    {% for f in fuels %}
+                    {% if f.TipoCombustibleCodigo == vehicle.TipoCombustibleVehiculo %}
+                    <option value="{{f.TipoCombustibleCodigo}}" selected>
+                        {{f.TipoCombustible}}
+                    </option>
+                    {% else %}
+                    <option value="{{f.TipoCombustibleCodigo}}">{{f.TipoCombustible}}
+                    </option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <h4 class="ui block header grey">Responsable</h4>
+        <div class="eight wide required field">
+            <label for="office">Procuraduría/Unidad asignada</label>
+            <select class="ui fluid search dropdown" name="office" id='office'>
+                {% for o in offices %}
+                {% if o.CodigoOficinaResponsableVehiculo == vehicle.CodigoOficinaResponsableVehiculo %}
+                <option value="{{o.CodigoOficinaResponsableVehiculo}}" selected>
+                    {{o.DescripcionOficinaResponsableVehiculo}}
+                </option>
+                {% else %}
+                <option value="{{o.CodigoOficinaResponsableVehiculo}}">{{o.DescripcionOficinaResponsableVehiculo}}
+                </option>
+                {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+
+        <h4 class="ui block header grey">Situación actual</h4>
+        <div class="sixteen wide field">
+            <div class="two fields">
+                <div class="four wide required field">
+                    <label for="state">Estado</label>
+                    <select class="ui fluid search dropdown" name="state" id="state">
+                        {% for state in states %}
+                        {% if state.CodigoEstado == vehicle.CodigoEstado %}
+                        <option value="{{state.CodigoEstado}}" selected>{{state.EstadoVehiculo}}</option>
+                        {% else %}
+                        <option value="{{state.CodigoEstado}}">{{state.EstadoVehiculo}}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                    <!-- Campo oculto para estado anterior -->
+                    <!-- value debe reemplazarse con {{state.CodigoEstado}} que tiene el vehiculo en la base  -->
+                    <input type="hidden" id="old_state" value="{{vehicle.CodigoEstado}}">
+                </div>
+                <div class="four wide required field">
+                    <label for="mileage">Kilometraje actual</label>
+                    <input id="mileage" name="mileage" min="0" type="text" placeholder="Kilometraje"
+                        value="{{vehicle.KilometrajeActual | int}}">
+                </div>
+            </div>
+            <div class="field">
+                <label>Observaciones</label>
+                <textarea id="observations" name="observations">{{vehicle.ObservacionesVehiculo}}</textarea>
+            </div>
+            <input type="hidden" id="vehicle_id" name="vehicle_id" value="{{ vehicle.CodigoActivoFijo }}">
+            <!-- Formulario para el cambio de los estado de dañado y en manenimiento; al estado Funcional -->
+            <div id="update_km_form_div" style="display:none;">
+                <!-- <form class="ui form " id="update_km_form" name="update_km_form"> -->
+                <h4 class="ui block header grey">
+                    Actualización del kilometraje
+                </h4>
+                <div class="fields">
+                    <div class="field">
+                        <label for="km_check">Cambiar kilometraje</label>
+                        <div class="five wide" style="display: flex; align-items: flex-end;">
+                            <label for="km_check" style="margin-right: 1em;">Actual</label>
+                            <div class="ui toggle checkbox" id="km_cb" style="margin-top: 0.2em !important;">
+                                <!-- Mostrará el campo con el km actual y si cambia el checkbos podrá ingresar un nuevo valor -->
+                                <input type="checkbox" id="km_check" name="km_check" checked="unchecked" tabindex="0"
+                                    class="hidden">
+                            </div>
+                            <label for="km_check">Nuevo</label>
+                        </div>
+                    </div>
+                    <div class="five wide required field">
+                        <label for="km_input">kilometraje:</label>
+                        <!-- Colocar como placeholder el km actual, para tomarlo de referencia -->
+                        <input type="text" name="km_input" id="km_input" readonly value="">
+                    </div>
+                </div>
+                <div class="required field">
+                    <label for="motive_dropdown">Motivo de Actualización:</label>
+                    <select class="ui fluid dropdown" name="motive_dropdown" id="motive_dropdown">
+                        {% for r in reasons %}
+                        {% if r.Descripcion != "Inicial" %}
+                        <option value="{{r.CodigoDescripcion}}">{{r.Descripcion}}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="required field">
+                    <label>Justificación detallada</label>
+                    <textarea id="details" name="details"></textarea>
+                </div>
+                <br>
+                <input type="hidden" name="km_actual" id="km_actual" value="{{vehicle.KilometrajeActual}}">
+                <!--  </form> -->
+            </div>
+        </div>
+        <br>
+        <a href="/vehiculos">
+            <div class="ui left floated animated button" style="margin-bottom:1em" type="button">
+                <div class="visible content">Volver</div>
+                <div class="hidden content"><i class="left arrow icon"></i></div>
+            </div>
+        </a>
+        <div class="ui positive button" id="add_btn">Guardar</div>
+        <!-- <div class="ui right floated yellow hiden hidden button" id="validate_plate">Validar matrícula</div> -->
+    </form>
+    <!-- Formulario para el cambio de los estado de dañado y en manenimiento; al estado Funcional -->
+</div>
+
+<link rel="stylesheet" href="/stylesheets/vehicle.css">
+<script src="/javascript/vehicle/a_vehicle_add.js"></script>
+<!-- JS correspondiente al formulario de cambio de kilometraje -->
+<script src="/javascript/vehicle/a_kilometraje.js"></script>
+
+{% endblock %}

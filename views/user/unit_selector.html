@@ -1,0 +1,12 @@
+<div id="unit_field" class="four wide required field">
+    <label for="unit_id">Unidad</label>
+    <select class="ui fluid search dropdown" name="unit_id">
+        {% for unit in units %}
+        {% if unit.id == user.unit_id %}
+        <option value="{{unit.id}}" selected>{{unit.name_unit}}</option>
+        {% else %}
+        <option value="{{unit.id}}">{{unit.name_unit}}</option>
+        {% endif %}
+        {% endfor %}
+    </select>
+</div>

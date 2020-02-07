@@ -1,0 +1,22 @@
+#page-container {
+    display: grid;
+    position: relative;
+    max-height: 100vh;
+    min-height: 100vh;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    grid-template-rows: repeat(auto-fit, 100px);
+}
+
+#content-wrap {
+    padding-bottom: 2.5rem;
+}
+
+footer {
+    padding-top: 2em;
+    position: absolute;
+    bottom:
+        0em;
+    width:
+        100%;
+    height: fit-content;
+}

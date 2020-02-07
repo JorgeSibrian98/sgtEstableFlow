@@ -1,0 +1,51 @@
+{% extends 'index.html' %}
+
+
+{% block views %}
+<div class="ui container">
+    <div class="ui vertically divided grid">
+        <div class="sixteen wide column">
+            <br>
+            <form class="ui form" id="update_km_form" name="update_km_form">
+                <h4 class="ui block header grey">
+                    Actualización del kilometraje
+                </h4>
+                <div class="fields">
+                    <div class="field">
+                        <label for="km_check">Cambiar kilometraje</label>
+                        <div class="five wide" style="display: flex; align-items: flex-end;">
+                            <label for="km_check" style="margin-right: 1em;">Actual</label>
+                            <div class="ui toggle checkbox" id="km_cb" style="margin-top: 0.2em !important;">
+                                <!-- Mostrará el campo con el km actual y si cambia el checkbos podrá ingresar un nuevo valor -->
+                                <input type="checkbox" id="km_check" name="km_check" checked="unchecked" tabindex="0"
+                                    class="hidden">
+                            </div>
+                            <label for="km_check">Nuevo</label>
+                        </div>
+                    </div>
+                    <div class="five wide required field">
+                        <label for="km_input">kilometraje:</label>
+                        <!-- Colocar como placeholder el km actual, para tomarlo de referencia -->
+                        <input type="text" name="km_input" id="km_input" readonly maxlength="100">
+                    </div>
+                </div>
+                <div class="required field">
+                    <label for="motive_dropdown">Motivo de Actualización:</label>
+                    <select class="ui fluid dropdown" name="motive_dropdown" id="motive_dropdown">
+                        <option value="">Seleccione un motivo</option>
+                        <option value="init">Inicial</option>
+                        <option value="update">Reparación y prueba del vehículo</option>
+                    </select>
+                </div>
+                <br>
+                <input type="hidden" id="km_actual" value="123456">
+                <button class="ui green button" id="add_btn"> <i class="check icon"></i>Aceptar</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script src="/javascript/vehicle/a_kilometraje.js"></script>
+
+{% endblock %}

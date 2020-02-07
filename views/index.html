@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+
+{% block header %}
+<a class="item" style="color: black" id="menu">
+    <i class="sidebar icon"></i>
+    Menu
+</a>
+<!-- Acá irá la session del usuario actual y el icono de notificaciones -->
+<div class="right menu">
+    <!-- <a class="ui item" style="color: black" id="notification">
+        <i class="bell outline icon"></i>
+        Notificaciones
+    </a> -->
+    <div class="ui secondary menu" id="user_menu">
+        <a class="browse item" id="user">
+            <i class="user tie icon"></i>
+            <label id="username"></label>
+            <i class="dropdown icon"></i>
+        </a>
+        <!-- Contenido del menu del usuario -->
+        <div class="ui fluid popup transition hidden" style="inset: 564.15px auto auto 1px; width: 960px;">
+            <div class="ui relaxed grid">
+                <h4 class="ui dividing header" style="margin: 0rem">Opciones</h4>
+                <div class="ui link list" style="margin: 0.5rem">
+                    <!-- <a class="item">Preferencias</a> -->
+                    <a class="item" href="/logout">Cerrar sesión</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block body %}
+
+<link rel="stylesheet" type="text/css" href="/stylesheets/index.css">
+
+<!-- Contenido del menu principal -->
+<div class="ui fluid container" style="border:0rem;">
+    <div id="menu_container" class="ui inverted labeled icon left inline vertical sidebar menu">
+
+    </div>
+    <div class="pusher">
+        <div class="ui basic segment" style="margin-bottom:5rem;border:0rem;padding:0em;">
+            <img class="ui fluid image" src="/images/banner.jpeg" alt="banner">
+            <!-- <br> -->
+            {% block views %}
+
+            {% endblock %}
+        </div>
+    </div>
+</div>
+
+<script src="/javascript/a_index.js"></script>
+<!-- Para mostrar en la nav bar el usuario en seseión -->
+<script src="/javascript/user_navbar.js"></script>
+<!-- Para mostrar en la nav bar el usuario en seseión -->
+
+{% endblock %}

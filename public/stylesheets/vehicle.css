@@ -1,0 +1,24 @@
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0
+}
+
+.ui.container {
+    overflow: hidden;
+    height: auto;
+}
+
+#title {
+    padding-bottom: 0em;
+    margin-bottom: 0em;
+}
+
+.ui.grid {
+    margin-top: 0em;
+    width: fit-content
+}
+
+.ui.grid>.row {
+    padding-bottom: 2em
+}

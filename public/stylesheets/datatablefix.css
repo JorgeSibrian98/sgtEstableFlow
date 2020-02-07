@@ -1,0 +1,14 @@
+.dataTables_scrollBody {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+}
+
+.dataTables_wrapper {
+    overflow: auto;
+}
+
+#mytable_wrapper {
+    padding-top: 0.5em;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}

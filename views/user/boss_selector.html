@@ -1,0 +1,15 @@
+<div id="boss_field" class="four wide required field">
+    <label for="id_boss">Jefe</label>
+    <select class="ui fluid search dropdown" name="id_boss">
+        {% for boss in unit_bosses %}
+        {% if boss.id == user.id_boss %}
+        <option value="{{boss.id}}" selected>{{boss.first_name }} {{ boss.last_name}}
+            [{{boss.SGT_Unidad.name_unit}}]
+        </option>
+        {% else %}
+        <option value="{{boss.id}}" email="{{boss.user_name}}">{{boss.first_name }} {{ boss.last_name}}
+            [{{boss.SGT_Unidad.name_unit}}]</option>
+        {% endif %}
+        {% endfor %}
+    </select>
+</div>
