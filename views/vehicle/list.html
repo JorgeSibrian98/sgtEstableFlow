@@ -1,0 +1,59 @@
+{% extends 'index.html'%}
+
+{% block views %}
+<div id="exito" class="ui success message center aligned" style="display: none">
+    <div class="header green">Éxito</div>
+    <p>¡Registro guardado correctamente!</p>
+</div>
+
+<div class="ui container">
+    <div class="ui vertically divided grid">
+        <div class="sixteen wide column">
+            <br>
+            <h1 id="title" class="ui blue dividing header"><i class="car icon"></i>Listado de vehículos</h1>
+            <br>
+            <a href="/vehiculos/gestionar">
+                <button class="ui labeled icon right floated primary button" id="nuevo" tabindex="0">
+                    <i class="plus icon"></i>Agregar</button>
+            </a>
+            <table id="mytable" class="ui selectable table">
+                <thead>
+                    <tr style="text-align: center">
+                        <th>Código activo fijo</th>
+                        <th>Matrícula</th>
+                        <th>Descripción</th>
+                        <th>Capacidad de personas</th>
+                        <th>Estado</th>
+                        <th>Kilometraje actual</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if vehicles.length %}
+                    {% for v in vehicles %}
+                    <tr>
+                        <td class="center aligned">{{v.codigo}}</td>
+                        <td class="center aligned">{{v.matricula | capitalize}}</td>
+                        <td>{{v.descripcion | upper}}</td>
+                        <td class="center aligned">{{v.capacidad}}</td>
+                        <td class="center aligned">{{v.estado | capitalize}}</td>
+                        <td class="center aligned">{{v.kilometraje}} km</td>
+                        <td style="text-align: center">
+                            <i class="large pencil yellow alternate link icon" data-content="Editar"
+                                value="{{v.matricula}}"></i>
+                            <i class="large file alternate link icon" value="{{v.codigo}}"
+                                data-content="Generar reporte"></i>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="/stylesheets/vehicle.css">
+<link rel="stylesheet" href="/stylesheets/datatablefix.css">
+<script src="/javascript/vehicle/a_vehicle_list.js"></script>
+{% endblock %}

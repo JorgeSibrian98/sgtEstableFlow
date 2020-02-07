@@ -1,0 +1,50 @@
+{% extends 'index.html'%}
+
+{% block views %}
+
+<div class="ui container">
+    <div class="ui vertically divided grid">
+        <div class="sixteen wide column">
+            <br>
+            <h1 id="title" class="ui blue dividing header"><i class="user icon"></i>Listado de usuarios</h1>
+            <br>
+            <a href="/usuarios/gestionar">
+                <button class="ui labeled icon right floated primary button" id="nuevo" tabindex="0">
+                    <i class="plus icon"></i>Agregar</button>
+            </a>
+            <table id="mytable" class="ui celled table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Jefe de unidad</th>
+                        <th>Usuario</th>
+                        <th>Activo</th>
+                        <th>Fecha de creación</th>
+                        <th>Editar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if users %}
+                    {% for e in users %}
+                    <tr>
+                        <td>{{e.name | upper}}</td>
+                        <td class="center aligned">{{"Sí" if e.is_unit_boss else "No"}}</td>
+                        <td>{{e.email}}</td>
+                        <td class="center aligned">{{"Sí" if e.active else "No"}}</td>
+                        <td>{{e.created_at}}</td>
+                        <td style="text-align: center">
+                            <i class="large pencil yellow alternate link icon" value={{e.id}}></i>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="/javascript/user/a_user_list.js"></script>
+<link rel="stylesheet" href="/stylesheets/datatablefix.css">
+
+{% endblock %}

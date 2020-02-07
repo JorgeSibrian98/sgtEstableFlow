@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="/jquery/dist/jquery.js"></script>
+    <link rel="stylesheet" type="text/css" href="/fomantic-ui/dist/semantic.css">
+    <script src="/fomantic-ui/dist/semantic.js"></script>
+    <title>Transporte PGR</title>
+    <link class="ui mini image" rel="icon" href="/images/bus.png" type="image/icon" />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/layout.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/container_correction.css">
+
+    <!-- DataTables. Pulgin que añade más y mejores funcionalidades a las tablas. Facilita su manipulacion -->
+    <link rel="stylesheet" type="text/css" href="/DataTables/DataTables-1.10.18/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="/DataTables/DataTables-1.10.18/css/dataTables.semanticui.min.css" />
+    <link rel="stylesheet" type="text/css" href="/DataTables/datatables.min.css" />
+    <script type="text/javascript" src="/DataTables/DataTables-1.10.18/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="/DataTables/DataTables-1.10.18/js/dataTables.semanticui.min.js"></script>
+    <script type="text/javascript" src="/DataTables/datatables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/w/se/b-1.5.6/datatables.min.css" />
+
+</head>
+
+<body>
+    <!-- Header: donde se encuentra el encabezado -->
+    <div class="ui top attached secondary menu" style="border: 0px;margin-top: 0em;background: #FEF4e1;">
+        {% block header %}
+
+        {% endblock %}
+    </div>
+
+    <!-- Contenido de la aplicación -->
+
+    <div id="#page-container" class="ui cotainer">
+        {% block body %}
+
+        {% endblock %}
+    </div>
+
+
+    <!-- <footer>
+        <div class="ui inverted vertical footer segment">
+            <div class="ui center aligned container">
+                <div class="ui relaxed stackable equal width inverted divided grid">
+                    <div class="left aligned column">
+                        <h4 class="ui inverted header">
+                            Procuraduria General de la República de El Salvador
+                        </h4>
+                    </div>
+                    <div class="column">
+                        <h4 class="ui inverted header">
+                            Información
+                        </h4>
+                    </div>
+                    <div class="column">
+                        <h4 class="ui inverted header">
+                            Contáctanos
+                        </h4>
+                    </div>
+                </div>
+                <div class="ui inverted section divider"></div>
+                <div class="ui horizontal middle aligned animated inverted list">
+                    <div class="item">
+                        <img class="ui avatar image" src="/images/minerva.png" alt="ues_logo"
+                            style="width:60px;height:50px;">
+                        <div class="content" style="text-align: left">
+                            <h4 class="ui inverted header" style="margin: 0em">Universidad de El Salvador</h4>
+                            Copyright <i class="copyright outline icon"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer> -->
+</body>
+
+</html>

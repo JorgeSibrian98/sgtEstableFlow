@@ -1,0 +1,30 @@
+{% extends "index.html" %}
+
+{% block views %}
+<div class="ui container">
+    <div class="ui center aligned basic segment">
+        <h2 class="ui icon header">
+            <div class="content">
+                <i class="settings icon"></i>
+                <div id="notFound" class="header">
+                    4<span class="ui red text">0</span>4
+                </div>
+                <br>
+                <div class="header">
+                    ¡Oops! Parece que te has perdido...
+                </div>
+                <div class="sub header">
+                    La página que busca no existe. Puedes volver a <a href="/home">Inicio</a>
+                </div>
+            </div>
+        </h2>
+        <div class="ui horizontal divider">
+            O
+        </div>
+        <div class="sub header">
+            Contactar al administrador al correo <a href="">ITSupport@pgr.gob.sv</a>
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" href="/stylesheets/404.css">
+{% endblock %}

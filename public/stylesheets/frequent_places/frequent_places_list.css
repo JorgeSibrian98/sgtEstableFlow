@@ -1,0 +1,29 @@
+/* Arregla un error de renderizacion */
+#bad {
+    overflow: hidden;
+    height: auto;
+}
+
+.ui.fluid.container.pushable {
+    height: auto;
+}
+
+/* Arregla un error de datatables con mozilla que muesta un scrollbar en la parte inferior */
+.dataTables_wrapper {
+    overflow-x: hidden;
+}
+
+.dataTables_scrollBody {
+    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+#mytable_wrapper {
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+#fix_center {
+    padding-left: 20.5em
+}

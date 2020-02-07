@@ -1,0 +1,113 @@
+{% extends 'index.html'%}
+
+{% block views %}
+
+<div class="ui container">
+    <div class="ui vertically divided grid">
+        <div class="one column row">
+            <div class="column">
+                <form class="ui form" id="user_form">
+                    {% if user.id %}
+                    <h1 class="ui blue dividing header">Editar</h1>
+                    {% else %}
+                    <h1 class="ui blue dividing header">Agregar</h1>
+                    {% endif %}
+                    <div class="two fields">
+                        <div class="required field">
+                            <label>Nombre</label>
+                            <input type="text" name="first_name" placeholder="Nombres" value="{{user.first_name}}">
+                        </div>
+                        <div class="required field">
+                            <label>Apellido</label>
+                            <input type="text" name="last_name" placeholder="Apelidos" value="{{user.last_name}}">
+                        </div>
+                    </div>
+
+                    <div class="required field">
+                        <div id="is_unit_boss" class="ui toggle checkbox" style="margin-bottom: 0.5rem;">
+                            {% if user.is_unit_boss == true %}
+                            <input type="checkbox" name="unit_boss" checked="checked">
+                            {% else %}
+                            <input type="checkbox" name="unit_boss">
+                            {% endif %}
+                            <label>Jefe de unidad</label>
+                        </div>
+                    </div>
+
+                    <div id="boss">
+                        {% if user.is_unit_boss == false or not user %}
+                        {% include '../user/boss_selector.html' %}
+                        {% endif %}
+                    </div>
+
+                    <div id="unit">
+                        {% if user.is_unit_boss == true %}
+                        {% include '../user/unit_selector.html' %}
+                        {% endif %}
+                    </div>
+
+                    <!-- User html -->
+                    <section class="ui segment" id="User">
+                        {% if user.id %}
+                        <h3 class="ui blue dividing header">Editar Usuario</h3>
+                        {% else %}
+                        <h3 class="ui blue dividing header">Nuevo usuario</h3>
+                        {% endif %}
+                        <div class="two fields">
+                            <div class="required field">
+                                <label>Correo electrónico</label>
+                                <input id="email" name="email" type="text" placeholder="Email" value={{user.email}}>
+                            </div>
+                            <div class="required field">
+                                <label>Contraseña</label>
+                                <div class="ui icon input">
+                                    <input name="password" id="password" placeholder="Contraseña" type="password"
+                                        value={{user.password}}>
+                                    <i id="pw_icon" class="eye slash link icon"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ui toggle checkbox">
+
+                            {% if user.active == true %}
+                            <input type="checkbox" name="is_active" checked="checked">
+                            {% else %}
+                            <input type="checkbox" name="is_active">
+                            {% endif %}
+                            <label>Activo</label>
+                        </div>
+
+                        <div class="field" style="margin-top: 1em;">
+                            <label>Roles</label>
+                            <div class="ui fluid clearable multiple selection dropdown">
+                                <input id="assinged_roles" type="hidden" name="roles" value="{{selected_roles}}">
+                                <i class="dropdown icon"></i>
+                                <div class="default text">Seleccione los roles</div>
+                                <div class="menu">
+                                    {% for rol in roles %}
+                                    <div class="item" data-value="{{rol.name}}">{{rol.name}}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- End of user html -->
+
+                    <div class="ui positive button" id="add_btn">Guardar</div>
+                    <input id="user_id" name="user_id" type="hidden" value={{ user.id }}>
+                    <a href="/usuarios">
+                        <div class="ui left floated animated button" style="margin-bottom:1em" type="button">
+                            <div class="visible content">Volver</div>
+                            <div class="hidden content"><i class="left arrow icon"></i></div>
+                        </div>
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/javascript/user/a_user_add.js"></script>
+
+{% endblock %}

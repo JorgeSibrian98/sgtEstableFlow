@@ -1,0 +1,16 @@
+.ui.menu {
+    margin-top: 0 rem;
+    margin-bottom: 0 rem;
+    border: 0px;
+}
+
+.ui.menu .active.item {
+    background-color:
+        rgba(81, 156, 218, 0.671);
+    color: whitesmoke;
+}
+
+.ui.menu .active.item:hover {
+    background-color:
+        rgba(81, 156, 218, 0.671);
+}

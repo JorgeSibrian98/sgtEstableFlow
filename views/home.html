@@ -1,0 +1,155 @@
+{% extends 'index.html' %}
+
+
+{% block views %}
+<div class="ui container">
+    <div class="ui vertically divided grid">
+        <div class="sixteen wide column">
+            <div class="ui modal segment dimmable" id="delete_modal">
+                <div class="header">
+                    <div class="ui warning message">
+                        <div class="header">
+                            <div>
+                                <div class="ui huge red label"><i class="white exclamation triangle fitted icon"></i>
+                                    Advertencia</div>
+                                <span class="ui small text">
+                                    ¿Esta seguro que desea eliminar la solicitud?
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="content ">
+                    <strong>Fecha de salida: </strong><label id="off_date_lb"></label>
+                    <div class="labels">
+                        <strong>Hora de salida: </strong><label id="off_hour_lb"></label>
+                        <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                        <strong>Hora de retorno: </strong> <label id="return_hour_lb"></label>
+                    </div>
+                    <div> <strong>Cantidad de pasajeros: </strong><label id="Passenger_number_lb"></label></div>
+                    <div><strong>Con motorista: </strong> <label id="with_driver_lb"></label></div>
+                    <div><strong>Persona que conducirá: </strong> <label id="driver_name_lb"></label></div>
+                    <div><strong>Tipo de licencia: </strong> <label id="license_type_lb"></label></div>
+                    <div><strong>Misión: </strong><label id="mission_lb"></label></div>
+                    <div><strong>Observación: </strong><label id="observation_lb"></label></div>
+                    <div><strong>Fecha de creación: </strong> <label id="created_at_lb"></label></div>
+                    <table class="ui celled collapsing table tablet stackable" id="addressTable" name="addressTable">
+                        <thead>
+                            <tr>
+                                <th>Nombre del destino</th>
+                                <th>Detalle de la dirección</th>
+                                <th>Departamento</th>
+                                <th>Municipio</th>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="actions">
+                    <div class="ui green left aligned cancel button">Cancelar</div>
+
+                    <button class="ui red approve inverted button" id="delete_btn"> <i
+                            class="trash alternate outline icon"></i>
+                        Aceptar</button>
+                </div>
+            </div>
+            <div class="ui modal segment dimmable" id="show_modal">
+                <div class="header">
+                    <h2 class="ui blue centered header">Solicitud de transporte</h2>
+                </div>
+                <div class="content">
+                    <strong>Fecha de salida: </strong><label id="off_date_lb1"></label>
+                    <div class="labels">
+                        <strong>Hora de salida: </strong><label id="off_hour_lb1"></label>
+                        <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                        <strong>Hora de retorno: </strong> <label id="return_hour_lb1"></label>
+                    </div>
+                    <div class="foloInfoText">
+                        <div> <strong>Cantidad de pasajeros: </strong><label id="Passenger_number_lb1"></label></div>
+                        <div><strong>Con motorista: </strong> <label id="with_driver_lb1"></label></div>
+                        <div><strong>Persona que conducirá: </strong> <label id="driver_name_lb1"></label></div>
+                        <div><strong>Tipo de licencia: </strong> <label id="license_type_lb1"></label></div>
+                        <div><strong>Misión: </strong><label id="mission_lb1"></label></div>
+                        <div><strong>Observación: </strong><label id="observation_lb1"></label></div>
+                        <div><strong>Fecha de creación: </strong> <label id="created_at_lb1"></label></div>
+                    </div>
+                    <br>
+                    <div id=progressTable1Parent>
+                        <div id="progressTable1"></div>
+                    </div>
+                    <br>
+                    <table class="ui celled collapsing table tablet stackable" id="addressTable1" name="addressTable1">
+                        <thead>
+                            <tr>
+                                <th>Nombre del destino</th>
+                                <th>Detalle de la dirección</th>
+                                <th>Departamento</th>
+                                <th>Municipio</th>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="actions">
+                    <div class="ui left aligned cancel button">Volver</div>
+                    <!--  <button class="ui approve button" id="delete_btn"> <i
+                            class="trash alternate outline icon"></i>
+                        Aceptar</button> -->
+                </div>
+            </div>
+            <br>
+            <h1 id="title" class="ui blue dividing header"><i class="archive icon"></i>Solicitudes Recientes</h1>
+            <table class="ui celled table datatable" id="mytable" name="mytable" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th style="width: 15em;">Fecha de salida</th>
+                        <th style="width: 10em;">Hora de salida</th>
+                        <th style="width: 10em;">Hora de retorno</th>
+                        <th style="width: 6em;">Cantidad de pasajeros</th>
+                        <th style="width: 6em;">Con Motorista</th>
+                        <th style="width: 6em;">Fecha y hora de creación</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>off_date</td>
+                        <td>off_hour</td>
+                        <td>return_hour</td>
+                        <td>passengers_number</td>
+                        <td>with_driver</td>
+                        <td>created_at</td>
+                        <td>Actions</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<style>
+    tbody tr td:nth-child(7) {
+        display: flex;
+        height: -webkit-fill-available;
+        align-items: center;
+    }
+
+
+    tbody tr td:nth-child(7) i,
+    tbody tr td:nth-child(7) a {
+        margin-right: 7%;
+    }
+
+    tbody tr td:nth-child(7) a i {
+        margin-right: 0%;
+    }
+</style>
+
+<script src="/javascript/a_home.js"></script>
+
+
+<!-- Para mostrar en la nav bar el usuario en seseión -->
+<script src="/javascript/user_navbar.js"></script>
+<!-- Para mostrar en la nav bar el usuario en seseión -->
+
+<link rel="stylesheet" href="/stylesheets/home.css">
+
+{% endblock %}

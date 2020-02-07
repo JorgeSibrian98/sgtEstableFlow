@@ -1,0 +1,30 @@
+{
+  "name": "transporte",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "dev": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "dotenv": "^8.2.0",
+    "express": "~4.16.1",
+    "express-validator": "^6.1.1",
+    "fomantic-ui": "^2.7.7",
+    "http-errors": "~1.6.3",
+    "jquery": "^3.4.1",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.24.0",
+    "morgan": "~1.9.1",
+    "nunjucks": "^3.2.0",
+    "pdfmake": "^0.1.58",
+    "sequelize": "^5.19.3",
+    "tedious": "^6.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.4"
+  }
+}

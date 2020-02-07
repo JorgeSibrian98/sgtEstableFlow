@@ -1,0 +1,69 @@
+{% extends 'layout.html' %}
+
+{% block header %}
+<div class="right menu">
+    <a class="item" style="color: black">
+        <i class="user tie icon"></i>
+        Usted no se ha identificado.
+    </a>
+</div>
+{% endblock %}
+
+{% block body %}
+
+<!-- <div style="margin-bottom: -15em;border: 0em;padding: 0em">
+    <img class="ui fluid image" src="/images/banner.jpeg"></img>
+</div> -->
+<div class="ui fluid container">
+    <img class="ui fluid image" src="/images/banner.jpeg"></img>
+    <div class=" ui stackable middle aligned center aligned grid" style="margin:1rem;">
+        <div class="column">
+            {% if(err_title or err_message) %}
+            <div class="ui negative message">
+                <i class="close icon"></i>
+                <div class="header">{{err_title}} </div>
+                <p> {{err_message}}</p>
+            </div>
+            {%endif%}
+            <!-- Error por sesión caducada -->
+            <div class="ui hidden warning message" id="session_error_message">
+                <i class="close icon"></i>
+                <div class="header">Su sesión ha caducado</div>
+                <p> Por favor ingrese sus datos de nuevo</p>
+            </div>
+            <!-- Error por sesión caducada -->
+            <!-- Mensaje de despedida -->
+            <div class="ui hidden info message" id="bye_message">
+                <i class="close icon"></i>
+                <div class="header">
+                    Esperamos verte pronto <i class="smile wink outline icon"></i>
+                </div>
+            </div>
+            <!-- Mensaje de despedida -->
+            <h2> Ingrese su cuenta</h2>
+            <form class="ui large form" action="/login/auth" method="POST">
+                <div class="ui stacked segment">
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="user icon"></i>
+                            <input name="cod_usuario" placeholder="Código de usuario" type="text">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="lock icon"></i>
+                            <input name="password" placeholder="Password" type="password">
+                        </div>
+                    </div>
+                    <button class="fluid ui button" type="submit">Iniciar sesion</button>
+                </div>
+                <div class="ui error message"></div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" type="text/css" href="/stylesheets/login.css">
+<script src="/javascript/a_login.js"></script>
+
+{% endblock %}
