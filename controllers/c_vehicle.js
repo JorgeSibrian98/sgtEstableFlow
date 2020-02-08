@@ -221,12 +221,8 @@ class Vehicle_controller {
     //Metodo que inserta el nuevo vehiculo. Post gestionar
     //Recibe los parametros request y response, respectivamente
     async create(req, res) {
-        <<
-        << << < HEAD
-        console.log('DATOS DE BODY', req.body) ===
-            === =
-            console.log('DATOS DE BODY', req.body) >>>
-            >>> > release / 0.1 .0
+
+        console.log('DATOS DE BODY', req.body)
         try {
             var errs = validationResult(req);
             var errors = [];
@@ -595,14 +591,7 @@ class Vehicle_controller {
                 se descarga como 'document.pdf'. Si se descarga dando clic derecho en el documento y
                 luego clic en "Guardar como", se descarga con el nombre de la ruta relativa (reporteLoteVehicular.pdf).
                 Google Chrome: El PDF se descarga con el nombre de la ruta relativa de ambas formas.*/
-                <<
-                << << < HEAD
 
-                    ===
-                    === =
-
-                    >>>
-                    >>> > release / 0.1 .0
                 /* res.setHeader('content-type', 'application/pdf'); */
 
                 /*Para descargar el PDF directamente sin visualización en navegador.
@@ -632,14 +621,8 @@ class Vehicle_controller {
             var today = new Date();
             var month = today.getMonth() + 1;
             const token = Authorize.decode_token(req.cookies.token);
-            let CodigoActivoFijo = req.query.codigo; <<
-            << << < HEAD
+            let CodigoActivoFijo = req.query.codigo;
 
-                ===
-                === =
-
-                >>>
-                >>> > release / 0.1 .0
             var vehiculo = await Vehicle.findOne({
                 where: {
                     CodigoActivoFijo: CodigoActivoFijo,
@@ -661,14 +644,10 @@ class Vehicle_controller {
             });
 
             //Nombre del archivo PDF a descargar.
-            <<
-            << << < HEAD
+
             var fileName = 'Reporte_vehiculo_' + vehiculo.NumeroPlacaVehiculo.trim() + '_' +
-                today.getDate() + '/' + month + '/' + today.getFullYear() + '.pdf'; ===
-            === =
-            var fileName = 'Reporte_vehiculo_' + vehiculo.NumeroPlacaVehiculo.trim() + '_' +
-                today.getDate() + '/' + month + '/' + today.getFullYear() + '.pdf'; >>>
-            >>> > release / 0.1 .0
+                today.getDate() + '/' + month + '/' + today.getFullYear() + '.pdf';
+
             let TipoCombustible = vehiculo.TipoCombustibleVehiculo;
             switch (TipoCombustible) {
                 case 'D':
@@ -806,14 +785,7 @@ class Vehicle_controller {
                 se descarga como 'document.pdf'. Si se descarga dando clic derecho en el documento y
                 luego clic en "Guardar como", se descarga con el nombre de la ruta relativa (reporteLoteVehicular.pdf).
                 Google Chrome: El PDF se descarga con el nombre de la ruta relativa de ambas formas.*/
-                <<
-                << << < HEAD
 
-                    ===
-                    === =
-
-                    >>>
-                    >>> > release / 0.1 .0
                 /* res.setHeader('content-type', 'application/pdf'); */
 
                 /*Para descargar el PDF directamente sin visualización en navegador.
