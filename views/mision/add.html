@@ -1,0 +1,38 @@
+{% extends 'index.html' %}
+
+{% block views %}
+<div class="ui container" id="add">
+  <br>
+  {% if Misi %}
+  <h1 class="ui blue dividing header">Editar Misi&oacute;n</h1>
+  {% else %}
+  <h1 class="ui blue dividing header">Crear Misi&oacute;n</h1>
+  {% endif %}
+  <form class="ui form" action="/misiones/gestionar" method="POST">
+    <div class="required field">
+      <label>Nombre Mision:</label>
+      <input type="text" name="name" id="name" value="{{Misi.Nombre_mision}}" autocomplete="off">
+    </div>
+    <input type="hidden" id="Misi_id" name="Misi_id" value={{Misi.id}}>
+    <a href="/misiones">
+      <div class="ui left floated animated button" type="button">
+        <div class="visible content">Volver</div>
+        <div class="hidden content">
+          <i class="left arrow icon"></i>
+        </div>
+      </div>
+    </a>
+    <button class="ui positive button" type="submit">Guardar</button>
+  </form>
+  {% if errors %}
+  <div class="ui error message">
+    {% for error in errors %}
+    <li> {{ error.msg }} </li>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+
+<script src="/javascript/procuraduria/a_procu.js"></script>
+
+{% endblock %}

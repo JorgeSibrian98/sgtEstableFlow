@@ -1,0 +1,93 @@
+{% extends 'index.html' %}
+{% block views %}
+<div class="ui container" id="lista_procuradurias">
+    <div class="ui vertically divided grid">
+        <div class="sixteen wide column">
+            <br>
+            <h1 id="title" class="ui blue dividing header"><i class="flag outline icon"></i>Lista de Misiones
+            </h1>
+            <a href="/misiones/gestionar">
+                <button class="ui labeled icon right floated primary button"><i class=" plus icon"></i>Agregar</button>
+            </a>
+            <table id="mytable" class="ui selectable table">
+                <thead>
+                    <tr class="ui green table">
+                        <th class="center aligned">Nombre</th>
+                        <th class="center aligned">Estado</th>
+                        <th class="center aligned">Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mis in Misiones %}
+                    <tr>
+                        <td class="center aligned">{{ mis.Nombre_mision }}</td>
+                        <td class="center aligned">{% if mis.Mision_activa == 1 %}
+                            Activa
+                            {% else %}
+                            De Baja
+                            {% endif %}</td>
+                        <td class="center aligned">
+                            <i class="large pencil yellow alternate link icon" value={{mis.id}}></i>
+                            {% if mis.Mision_activa == 1 %}
+                            <i class="large trash red alternate outline link icon" value="{{mis.id}}"></i>
+                            {% else %}
+                            <i class="large check green circle outline link icon" value="{{mis.id}}"
+                                title="Activar"></i>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="ui mini inverted modal" id="deleteModal">
+    <div class="ui icon header">
+        <i class="trash alternate outline icon"></i>
+        Dar de baja Misi&oacute;n.
+    </div>
+
+    <div class="content">
+        <p>¿Esta seguro de dar de baja la misi&oacute;n?</p>
+    </div>
+
+    <div class="actions">
+        <div class="ui green ok inverted button" type="submit">
+            <i class="checkmark icon"></i>
+            Aceptar
+        </div>
+        <div class="ui red deny button" type="submit">
+            <i class="remove icon"></i>
+            Cancelar
+        </div>
+    </div>
+</div>
+
+<div class="ui mini inverted modal" id="activeModal">
+    <div class="ui icon header">
+        <i class="check circle outline icon"></i>
+        Activar Misi&oacute;n.
+    </div>
+
+    <div class="content">
+        <p>¿Esta seguro de Activar la misi&oacute;n?</p>
+    </div>
+
+    <div class="actions">
+        <div class="ui green ok inverted button" type="submit">
+            <i class="checkmark icon"></i>
+            Aceptar
+        </div>
+        <div class="ui red deny button" type="submit">
+            <i class="remove icon"></i>
+            Cancelar
+        </div>
+    </div>
+
+</div>
+
+<script src="/javascript/a_misiones.js"></script>
+<link rel="stylesheet" href="/stylesheets/datatablefix.css">
+</link>
+{% endblock %}
