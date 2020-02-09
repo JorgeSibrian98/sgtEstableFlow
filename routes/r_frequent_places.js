@@ -13,17 +13,17 @@ router.get('/', (req, res) => {
     }
 });
 
-/* router.get('/nuevo', (req, res) => {
+router.get('/nuevo', (req, res) => {
     controller.getAdd(req, res);
-}); */
+});
 /* router.get('/getMunicipios', (req, res) => {
     controller.getMunicipiosByDepartamento(req, res);
 }); */
-/* router.get('/editar', (req, res) => {
+router.get('/editar', (req, res) => {
     controller.getUpdate(req, res);
-}); */
+});
 
-/* router.post('/gestionar', [
+router.post('/gestionar', [
     //Validations
     body('name', 'El nombre debe ser menor a 100 caracteres.').isLength({
         max: 150
@@ -45,7 +45,7 @@ router.get('/', (req, res) => {
     } else {
         controller.createFrequentPlace(req, res);
     }
-}); */
+});
 
 /* router.get('/eliminar', (req, res) => {
     controller.deleteFrequentPlace(req, res);

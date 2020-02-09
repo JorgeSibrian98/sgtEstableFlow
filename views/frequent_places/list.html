@@ -15,8 +15,8 @@
             <a href="/lugares_frecuentes/nuevo"><button class="ui ui labeled icon  right floated blue button"
                     type="submit"><i class="plus icon"></i>Agregar
                 </button></a>
-            <label style="margin-right: 0.1em;">Filtrar por ruta: </label>
-            <div class="ui search selection dropdown" id="div_ruta">
+            <!-- <label style="margin-right: 0.1em;">Filtrar por ruta: </label> -->
+            <!-- <div class="ui search selection dropdown" id="div_ruta">
                 <input id="ruta" type="hidden" name="ruta" value="">
                 <i class="dropdown icon"></i>
                 <div class="text">Todos</div>
@@ -28,9 +28,9 @@
                     {% endfor %}
                     {% endif %}
                 </div>
-            </div>
+            </div> -->
             <input type="hidden" id="messages" name="messages" value="{{messages}}">
-            <div id="fTable" class="ui basic segment" style="margin-top: 0em;">
+            <div id="fTable" class="ui basic segment" style="margin-top: 4em;">
                 <table class="ui celled table datatable" id="mytable" name="mytable" style="width: 100%">
                     <thead>
                         <tr>
@@ -46,7 +46,7 @@
                         {% for fplace in fplaces %}
                         <tr data-id="{{fplace.id}}">
                             <td>{{ fplace.nombre}}</td>
-                            <td>{{ fplace.detalle }}</td>
+                            <td>{{ fplace.Detalle }}</td>
                             <td>{{ fplace.Departamento.NombreUbicacionGeografica }}</td>
                             <td>{{ fplace.Municipio.NombreUbicacionGeografica }}</td>
                             <td>

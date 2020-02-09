@@ -19,7 +19,7 @@ require('dotenv').config()
 });*/
 
 //Local db connection
-const dbConex = new Sequelize('sgt_PGR', 'hq14006', 'hq14006', {
+const dbConex = new Sequelize('sgt_PGR', 'admin', 'admin', {
   host: 'localhost',
   dialect: 'mssql',
 });
