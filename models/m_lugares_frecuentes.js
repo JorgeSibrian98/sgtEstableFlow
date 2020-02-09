@@ -27,7 +27,7 @@ LugaresFrecuentes.belongsTo(UbicacionesGeograficas, {
 });
 
 LugaresFrecuentes.belongsTo(UbicacionesGeograficas, {
-    as: 'Municipio',
+    as: 'Departamento',
     foreignKey: 'Cod_mun',
 });
 
