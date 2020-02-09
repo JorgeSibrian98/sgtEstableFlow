@@ -57,10 +57,10 @@ app.use(is_logged);
 app.use('/', require('./routes/index'));
 /* app.use('/solicitud_nueva', require('./routes/r_folo6'));
 app.use('/vales', authorize('adminV'), require('./routes/r_voucher'));
-app.use('/direccion', require('./routes/r_address'));
 app.use('/instituciones', authorize('adminIT'), require('./routes/r_procuraduria'));*/
 app.use('/misiones', authorize('adminTrans', 'adminR'), require('./routes/r_misiones'));
 app.use('/vehiculos', authorize('adminTrans'), require('./routes/r_vehicle'));
+app.use('/direccion', authorize('adminTrans'), require('./routes/r_direccion'));  
 
 /* app.use('/rutas', require('./routes/r_route'));
 app.use('/lugares_frecuentes', authorize('emp', 'adminTrans', 'adminR'), require('./routes/r_frequent_places'));

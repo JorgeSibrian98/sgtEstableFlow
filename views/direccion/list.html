@@ -1,0 +1,33 @@
+<!-- Falta definir esta vista. No Utilizar -->
+<section id="lista_procuradurias">
+    <h1 id="title" class="ui header">Lista de direcciones.</h1>
+    <table class="ui collapsing table">
+        <thead>
+            <tr class="ui green table">
+                <th class="center aligned">Nombre:</th>
+                <th class="center aligned">Departamento:</th>
+                <th class="center aligned">Municipio:</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dir in Direcciones %}
+            <tr>
+                <td>{{ dir.name }}</td>
+                <td>{{ dir.department.name }}</td>
+                <td>{{ dir.city.name }}</td>
+                <td>
+                    <form action="/direccion/update" method="GET">
+                        <button type="submit" class="huge basic black ui icon button">
+                            <i class="large pencil yellow alternate icon">
+                                <input type="hidden" id="address_id" name="address_id" value={{ dir.id }}></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <p>No hay rutas estándar disponibles.</p>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>

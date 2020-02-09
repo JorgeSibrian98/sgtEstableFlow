@@ -4,7 +4,7 @@ function fillMunicipio() {
     var municipiosSelect = $('#municipio');
     municipiosSelect.empty();
     if (selectedDepartamento != null && selectedDepartamento != '') {
-        $.getJSON('http://localhost:3000/direccion/getMunicipios', {
+        $.getJSON('/direccion/getMunicipios', {
             selectedDepartamento
         }, function (municipios) {
             if (municipios != null && !jQuery.isEmptyObject(municipios)) {
@@ -15,14 +15,14 @@ function fillMunicipio() {
                 $.each(municipios, function (index, municipio) {
                     if (municipio.id == sMun) {
                         municipiosSelect.append($('<option/>', {
-                            value: municipio.id,
-                            text: municipio.name,
+                            value: municipio.CodigoUbicacionGeografica,
+                            text: municipio.NombreUbicacionGeografica,
                             selected: true,
                         }))
                     } else {
                         municipiosSelect.append($('<option/>', {
-                            value: municipio.id,
-                            text: municipio.name,
+                            value: municipio.CodigoUbicacionGeografica,
+                            text: municipio.NombreUbicacionGeografica,
                         }))
                     }
                 });
@@ -30,11 +30,6 @@ function fillMunicipio() {
         });
     };
 };
-
-
-$(function () {
-    fillMunicipio();
-});
 
 $('#departamento').change(function () {
     $('#municipio').prop('disabled', false); //Habilito dropdown de municipios al seleccionar un departamento
