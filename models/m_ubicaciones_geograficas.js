@@ -3,6 +3,7 @@ const db = require('../dbconfig/conex');
 
 const UbicacionesGeograficas = db.define('GLO_UbicacionesGeograficas', {
     CodigoUbicacionGeografica: {
+        primaryKey: true,
         type: Sequelize.CHAR(10),
         allowNull: false,
         unique: true

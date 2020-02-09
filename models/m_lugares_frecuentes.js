@@ -22,10 +22,12 @@ const LugaresFrecuentes = db.define('TRA_LugaresFrecuentes', {
     freezeTableName: true,
 });
 LugaresFrecuentes.belongsTo(UbicacionesGeograficas, {
+    as: 'Departamento',
     foreignKey: 'Cod_depto',
 });
 
 LugaresFrecuentes.belongsTo(UbicacionesGeograficas, {
+    as: 'Municipio',
     foreignKey: 'Cod_mun',
 });
 
