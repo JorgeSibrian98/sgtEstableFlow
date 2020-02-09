@@ -57,7 +57,7 @@ function getMenuOptions(_roles) {
     for (var r in roles) {
         console.log(roles[r]);
         switch (roles[r]) {
-            case "emp":
+            case "emp       ":
                 menuOptions = menuOptions.concat(emp);
                 break;
             case "adminIT":
