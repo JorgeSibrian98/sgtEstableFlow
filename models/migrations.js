@@ -1,12 +1,10 @@
-/* const Department = require('./m_department');
-const City = require('./m_city'); */
 const Vehicle = require('./m_vehiculo');
 const Historial = require('./m_historial_uso_vehiculo');
 const Description = require('./m_descripcion_uso_vehiculo');
-/* const Procuraduria = require('./m_procuraduria');
-const Address = require('./m_address');
+const Direccion = require('./m_direccion');
+/*
+const Frequent_Place = require('./m_lugares_frecuentes');
 const Route = require('./m_route');
-const Frequent_Place = require('./m_frequent_place');
 const Voucher = require('./m_voucher');
 const Voucher_procu_assign = require('./m_voucher_procu_assign');
 const Voucher_folo6_assign = require('./m_voucher_folo6_assign');
@@ -30,21 +28,18 @@ const Vehicle_folo6_assign = require('../models/m_vehicle_folo6_assign'); */
 
 class Migration {
     constructor() {
-        /* Department.sync();
-        City.sync();
+        /* 
         Driver.sync({
             alter: false
         });
         Mision.sync({
             alter: false
         });
-        Address.sync({
-            alter: false
-        });
+        
         Procuraduria.sync({
             alter: false
         }); */
-        Vehicle.sync({
+        /* Vehicle.sync({
             alter: false
         });
         Description.sync({
@@ -52,7 +47,10 @@ class Migration {
         });
         Historial.sync({
             alter: false
-        });
+        }); */
+        /* Direccion.sync({
+            alter: true
+        }); */
         /* Frequent_Place.sync({
             alter: false
         });
@@ -86,7 +84,7 @@ class Migration {
         Route_conditions.sync({
             alter: false
         }); */
-        User.sync({
+        /* User.sync({
             alter: false
         });
         UserRol.sync({
@@ -100,7 +98,7 @@ class Migration {
         });
         ReportePorPerfil.sync({
             alter: false
-        });
+        }); */
         /* Vehicle_folo6_assign.sync({
             alter: false
         });
