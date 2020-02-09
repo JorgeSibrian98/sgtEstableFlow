@@ -1,0 +1,40 @@
+<section class="ui segment" id="Address">
+  <h3 class="ui blue dividing header">Dirección.</h3>
+  <div class="field">
+    <label>Detalle:</label>
+    <input type="text" id="detail" name="detail"
+      placeholder="Ej: # de casa o local, # de pasaje o calle, colonia o urbanización" value="{{detail}}">
+  </div>
+  <div class="two fields">
+    <div class="field">
+      <div class="eight wide field ">
+        <div class="field">
+          <label>Departamento:</label>
+          <select class="ui fluid dropdown" id="departamento" name="departamento">
+            <option value="">--Seleccione un departamento--</option>
+            {% for dep in Departamentos %}
+            {% if(dep.CodigoUbicacionGeografica == departamento) %}
+            <option value="{{ dep.CodigoUbicacionGeografica }}" selected>{{ dep.NombreUbicacionGeografica }}</option>
+            {% else %}
+            <option value="{{ dep.CodigoUbicacionGeografica }}">{{ dep.NombreUbicacionGeografica }}</option>
+            {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="six wide field">
+        <div class="field">
+          <label>Municipio:</label>
+          <select class="ui fluid dropdown" id="municipio" name="municipio">
+            <option value=""></option>
+          </select>
+        </div>
+        <input id="idmun" type="hidden" value="{{municipio}}">
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="/javascript/a_direccion.js"></script>
