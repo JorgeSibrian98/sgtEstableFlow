@@ -1,0 +1,26 @@
+<table class="ui celled table datatable" id="mytable" name="mytable" style="width: 100%">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Detalle:</th>
+            <th>Departamento:</th>
+            <th>Municipio:</th>
+            <th>Acciones:</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Recibiendo todas las direcciones e insertandolas en la tabla -->
+        {% for fplace in fplaces %}
+        <tr data-id="{{fplace.id}}">
+            <td>{{ fplace.name}}</td>
+            <td>{{ fplace.detail }}</td>
+            <td>{{ fplace.SGT_Departamento.name }}</td>
+            <td>{{ fplace.SGT_Municipio.name | capitalize }}</td>
+            <td>
+                <i class="large pencil yellow alternate link icon" value={{fplace.id}}></i>
+                <i class="large trash red alternate outline link icon" value="{{fplace.id}}"></i>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
