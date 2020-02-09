@@ -36,7 +36,12 @@ class folo6_controllers {
     //Gets Departments List
     async getDepartmentList(req, res) {
         try {
-            let Departamentos = await department_controller.getList();
+            let Departamentos = await UbicacionesGeograficas.findAll({
+                attributes: ['CodigoUbicacionGeografica', 'NombreUbicacionGeografica'],
+                where: {
+                  CodigoUbicacionGeograficaSuperior: 'ES'
+                }
+              });
             return res.render('./folo6/folo6.html', {
                 Departamentos
             });
