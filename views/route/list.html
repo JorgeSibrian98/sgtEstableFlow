@@ -1,0 +1,42 @@
+{% extends 'index.html' %}
+
+{% block views %}
+<br>
+<div class="ui container">
+    <div class="ui vertically divided grid">
+        <div class="sixteen wide column">
+            <h1 id="title" class="ui blue dividing header"><i class="route icon"></i>Lista de rutas estándar</h1>
+            <a href="/rutas/gestionar">
+                <button class="ui labeled icon right floated primary button" id="nuevo" tabindex="0">
+                    <i class="plus icon"></i>Agregar</button>
+            </a>
+            <br>
+            <br>
+            <table id="mytable" class="ui selectable table">
+                <thead>
+                    <tr class="ui green table">
+                        <th class="center aligned">Nombre:</th>
+                        <th class="center aligned">Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ruta in Rutas %}
+                    <tr>
+                        <td>{{ ruta.name }}</td>
+                        <td class="center aligned">
+                            <i class="large pencil yellow alternate link icon" value="{{ ruta.id }}"></i>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="/stylesheets/datatablefix.css">
+</link>
+<script src="/javascript/route/a_route.js"></script>
+
+
+{% endblock %}
