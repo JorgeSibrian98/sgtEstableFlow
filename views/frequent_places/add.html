@@ -16,7 +16,7 @@
                             <input type="text" autocomplete="off" name="name" id="name" placeholder="Nombre del Destino"
                                 maxlength="150" value="{{name}}">
                         </div>
-                        <div class="field">
+                        <!-- <div class="field">
                             <label>Ruta:</label>
                             <select class="ui fluid dropdown" id="ruta" name="ruta">
                                 <option value="">--Seleccione una ruta--</option>
@@ -28,9 +28,9 @@
                                 {% endif %}
                                 {% endfor %}
                             </select>
-                        </div>
+                        </div> -->
                     </div>
-                    {% include '../address/add.html' %}
+                    {% include '../direccion/add.html' %}
 
                     <button class="ui positive button" type="submit">Guardar</button>
                     <input id="fplace_id" name="fplace_id" type="hidden" value="{{fplace_id}}">
