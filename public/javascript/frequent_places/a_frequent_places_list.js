@@ -101,11 +101,25 @@ $(".pencil.yellow.alternate.link.icon").click(function () {
 /* Detona el metodo eliminar en el back mediante el id en un querystring */
 $(".trash.red.alternate.outline.link.icon").click(function () {
     var id = $(this).attr("value");
-    $('.ui.modal')
+    $('#deleteModal')
         .modal({
             closable: true,
             onApprove: function () {
                 url_list = encodeURI('lugares_frecuentes/eliminar?' + "fplace_id=" + id);
+                console.log(url_list);
+                location.href = url_list;
+            }
+        })
+        .modal('show');
+});
+
+$(".check.green.circle.outline.link.icon").click(function () {
+    var id = $(this).attr("value");
+    $('#activeModal')
+        .modal({
+            closable: true,
+            onApprove: function () {
+                url_list = encodeURI('lugares_frecuentes/activar?' + "fplace_id=" + id);
                 console.log(url_list);
                 location.href = url_list;
             }
@@ -153,11 +167,24 @@ function fillTable() {
 
         $(".trash.red.alternate.outline.link.icon").click(function () {
             var id = $(this).attr("value");
-            $('.ui.modal')
+            $('#deleteModal')
                 .modal({
                     closable: true,
                     onApprove: function () {
                         url_list = encodeURI('lugares_frecuentes/eliminar?' + "fplace_id=" + id);
+                        console.log(url_list);
+                        location.href = url_list;
+                    }
+                })
+                .modal('show');
+        });
+        $(".check.green.circle.outline.link.icon").click(function () {
+            var id = $(this).attr("value");
+            $('#activeModal')
+                .modal({
+                    closable: true,
+                    onApprove: function () {
+                        url_list = encodeURI('lugares_frecuentes/activar?' + "fplace_id=" + id);
                         console.log(url_list);
                         location.href = url_list;
                     }

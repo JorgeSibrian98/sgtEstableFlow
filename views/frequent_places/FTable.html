@@ -12,13 +12,17 @@
         <!-- Recibiendo todas las direcciones e insertandolas en la tabla -->
         {% for fplace in fplaces %}
         <tr data-id="{{fplace.id}}">
-            <td>{{ fplace.name}}</td>
-            <td>{{ fplace.detail }}</td>
-            <td>{{ fplace.SGT_Departamento.name }}</td>
-            <td>{{ fplace.SGT_Municipio.name | capitalize }}</td>
+            <td>{{ fplace.nombre}}</td>
+            <td>{{ fplace.Detalle }}</td>
+            <td>{{ fplace.Departamento.NombreUbicacionGeografica }}</td>
+            <td>{{ fplace.Municipio.NombreUbicacionGeografica }}</td>
             <td>
                 <i class="large pencil yellow alternate link icon" value={{fplace.id}}></i>
+                {% if fplace.Lugar_activo == 1 %}
                 <i class="large trash red alternate outline link icon" value="{{fplace.id}}"></i>
+                {% else %}
+                <i class="large check green circle outline link icon" value="{{fplace.id}}" title="Activar"></i>
+                {% endif %}
             </td>
         </tr>
         {% endfor %}

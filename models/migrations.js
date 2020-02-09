@@ -79,13 +79,14 @@ class Migration {
         });
         Folo6_Approve_State.sync({
             alter: false
-        }); 
-        Route.sync({
-            alter: false
-        });
-        Route_conditions.sync({
+        }); */
+        /* Route.sync({
             alter: false
         }); */
+        /*
+                Route_conditions.sync({
+                    alter: false
+                }); */
         /* User.sync({
             alter: false
         });

@@ -47,10 +47,12 @@ router.post('/gestionar', [
     }
 });
 
-/* router.get('/eliminar', (req, res) => {
+router.get('/eliminar', (req, res) => {
     controller.deleteFrequentPlace(req, res);
-}); */
-
+});
+router.get('/activar', (req, res) => {
+    controller.activarLugarFrecuente(req, res);
+});
 //PARA LOS PLACES DEL FOLO 6
 router.get('/getPlaces', (req, res) => {
     console.log("Encontre la ruta")
