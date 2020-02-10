@@ -63,7 +63,7 @@ class Mision_controller {
       } else {
         console.log(req.body);
         Mision.create({
-          Nombre_mision: name
+          NombreMision: name
         });
         const query = querystring.stringify({
           title: "Guardado exitoso",
@@ -102,10 +102,10 @@ class Mision_controller {
       } else {
         console.log(req.body);
         Mision.update({
-          Nombre_mision: name
+          NombreMision: name
         }, {
           where: {
-            id: Misi_id
+            IDMision: Misi_id
           }
         });
         const query = querystring.stringify({
@@ -130,10 +130,10 @@ class Mision_controller {
       let Misi_id = req.query.mis_id;
       console.log(Misi_id);
       await Mision.update({
-        Mision_activa: 0
+        MisionActiva: 0
       }, {
         where: {
-          id: Misi_id
+          IDMision: Misi_id
         }
       });
       const query = querystring.stringify({
@@ -157,10 +157,10 @@ class Mision_controller {
       let Misi_id = req.query.mis_id;
       console.log(Misi_id);
       await Mision.update({
-        Mision_activa: 1
+        MisionActiva: 1
       }, {
         where: {
-          id: Misi_id
+          IDMision: Misi_id
         }
       });
       const query = querystring.stringify({
