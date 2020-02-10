@@ -4,9 +4,9 @@ const Description = require('./m_descripcion_uso_vehiculo');
 const Direccion = require('./m_direccion');
 const Route = require('./m_route');
 const Route_conditions = require('../models/m_route_conditions');
-/*
-const Frequent_Place = require('./m_lugares_frecuentes');
 
+const Frequent_Place = require('./m_lugares_frecuentes');
+/*
 const Voucher = require('./m_voucher');
 const Voucher_procu_assign = require('./m_voucher_procu_assign');
 const Voucher_folo6_assign = require('./m_voucher_folo6_assign');
@@ -55,7 +55,8 @@ class Migration {
         }); */
         /* Frequent_Place.sync({
             alter: false
-        });
+        }); */
+        /*
         Voucher.sync({
             alter: false
         });

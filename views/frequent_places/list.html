@@ -44,18 +44,20 @@
                     <tbody>
                         <!-- Recibiendo todas las direcciones e insertandolas en la tabla -->
                         {% for fplace in fplaces %}
-                        <tr data-id="{{fplace.id}}">
-                            <td>{{ fplace.nombre}}</td>
-                            <td>{{ fplace.Detalle }}</td>
+                        <tr data-id="{{fplace.IDLugarFrecuente}}">
+                            <td>{{ fplace.NombreLugarFrecuente}}</td>
+                            <td>{{ fplace.DetalleLugarFrecuente }}</td>
                             <td>{{ fplace.Departamento.NombreUbicacionGeografica }}</td>
                             <td>{{ fplace.Municipio.NombreUbicacionGeografica }}</td>
                             <td>
-                                <i class="large pencil yellow alternate link icon" value={{fplace.id}}></i>
-                                {% if fplace.Lugar_activo == 1 %}
-                                <i class="large trash red alternate outline link icon" value="{{fplace.id}}"></i>
+                                <i class="large pencil yellow alternate link icon"
+                                    value={{fplace.IDLugarFrecuente}}></i>
+                                {% if fplace.LugarFrecuenteActivo == 1 %}
+                                <i class="large trash red alternate outline link icon"
+                                    value="{{fplace.IDLugarFrecuente}}"></i>
                                 {% else %}
-                                <i class="large check green circle outline link icon" value="{{fplace.id}}"
-                                    title="Activar"></i>
+                                <i class="large check green circle outline link icon"
+                                    value="{{fplace.IDLugarFrecuente}}" title="Activar"></i>
                                 {% endif %}
                             </td>
                         </tr>
@@ -71,11 +73,11 @@
 <div class="ui mini inverted modal" id="deleteModal">
     <div class="ui icon header">
         <i class="trash alternate outline icon"></i>
-        Eliminar Destino Frecuente.
+        Dar de baja Lugar Frecuente.
     </div>
 
     <div class="content">
-        <p>¿Esta seguro de Eliminar el lugar frecuente?</p>
+        <p>¿Esta seguro de dar de baja el lugar frecuente?</p>
     </div>
 
     <div class="actions">

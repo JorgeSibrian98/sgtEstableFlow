@@ -1,4 +1,5 @@
 var filterValue;
+var title, message, clss, query1;
 
 $(window).on('load', function () {
     console.log('window loaded');
@@ -13,82 +14,17 @@ $(document).ready(function () {
             "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
         }
     });
-    var type = $('input#messagetype').val();
-    var info = $('input#messageinfo').val();
-    console.log(type);
-    console.log(info);
-    if (type == 1) {
-        if (info == 1) {
-            $('body')
-                .toast({
-                    class: 'success',
-                    onclick: 'null',
-                    message: `El Requerimiento fue aprobado`
-                });
-        } else if (info == 0) {
-            $('body')
-                .toast({
-                    class: 'error',
-                    message: `Error al modificar la base de Datos.`
-                });
-        }
-    } else if (type == 0) {
-        if (info == 1) {
-            $('body')
-                .toast({
-                    class: 'warning',
-                    message: `El Requerimiento fue cancelado`
-                });
-        } else if (info == 0) {
-            $('body')
-                .toast({
-                    class: 'error',
-                    message: `Error al modificar la base de Datos.`
-                });
-        }
-    };
+    title = getParameterByName('title');
+    message = getParameterByName('message');
+    clss = getParameterByName('class');
 
-    enviarToast();
+    if (title && message && clss) {
+        AddToast(title, clss, message);
+    }
 });
 
 
-function enviarToast() {
-    var type = $('input#messagetype').val();
-    var info = $('input#messageinfo').val(); /* Tomamos los valores de los input en el HTML */
-    if (type == 'true') {
-        if (info == 'true') {
-            $('body')
-                .toast({
-                    class: 'success',
-                    message: `El Requerimiento fue aprobado`,
-                    position: 'top right'
-                });
-        } else if (info == 'false') {
-            $('body')
-                .toast({
-                    class: 'error',
-                    position: 'top right',
-                    message: `Error al modificar la base de Datos.`
-                });
-        }
-    } else if (type == 'false') {
-        if (info == 'true') {
-            $('body')
-                .toast({
-                    class: 'warning',
-                    position: 'top right',
-                    message: `El Requerimiento fue cancelado`
-                });
-        } else if (info == 'false') {
-            $('body')
-                .toast({
-                    class: 'error',
-                    position: 'top right',
-                    message: `Error al modificar la base de Datos.`
-                });
-        }
-    }
-};
+
 
 /* Detona el metodo editar en el back mediante el id en un querystring */
 $(".pencil.yellow.alternate.link.icon").click(function () {
@@ -205,3 +141,33 @@ function showLoadingDimmer() {
 }
 
 $('#container').css('display', 'block');
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    var regexS = "[\\?&]" + name + "=([^&#]*)";
+    var regex = new RegExp(regexS);
+    var results = regex.exec(window.location.href);
+    if (results == null)
+        return "";
+    else
+        return decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+function AddToast(_title, _class, _message) {
+    $('body')
+        .toast({
+            title: _title,
+            showIcon: true,
+            class: _class,
+            position: 'top right',
+            displayTime: 8000,
+            closeIcon: true,
+            message: _message,
+            transition: {
+                showMethod: 'zoom',
+                showDuration: 100,
+                hideMethod: 'fade',
+                hideDuration: 500
+            }
+        });
+}

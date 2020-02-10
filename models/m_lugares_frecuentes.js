@@ -29,20 +29,30 @@ const LugaresFrecuentes = db.define('TRA_LugaresFrecuentes', {
         type: Sequelize.BOOLEAN,
         allowNull: true,
         defaultValue: '1'
-    }
+    },
+    CreadoPor: {
+        type: Sequelize.CHAR(10),
+        allowNull: true,
+    },
+    ActualizadoPor: {
+        type: Sequelize.CHAR(10),
+        allowNull: true,
+    },
 }, {
     underscored: false,
-    timestamps: false,
+    timestamps: true,
+    createdAt: 'FechaCreacion',
+    updatedAt: 'FechaActualizacion',
     freezeTableName: true,
 });
 LugaresFrecuentes.belongsTo(UbicacionesGeograficas, {
     as: 'Departamento',
-    foreignKey: 'CodDepto',
+    foreignKey: 'CodDepartamento',
 });
 
 LugaresFrecuentes.belongsTo(UbicacionesGeograficas, {
     as: 'Municipio',
-    foreignKey: 'CodMun',
+    foreignKey: 'CodMunicipio',
 });
 
 
