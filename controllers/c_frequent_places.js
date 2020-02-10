@@ -1,6 +1,7 @@
 const frequent_place = require('../models/m_lugares_frecuentes');
 const UbicacionesGeograficas = require('../models/m_ubicaciones_geograficas');
-/* const route_controller = require('./c_route'); */
+const route_controller = require('./c_route');
+const querystring = require('querystring');
 const {
     validationResult
 } = require('express-validator');
@@ -18,12 +19,29 @@ class frequent_place_controller {
                     where: {
                         route_id: req.query.filter
                     },
-                    include: [UbicacionesGeograficas]
+                    include: [{
+                        model: UbicacionesGeograficas,
+                        as: 'Departamento',
+                        attributes: ['NombreUbicacionGeografica']
+                    }, {
+                        model: UbicacionesGeograficas,
+                        as: 'Municipio',
+                        attributes: ['NombreUbicacionGeografica']
+                    }],
                 });
             } //Caundo se derse ver todos
             else {
                 fplaces = await frequent_place.findAll({
-                    include: [UbicacionesGeograficas]
+                    include: [{
+                        model: UbicacionesGeograficas,
+                        as: 'Departamento',
+                        attributes: ['NombreUbicacionGeografica']
+                    }, {
+                        model: UbicacionesGeograficas,
+                        as: 'Municipio',
+                        attributes: ['NombreUbicacionGeografica']
+                    }],
+                    attributes: ['id', 'nombre', 'detalle']
                 });
             }
             return res.render('../views/frequent_places/FTable.html', {
@@ -48,10 +66,10 @@ class frequent_place_controller {
                 }],
                 attributes: ['id', 'nombre', 'detalle']
             });
-            /* let rutas = await route_controller.getRouteList(); */
+            let rutas = await route_controller.getRouteList();
             return res.render('../views/frequent_places/list.html', {
                 fplaces,
-                /* rutas */
+                rutas
             });
         } catch (error) {
             console.log(error);
@@ -71,10 +89,10 @@ class frequent_place_controller {
     async getAdd(req, res) {
         try {
             let Departamentos = await this.getDepartmentList();
-            /* let rutas = await route_controller.getRouteList(); */
+            let rutas = await route_controller.getRouteList();
             return res.render('../views/frequent_places/add.html', {
                 Departamentos,
-                /* rutas */
+                rutas
             });
         } catch (error) {
             console.log(error);
@@ -102,19 +120,19 @@ class frequent_place_controller {
                 detail,
                 departamento,
                 municipio,
-                /* ruta */
+                ruta
             } = req.body;
             if (!errors.isEmpty()) {
                 let Departamentos = await this.getDepartmentList();
-                /* let rutas = await route_controller.getRouteList(); */
+                let rutas = await route_controller.getRouteList();
                 res.render('../views/frequent_places/add.html', {
                     name,
                     detail,
                     departamento,
                     Departamentos,
                     municipio,
-                    /* rutas,
-                    ruta, */
+                    rutas,
+                    ruta,
                     errors: errors.array()
                 });
             } else {
@@ -124,17 +142,17 @@ class frequent_place_controller {
                         Detalle: detail,
                         Cod_mun: municipio,
                         Cod_depto: departamento,
-                        /* route_id: ruta, */
+                        route_id: ruta,
                     });
                     res.redirect('/lugares_frecuentes');
                 } catch (errors) {
                     console.log(errors);
                     let error = 'El Lugar de Destino ingresado ya existe.';
                     let Departamentos = await this.getDepartmentList();
-                    /* let rutas = await route_controller.getRouteList(); */
+                    let rutas = await route_controller.getRouteList();
                     res.render('../views/frequent_places/add.html', {
                         Departamentos,
-                        /* rutas, */
+                        rutas,
                         error,
                     });
                 }
@@ -155,8 +173,8 @@ class frequent_place_controller {
             let municipio = place.Cod_mun;
             let departamento = place.Cod_depto;
             let edit = true;
-            /* let ruta = place.route_id; */
-            /* let rutas = await route_controller.getRouteList(); */
+            let ruta = place.route_id;
+            let rutas = await route_controller.getRouteList();
             let Departamentos = await this.getDepartmentList();
             console.log(name);
             return res.render('../views/frequent_places/add.html', {
@@ -168,15 +186,14 @@ class frequent_place_controller {
                 edit,
                 fplace_id,
                 true_name,
-                /* ruta,
-                rutas */
+                ruta,
+                rutas
             })
         } catch (error) {
             console.log(error);
         }
 
     };
-    /*
     async updateFrequentPlace(req, res) {
         try {
             const errors = validationResult(req);
@@ -205,11 +222,11 @@ class frequent_place_controller {
                 try {
                     console.log(req.body.detail);
                     await frequent_place.update({
-                        name: name,
+                        nombre: name,
                         route_id: ruta,
-                        detail: detail,
-                        city_id: municipio,
-                        department_id: departamento
+                        Detalle: detail,
+                        Cod_mun: municipio,
+                        Cod_depto: departamento
                     }, {
                         where: {
                             id: fplace_id
@@ -239,23 +256,54 @@ class frequent_place_controller {
         } catch (error) {
             console.log(error);
         }
-    }
- */
-    /* 
-        async deleteFrequentPlace(req, res) {
-            try {
-                let fplace_id = req.query.fplace_id;
-                console.log(fplace_id);
-                await frequent_place.destroy({
-                    where: {
-                        id: fplace_id
-                    }
-                });
-                res.redirect('/lugares_frecuentes');
-            } catch (error) {
-                res.redirect('/lugares_frecuentes');
-            }
-        } */
+    };
+
+    /* Metodo para dar de baja un lugar frecuente a travez de su id */
+    async deleteFrequentPlace(req, res) {
+        try {
+            let fplace_id = req.query.fplace_id;
+            console.log(fplace_id);
+            await frequent_place.update({
+                Lugar_activo: 0
+            }, {
+                where: {
+                    id: fplace_id
+                }
+            });
+            res.redirect('/lugares_frecuentes');
+        } catch (error) {
+            res.redirect('/lugares_frecuentes');
+        }
+    };
+    /* Metodo para Activarun lugar frecuente a travez de su id */
+    async activarLugarFrecuente(req, res) {
+        try {
+            let fplace_id = req.query.fplace_id;
+            console.log(fplace_id);
+            await frequent_place.update({
+                Lugar_activo: 1
+            }, {
+                where: {
+                    id: fplace_id
+                }
+            });
+            const query = querystring.stringify({
+                title: "Activar exitoso",
+                message: "Misi&oacute;n actualizada",
+                class: "success"
+            });
+            res.redirect('/lugares_frecuentes?&' + query);
+        } catch (error) {
+            console.log(error);
+            const query = querystring.stringify({
+                title: "Error al Actualizar",
+                message: "Misi&oacute;n NO actualizada" + error,
+                class: "error"
+            });
+            res.redirect('/lugares_frecuentes?&' + query);
+        }
+    };
+
     //Gets frequent places list based on the selected municipio
     async getPlacesByMunicipio(req, res) {
         try {

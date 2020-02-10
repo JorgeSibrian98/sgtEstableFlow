@@ -16,6 +16,11 @@ const LugaresFrecuentes = db.define('TRA_LugaresFrecuentes', {
         type: Sequelize.TINYINT,
         allowNull: true
     },
+    Lugar_activo: {
+        type: Sequelize.BOOLEAN,
+        allowNull: true,
+        defaultValue: '1'
+    }
 }, {
     underscored: false,
     timestamps: false,

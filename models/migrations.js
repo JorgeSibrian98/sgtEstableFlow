@@ -2,9 +2,11 @@ const Vehicle = require('./m_vehiculo');
 const Historial = require('./m_historial_uso_vehiculo');
 const Description = require('./m_descripcion_uso_vehiculo');
 const Direccion = require('./m_direccion');
+const Route = require('./m_route');
+const Route_conditions = require('../models/m_route_conditions');
 /*
 const Frequent_Place = require('./m_lugares_frecuentes');
-const Route = require('./m_route');
+
 const Voucher = require('./m_voucher');
 const Voucher_procu_assign = require('./m_voucher_procu_assign');
 const Voucher_folo6_assign = require('./m_voucher_folo6_assign');
@@ -13,7 +15,7 @@ const Employee = require('./m_employee');
 const Unit = require('./m_unit');
 const Places_container = require('./m_places_container');
 const Folo6_Approve_State = require('./m_folo6_approve_state');
-const Route_conditions = require('../models/m_route_conditions'); */
+ */
 const User = require('./m_usuario');
 const Rol = require('./m_perfil');
 const UserRol = require('./m_usuario_por_perfil');
@@ -77,13 +79,14 @@ class Migration {
         });
         Folo6_Approve_State.sync({
             alter: false
-        });
-        Route.sync({
-            alter: false
-        });
-        Route_conditions.sync({
+        }); */
+        /* Route.sync({
             alter: false
         }); */
+        /*
+                Route_conditions.sync({
+                    alter: false
+                }); */
         /* User.sync({
             alter: false
         });
