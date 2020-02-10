@@ -56,15 +56,16 @@ app.use('/login', require('./routes/r_login'))
 app.use(is_logged);
 app.use('/', require('./routes/index'));
 /* app.use('/solicitud_nueva', require('./routes/r_folo6'));
-app.use('/vales', authorize('adminV'), require('./routes/r_voucher'));
-app.use('/direccion', authorize('adminTrans'), require('./routes/r_direccion'));  
+app.use('/vales', authorize('adminV'), require('./routes/r_voucher'));*/
+app.use('/direccion', authorize('adminTrans'), require('./routes/r_direccion'));
+/*
 app.use('/instituciones', authorize('adminIT'), require('./routes/r_procuraduria'));*/
 app.use('/misiones', authorize('adminTrans', 'adminR'), require('./routes/r_misiones'));
 app.use('/vehiculos', authorize('adminTrans'), require('./routes/r_vehicle'));
 
 app.use('/rutas', authorize('adminR'), require('./routes/r_route'));
-/*app.use('/lugares_frecuentes', authorize('emp', 'adminTrans', 'adminR'), require('./routes/r_frequent_places'));
-app.use('/motoristas', authorize('adminTrans'), require('./routes/r_driver'));
+app.use('/lugares_frecuentes', authorize('emp', 'adminTrans', 'adminR'), require('./routes/r_frequent_places'));
+/*app.use('/motoristas', authorize('adminTrans'), require('./routes/r_driver'));
 app.use('/empleado', require('./routes/r_employee'));
 app.use('/panel_de_aprobacion', authorize('uBoss', 'adminTrans'), require('./routes/r_approve_panel'));
 app.use('/configuracion_calendario', require('./routes/r_config_calendar'));

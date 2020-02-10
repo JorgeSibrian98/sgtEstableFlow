@@ -20,18 +20,18 @@
                 <tbody>
                     {% for mis in Misiones %}
                     <tr>
-                        <td class="center aligned">{{ mis.Nombre_mision }}</td>
-                        <td class="center aligned">{% if mis.Mision_activa == 1 %}
+                        <td class="center aligned">{{ mis.NombreMision }}</td>
+                        <td class="center aligned">{% if mis.MisionActiva == 1 %}
                             Activa
                             {% else %}
                             De Baja
                             {% endif %}</td>
                         <td class="center aligned">
-                            <i class="large pencil yellow alternate link icon" value={{mis.id}}></i>
-                            {% if mis.Mision_activa == 1 %}
-                            <i class="large trash red alternate outline link icon" value="{{mis.id}}"></i>
+                            <i class="large pencil yellow alternate link icon" value={{mis.IDMision}}></i>
+                            {% if mis.MisionActiva == 1 %}
+                            <i class="large trash red alternate outline link icon" value="{{mis.IDMision}}"></i>
                             {% else %}
-                            <i class="large check green circle outline link icon" value="{{mis.id}}"
+                            <i class="large check green circle outline link icon" value="{{mis.IDMision}}"
                                 title="Activar"></i>
                             {% endif %}
                         </td>
@@ -84,7 +84,6 @@
             Cancelar
         </div>
     </div>
-
 </div>
 
 <script src="/javascript/a_misiones.js"></script>

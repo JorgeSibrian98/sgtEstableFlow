@@ -39,7 +39,7 @@ Route.hasOne(route_conditions, {
 });
 
 Route.hasMany(frequent_places, {
-  foreignKey: 'route_id'
+  foreignKey: 'IDRuta'
 });
 
 module.exports = Route;

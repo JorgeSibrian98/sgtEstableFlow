@@ -1,0 +1,31 @@
+<table class="ui celled table datatable" id="mytable" name="mytable" style="width: 100%">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Detalle:</th>
+            <th>Departamento:</th>
+            <th>Municipio:</th>
+            <th>Acciones:</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Recibiendo todas las direcciones e insertandolas en la tabla -->
+        {% for fplace in fplaces %}
+        <tr data-id="{{fplace.IDLugarFrecuente}}">
+            <td>{{ fplace.NombreLugarFrecuente}}</td>
+            <td>{{ fplace.DetalleLugarFrecuente }}</td>
+            <td>{{ fplace.Departamento.NombreUbicacionGeografica }}</td>
+            <td>{{ fplace.Municipio.NombreUbicacionGeografica }}</td>
+            <td>
+                <i class="large pencil yellow alternate link icon" value={{fplace.IDLugarFrecuente}}></i>
+                {% if fplace.LugarFrecuenteActivo == 1 %}
+                <i class="large trash red alternate outline link icon" value="{{fplace.IDLugarFrecuente}}"></i>
+                {% else %}
+                <i class="large check green circle outline link icon" value="{{fplace.IDLugarFrecuente}}"
+                    title="Activar"></i>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

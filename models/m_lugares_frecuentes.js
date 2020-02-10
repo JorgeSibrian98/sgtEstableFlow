@@ -3,30 +3,56 @@ const db = require('../dbconfig/conex');
 const UbicacionesGeograficas = require('./m_ubicaciones_geograficas');
 
 const LugaresFrecuentes = db.define('TRA_LugaresFrecuentes', {
-    nombre: {
+    IDLugarFrecuente: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        allowNull: false,
+        autoIncrement: true,
+        validate: {
+            notEmpty: true,
+        }
+    },
+    NombreLugarFrecuente: {
         type: Sequelize.STRING(100),
         allowNull: false,
         unique: true
     },
-    Detalle: {
+    DetalleLugarFrecuente: {
         type: Sequelize.STRING(150),
         allowNull: true
     },
-    Id_procuraduria: {
+    IDProcuraduria: {
         type: Sequelize.TINYINT,
         allowNull: true
     },
+    LugarFrecuenteActivo: {
+        type: Sequelize.BOOLEAN,
+        allowNull: true,
+        defaultValue: '1'
+    },
+    CreadoPor: {
+        type: Sequelize.CHAR(10),
+        allowNull: true,
+    },
+    ActualizadoPor: {
+        type: Sequelize.CHAR(10),
+        allowNull: true,
+    },
 }, {
     underscored: false,
-    timestamps: false,
+    timestamps: true,
+    createdAt: 'FechaCreacion',
+    updatedAt: 'FechaActualizacion',
     freezeTableName: true,
 });
 LugaresFrecuentes.belongsTo(UbicacionesGeograficas, {
-    foreignKey: 'Cod_depto',
+    as: 'Departamento',
+    foreignKey: 'CodDepartamento',
 });
 
 LugaresFrecuentes.belongsTo(UbicacionesGeograficas, {
-    foreignKey: 'Cod_mun',
+    as: 'Municipio',
+    foreignKey: 'CodMunicipio',
 });
 
 
