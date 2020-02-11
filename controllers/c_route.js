@@ -7,11 +7,11 @@ const {
 const querystring = require('querystring');
 
 class Route_controller {
-  constructor() { }
+  constructor() {}
 
   async getRouteList() {
     return await Route.findAll({
-      order: Sequelize.literal('id ASC')
+      order: Sequelize.literal('IDRuta ASC')
     });
   }
 
@@ -20,7 +20,7 @@ class Route_controller {
   async getRouteList(req, res) {
     try {
       var Routes = await Route.findAll({
-        order: Sequelize.literal('id ASC')
+        order: Sequelize.literal('IDRuta ASC')
       });
       return Routes
     } catch (error) {
