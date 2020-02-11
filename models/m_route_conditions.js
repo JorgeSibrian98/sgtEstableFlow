@@ -2,7 +2,16 @@ const Sequelize = require('sequelize');
 const db = require('../dbconfig/conex');
 
 const route_conditions = db.define('TRA_Condiciones_Ruta', {
-    monday: {
+    IDCondicionesRuta: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        primaryKey: true,
+        autoIncrement: true,
+        validate: {
+            notEmpty: true,
+        }
+    },
+    Lunes: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false,
@@ -10,7 +19,7 @@ const route_conditions = db.define('TRA_Condiciones_Ruta', {
             notEmpty: true
         },
     },
-    monday_frequency: {
+    CantidadMotoristasLunes: {
         type: Sequelize.INTEGER,
         allowNull: false,
         defaultValue: 0,
@@ -18,7 +27,7 @@ const route_conditions = db.define('TRA_Condiciones_Ruta', {
             notEmpty: true
         },
     },
-    tuesday: {
+    Martes: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false,
@@ -26,7 +35,7 @@ const route_conditions = db.define('TRA_Condiciones_Ruta', {
             notEmpty: true
         },
     },
-    tuesday_frequency: {
+    CantidadMotoristasMartes: {
         type: Sequelize.INTEGER,
         allowNull: false,
         defaultValue: 0,
@@ -34,7 +43,7 @@ const route_conditions = db.define('TRA_Condiciones_Ruta', {
             notEmpty: true
         },
     },
-    wednesday: {
+    Miercoles: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false,
@@ -42,7 +51,7 @@ const route_conditions = db.define('TRA_Condiciones_Ruta', {
             notEmpty: true
         },
     },
-    wednesday_frequency: {
+    CantidadMotoristasMiercoles: {
         type: Sequelize.INTEGER,
         allowNull: false,
         defaultValue: 0,
@@ -50,7 +59,7 @@ const route_conditions = db.define('TRA_Condiciones_Ruta', {
             notEmpty: true
         },
     },
-    thursday: {
+    Jueves: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false,
@@ -58,7 +67,7 @@ const route_conditions = db.define('TRA_Condiciones_Ruta', {
             notEmpty: true
         },
     },
-    thursday_frequency: {
+    CantidadMotoristasJueves: {
         type: Sequelize.INTEGER,
         allowNull: false,
         defaultValue: 0,
@@ -66,7 +75,7 @@ const route_conditions = db.define('TRA_Condiciones_Ruta', {
             notEmpty: true
         },
     },
-    friday: {
+    Viernes: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false,
@@ -74,7 +83,7 @@ const route_conditions = db.define('TRA_Condiciones_Ruta', {
             notEmpty: true
         },
     },
-    friday_frequency: {
+    CantidadMotoristasViernes: {
         type: Sequelize.INTEGER,
         allowNull: false,
         defaultValue: 0,
@@ -82,7 +91,7 @@ const route_conditions = db.define('TRA_Condiciones_Ruta', {
             notEmpty: true
         },
     },
-    saturday: {
+    Sabado: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false,
@@ -90,7 +99,7 @@ const route_conditions = db.define('TRA_Condiciones_Ruta', {
             notEmpty: true
         },
     },
-    saturday_frequency: {
+    CantidadMotoristasSabado: {
         type: Sequelize.INTEGER,
         allowNull: false,
         defaultValue: 0,
@@ -98,7 +107,7 @@ const route_conditions = db.define('TRA_Condiciones_Ruta', {
             notEmpty: true
         },
     },
-    sunday: {
+    Domingo: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false,
@@ -106,19 +115,27 @@ const route_conditions = db.define('TRA_Condiciones_Ruta', {
             notEmpty: true
         },
     },
-    sunday_frequency: {
+    CantidadMotoristasDomingo: {
         type: Sequelize.INTEGER,
         allowNull: false,
         defaultValue: 0,
         validate: {
             notEmpty: true
         },
+    },
+    CreadoPor: {
+        type: Sequelize.CHAR(10),
+        allowNull: true
+    },
+    ActualizadoPor: {
+        type: Sequelize.CHAR(10),
+        allowNull: true
     },
 }, {
-    underscored: true,
+    underscored: false,
     timestamps: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
+    createdAt: 'FechaCreacion',
+    updatedAt: 'FechaActualizacion',
     freezeTableName: true,
 });
 

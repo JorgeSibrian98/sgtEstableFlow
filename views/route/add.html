@@ -12,9 +12,9 @@
       <div class="required field">
         <label>Nombre de la ruta:</label>
         <input type="text" name="name" id="name" autocomplete="off" placeholder="Nombre de la ruta estándar"
-        value="{{Ruta.name}}">
+        value="{{Ruta.Nombre}}">
       </div>
-      {% if Ruta.enabled == true %}
+      {% if Ruta.Habilitado == true %}
         <div class="ui checkbox">
         <input type="checkbox" id="enabled" name="enabled" checked="checked">
         <label for="enabled">Habilitada</label>
@@ -28,7 +28,7 @@
       <h3 class="ui blue dividing header">Días de servicio</h3>
       <div class="grouped fields">
         <label>Seleccione los días de servicio de la ruta estándar:</label>
-      {% if Condiciones.monday == true %}
+      {% if Condiciones.Lunes == true %}
         <div class="two inline fields">
           <div class="field">
             <div class="ui checkbox">
@@ -38,7 +38,7 @@
           </div>
           <div class="field" style="margin-left:-300px">
             <label for="monday_frequency" style="font-size:13px;">Cantidad de motoristas al día:</label>
-            <input type="number" name="monday_frequency" min="1" max="40" value="{{Condiciones.monday_frequency}}" id="monday_frequency" style="width:70px">
+            <input type="number" name="monday_frequency" min="1" max="40" value="{{Condiciones.CantidadMotoristasLunes}}" id="monday_frequency" style="width:70px">
           </div>
         </div>
       {% else %}
@@ -55,7 +55,7 @@
           </div>
         </div>
       {% endif %}
-      {% if Condiciones.tuesday == true %}
+      {% if Condiciones.Martes == true %}
         <div class="two inline fields">
           <div class="field">
             <div class="ui checkbox">
@@ -65,7 +65,7 @@
           </div>
           <div class="field" style="margin-left:-300px">
             <label for="tuesday_frequency" style="font-size:13px;">Cantidad de motoristas al día:</label>
-            <input type="number" name="tuesday_frequency" min="1" max="40" value="{{Condiciones.tuesday_frequency}}" id="tuesday_frequency" style="width:70px">
+            <input type="number" name="tuesday_frequency" min="1" max="40" value="{{Condiciones.CantidadMotoristasMartes}}" id="tuesday_frequency" style="width:70px">
           </div>
         </div>
       {% else %}
@@ -82,7 +82,7 @@
           </div>
         </div>
       {% endif %}
-      {% if Condiciones.wednesday == true %}
+      {% if Condiciones.Miercoles == true %}
         <div class="two inline fields">
           <div class="field">
             <div class="ui checkbox">
@@ -92,7 +92,7 @@
           </div>
           <div class="field" style="margin-left:-300px">
             <label for="wednesday_frequency" style="font-size:13px;">Cantidad de motoristas al día:</label>
-            <input type="number" name="wednesday_frequency" min="1" max="40" value="{{Condiciones.wednesday_frequency}}" id="wednesday_frequency" style="width:70px">
+            <input type="number" name="wednesday_frequency" min="1" max="40" value="{{Condiciones.CantidadMotoristasMiercoles}}" id="wednesday_frequency" style="width:70px">
           </div>
         </div>
       {% else %}
@@ -109,7 +109,7 @@
           </div>
         </div>
       {% endif %}
-        {% if Condiciones.thursday == true %}
+        {% if Condiciones.Jueves == true %}
           <div class="two inline fields">
           <div class="field">
             <div class="ui checkbox">
@@ -119,7 +119,7 @@
           </div>
           <div class="field" style="margin-left:-300px">
             <label for="thursday_frequency" style="font-size:13px;">Cantidad de motoristas al día:</label>
-            <input type="number" name="thursday_frequency" min="1" max="40" value="{{Condiciones.thursday_frequency}}" id="thursday_frequency" style="width:70px">
+            <input type="number" name="thursday_frequency" min="1" max="40" value="{{Condiciones.CantidadMotoristasJueves}}" id="thursday_frequency" style="width:70px">
           </div>
         </div>
         {% else %}
@@ -136,7 +136,7 @@
           </div>
         </div>
         {% endif %}
-        {% if Condiciones.friday == true %}
+        {% if Condiciones.Viernes == true %}
           <div class="two inline fields">
           <div class="field">
             <div class="ui checkbox">
@@ -146,7 +146,7 @@
           </div>
           <div class="field" style="margin-left:-300px">
             <label for="friday_frequency" style="font-size:13px;">Cantidad de motoristas al día:</label>
-            <input type="number" name="friday_frequency" min="1" max="40" value="{{Condiciones.friday_frequency}}" id="friday_frequency" style="width:70px">
+            <input type="number" name="friday_frequency" min="1" max="40" value="{{Condiciones.CantidadMotoristasViernes}}" id="friday_frequency" style="width:70px">
           </div>
         </div>
         {% else %}
@@ -163,7 +163,7 @@
           </div>
         </div>
         {% endif %}
-        {% if Condiciones.saturday == true %}
+        {% if Condiciones.Sabado == true %}
           <div class="two inline fields">
           <div class="field">
             <div class="ui checkbox">
@@ -173,7 +173,7 @@
           </div>
           <div class="field" style="margin-left:-300px">
             <label for="saturday_frequency" style="font-size:13px;">Cantidad de motoristas al día:</label>
-            <input type="number" name="saturday_frequency" min="1" max="40" value="{{Condiciones.saturday_frequency}}" id="saturday_frequency" style="width:70px">
+            <input type="number" name="saturday_frequency" min="1" max="40" value="{{Condiciones.CantidadMotoristasSabado}}" id="saturday_frequency" style="width:70px">
           </div>
         </div>
         {% else %}
@@ -190,7 +190,7 @@
           </div>
         </div>
         {% endif %}
-        {% if Condiciones.sunday == true %}
+        {% if Condiciones.Domingo == true %}
           <div class="two inline fields">
           <div class="field">
             <div class="ui checkbox">
@@ -200,7 +200,7 @@
           </div>
           <div class="field" style="margin-left:-300px">
             <label for="sunday_frequency" style="font-size:13px;">Cantidad de motoristas al día:</label>
-            <input type="number" name="sunday_frequency" min="1" max="40" value="{{Condiciones.sunday_frequency}}" id="sunday_frequency" style="width:70px">
+            <input type="number" name="sunday_frequency" min="1" max="40" value="{{Condiciones.CantidadMotoristasDomingo}}" id="sunday_frequency" style="width:70px">
           </div>
         </div>
         {% else %}
@@ -218,8 +218,8 @@
         </div>
         {% endif %}
       </div>
-      <input type="hidden" id="route_id" name="route_id" value="{{ Ruta.id }}">
-      <input type="hidden" id="route_conditions_id" name="route_conditions_id" value="{{ Condiciones.id }}">
+      <input type="hidden" id="route_id" name="route_id" value="{{ Ruta.IDRuta }}">
+      <input type="hidden" id="route_conditions_id" name="route_conditions_id" value="{{ Condiciones.IDCondicionesRuta }}">
       <br>
       <a href="/rutas">
         <div class="ui left floated animated button" type="button">

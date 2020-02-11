@@ -50,7 +50,7 @@ class Route_controller {
         //Se obtienen las condiciones relacionadas con la ruta obtenida
         let Condiciones = await route_conditions.findOne({
           where: {
-            route_id: Ruta.id
+            IDRuta: Ruta.IDRuta
           }
         });
         console.log(Ruta);
@@ -102,26 +102,26 @@ class Route_controller {
         console.log(req.body); //Impresión del cuerpo de la petición
         //Guardado en BD de la ruta estándar
         var ruta = await Route.create({
-          name,
-          enabled,
+          Nombre: name,
+          Habilitado: enabled,
         });
         //Guardado en la BD de las condiciones de la ruta
         var conditions = await route_conditions.create({
-          monday,
-          monday_frequency,
-          tuesday,
-          tuesday_frequency,
-          wednesday,
-          wednesday_frequency,
-          thursday,
-          thursday_frequency,
-          friday,
-          friday_frequency,
-          saturday,
-          saturday_frequency,
-          sunday,
-          sunday_frequency,
-          route_id: ruta.id
+          Lunes: monday,
+          CantidadMotoristasLunes: monday_frequency,
+          Martes: tuesday,
+          CantidadMotoristasMartes: tuesday_frequency,
+          Miercoles: wednesday,
+          CantidadMotoristasMiercoles: wednesday_frequency,
+          Jueves: thursday,
+          CantidadMotoristasJueves: thursday_frequency,
+          Viernes: friday,
+          CantidadMotoristasViernes: friday_frequency,
+          Sabado: saturday,
+          CantidadMotoristasSabado: saturday_frequency,
+          Domingo: sunday,
+          CantidadMotoristasDomingo: sunday_frequency,
+          IDRuta: ruta.IDRuta
         });
         console.log(conditions);
         console.log(ruta);
@@ -178,32 +178,32 @@ class Route_controller {
         console.log(req.body); //Impresión del cuerpo de la petición
         //Actualización en la BD de las condiciones de la ruta
         await route_conditions.update({
-          monday,
-          monday_frequency,
-          tuesday,
-          tuesday_frequency,
-          wednesday,
-          wednesday_frequency,
-          thursday,
-          thursday_frequency,
-          friday,
-          friday_frequency,
-          saturday,
-          saturday_frequency,
-          sunday,
-          sunday_frequency,
+          Lunes: monday,
+          CantidadMotoristasLunes: monday_frequency,
+          Martes: tuesday,
+          CantidadMotoristasMartes: tuesday_frequency,
+          Miercoles: wednesday,
+          CantidadMotoristasMiercoles: wednesday_frequency,
+          Jueves: thursday,
+          CantidadMotoristasJueves: thursday_frequency,
+          Viernes: friday,
+          CantidadMotoristasViernes: friday_frequency,
+          Sabado: saturday,
+          CantidadMotoristasSabado: saturday_frequency,
+          Domingo: sunday,
+          CantidadMotoristasDomingo: sunday_frequency,
         }, {
           where: {
-            id: route_conditions_id
+            IDCondicionesRuta: route_conditions_id
           }
         });
         //Actualización en la BD de la ruta estándar
         await Route.update({
-          name,
-          enabled
+          Nombre: name,
+          Habilitado: enabled
         }, {
           where: {
-            id: route_id
+            IDRuta: route_id
           }
         });
         const query = querystring.stringify({
@@ -228,7 +228,7 @@ class Route_controller {
       let exists; //Bandera
       //Obtiene solo el campo 'name' de la tabla de rutas en la BD.
       let Rutas = await Route.findAll({
-        attributes: ['name']
+        attributes: ['Nombre']
       });
       /* Itera los nombres obtenidos de la BD y compara cada uno con el nombre que proviene del campo
       en la vista. Si son iguales, se indica en la bandera y se rompe el ciclo. */

@@ -51,7 +51,7 @@ class Migration {
             alter: false
         }); */
         /* Direccion.sync({
-            alter: true
+            force: true
         }); */
         /* Frequent_Place.sync({
             alter: false
@@ -82,12 +82,11 @@ class Migration {
             alter: false
         }); */
         /* Route.sync({
-            alter: false
+            force: true
+        }); 
+        Route_conditions.sync({
+            force: true
         }); */
-        /*
-                Route_conditions.sync({
-                    alter: false
-                }); */
         /* User.sync({
             alter: false
         });
