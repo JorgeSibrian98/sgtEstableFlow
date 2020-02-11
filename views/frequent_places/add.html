@@ -21,10 +21,10 @@
                             <select class="ui fluid dropdown" id="ruta" name="ruta">
                                 <option value="">--Seleccione una ruta--</option>
                                 {% for r in rutas %}
-                                {% if(r.id == ruta) %}
-                                <option value="{{ r.id }}" selected>{{ r.name }}</option>
+                                {% if(r.IDRuta == ruta) %}
+                                <option value="{{ r.IDRuta }}" selected>{{ r.Nombre }}</option>
                                 {% else %}
-                                <option value="{{ r.id }}">{{ r.name }}</option>
+                                <option value="{{ r.IDRuta }}">{{ r.Nombre }}</option>
                                 {% endif %}
                                 {% endfor %}
                             </select>
