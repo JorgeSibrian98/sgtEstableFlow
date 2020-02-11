@@ -4,14 +4,23 @@ const frequent_places = require('./m_lugares_frecuentes');
 const route_conditions = require('./m_route_conditions');
 
 const Route = db.define('TRA_Ruta', {
-  name: {
+  IDRuta: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    primaryKey: true,
+    autoIncrement: true,
+    validate: {
+      notEmpty: true,
+    }
+  },
+  Nombre: {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
       notEmpty: true,
     }
   },
-  enabled: {
+  Habilitado: {
     type: Sequelize.BOOLEAN,
     allowNull: false,
     defaultValue: true,
@@ -19,22 +28,24 @@ const Route = db.define('TRA_Ruta', {
       notEmpty: true,
     }
   },
-  created_by: {
-    type: Sequelize.INTEGER
+  CreadoPor: {
+    type: Sequelize.CHAR(10),
+    allowNull: true
   },
-  updated_by: {
-    type: Sequelize.INTEGER
+  ActualizadoPor: {
+    type: Sequelize.CHAR(10),
+    allowNull: true
   },
 }, {
-  underscored: true,
+  underscored: false,
   timestamps: true,
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
+  createdAt: 'FechaCreacion',
+  updatedAt: 'FechaActualizacion',
   freezeTableName: true,
 });
 
 Route.hasOne(route_conditions, {
-  foreignKey: 'route_id',
+  foreignKey: 'IDRuta',
   onDelete: 'cascade'
 });
 
