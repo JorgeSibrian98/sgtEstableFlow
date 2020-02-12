@@ -10,8 +10,8 @@ const Address = require('../models/m_direccion');
 const Op = Sequelize.Op;
 const querystring = require('querystring');
 const auth_controller = require('../controllers/c_auth');
-
-
+const UbicacionesGeograficas = require('../models/m_ubicaciones_geograficas');
+const Mision = require('../models/m_mision');
 //Manejo de fechas
 var moment = require('moment');
 moment.locale("Es-SV")
@@ -36,14 +36,19 @@ class folo6_controllers {
     //Gets Departments List
     async getDepartmentList(req, res) {
         try {
-            let Departamentos = await UbicacionesGeograficas.findAll({
-                attributes: ['CodigoUbicacionGeografica', 'NombreUbicacionGeografica'],
-                where: {
-                  CodigoUbicacionGeograficaSuperior: 'ES'
-                }
-              });
+            /*    let Departamentos = await UbicacionesGeograficas.findAll({
+                   attributes: ['CodigoUbicacionGeografica', 'NombreUbicacionGeografica'],
+                   where: {
+                       CodigoUbicacionGeograficaSuperior: 'ES'
+                   }
+               }); */
+
+            let misiones = await Mision.findAll({
+                attributes: ['Nombre']
+
+            })
             return res.render('./folo6/folo6.html', {
-                Departamentos
+                // Departamentos
             });
         } catch (error) {
             console.log(error);

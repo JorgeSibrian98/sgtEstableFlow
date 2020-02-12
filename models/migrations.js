@@ -30,6 +30,15 @@ const Vehicle_folo6_assign = require('../models/m_vehicle_folo6_assign'); */
 
 class Migration {
     constructor() {
+        Mision.sync({
+            alter: false
+        });
+        Folo6.sync({
+            alter: false
+        });
+        Places_container.sync({
+            alter: false
+        });
         /* 
         Driver.sync({
             alter: false

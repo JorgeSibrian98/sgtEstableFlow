@@ -1,11 +1,22 @@
 const Sequelize = require('sequelize');
 const db = require('../dbconfig/conex');
 const Place_container = require('./m_places_container');
+const Mision = require('./m_mision');
+
 //const Voucher_folo6_assign = require('./m_voucher_folo6_assign');
 //const Folo6_Approve = require('./m_folo6_approve_state');
 //const Vehicle_folo6_assign = require('./m_vehicle_folo6_assign');
 
 const Folo6 = db.define('SGT_Folo6', {
+    IDMision: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        allowNull: false,
+        autoIncrement: true,
+        validate: {
+            notEmpty: true,
+        }
+    },
     request_unit: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -13,79 +24,73 @@ const Folo6 = db.define('SGT_Folo6', {
             notEmpty: true,
         }
     },
-    off_date: {
+    FechaSalida: {
         type: Sequelize.DATE,
         allowNull: false,
         validate: {
             notEmpty: true,
         }
     },
-    off_hour: {
+    HoraSalida: {
         type: Sequelize.TIME,
         allowNull: false,
         validate: {
             notEmpty: true,
         }
     },
-    return_hour: {
+    HoraRetorno: {
         type: Sequelize.TIME,
         allowNull: false,
         validate: {
             notEmpty: true,
         }
     },
-    passengers_number: {
+    CantidadDePasajeros: {
         type: Sequelize.INTEGER,
         allowNull: false,
         validate: {
             notEmpty: true,
         }
     },
-    with_driver: {
+    ConMotorista: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         validate: {
             notEmpty: true,
         }
     },
-    person_who_drive: {
+    PersonaQueConducira: {
         type: Sequelize.STRING(100),
         allowNull: true,
     },
-    license_type: {
+    TipoDeLicencia: {
         type: Sequelize.STRING(30),
         allowNull: true,
     },
-    mission: {
-        type: Sequelize.STRING(150),
-        allowNull: false,
-        validate: {
-            notEmpty: true,
-        }
-    },
-    observation: {
+    Observacion: {
         type: Sequelize.STRING(150),
         allowNull: true,
     },
-    created_by: {
-        type: Sequelize.INTEGER,
+    CreadoPor: {
+        type: Sequelize.CHAR(10),
         allowNull: true,
-    },
-    updated_by: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-    },
+    }
 }, {
     underscored: true,
     timestamps: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
+    createdAt: 'FechaCreacion',
+    updatedAt: 'FechaActualizacion',
     freezeTableName: true,
 });
 
 Folo6.hasMany(Place_container, {
     foreignKey: 'folo_id',
     onDelete: 'CASCADE'
+});
+
+Folo6.hasMany(Mision, {
+    foreignKey: 'IDMision',
+    onDelete: 'CASCADE',
 });
 
 /* Folo6.hasMany(Voucher_folo6_assign, {

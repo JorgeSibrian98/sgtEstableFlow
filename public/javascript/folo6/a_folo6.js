@@ -14,7 +14,7 @@ function showLoadingDimmer() {
 }
 
 
-$(document).ready(function () {
+/*$(document).ready(function () {
     showLoadingDimmer()
     $.ajax({
         url: '/empleado/info',
@@ -34,7 +34,7 @@ $(document).ready(function () {
         $('body').dimmer('hide');
     });
 
-});
+});*/
 
 //VALIDACION DEL FORM
 $('.ui.form').form({
