@@ -1,14 +1,14 @@
 const Sequelize = require('sequelize');
 const db = require('../dbconfig/conex');
-const Place_container = require('./m_places_container');
+const Place_container = require('./m_lugares_contenedor');
 const Mision = require('./m_mision');
-
+const Usuario = require('./m_usuario');
 //const Voucher_folo6_assign = require('./m_voucher_folo6_assign');
 //const Folo6_Approve = require('./m_folo6_approve_state');
 //const Vehicle_folo6_assign = require('./m_vehicle_folo6_assign');
 
-const Folo6 = db.define('SGT_Folo6', {
-    IDMision: {
+const Folo6 = db.define('TRA_Folo6', {
+    IDFolo: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         allowNull: false,
@@ -17,7 +17,7 @@ const Folo6 = db.define('SGT_Folo6', {
             notEmpty: true,
         }
     },
-    request_unit: {
+    IDRelacionUbicacion: {
         type: Sequelize.INTEGER,
         allowNull: false,
         validate: {
@@ -76,15 +76,19 @@ const Folo6 = db.define('SGT_Folo6', {
         allowNull: true,
     }
 }, {
-    underscored: true,
+    underscored: false,
     timestamps: true,
     createdAt: 'FechaCreacion',
     updatedAt: 'FechaActualizacion',
     freezeTableName: true,
 });
 
+Usuario.hasMany(Folo6, {
+    foreignKey: 'CreadoPor'
+});
+
 Folo6.hasMany(Place_container, {
-    foreignKey: 'folo_id',
+    foreignKey: 'IDFolo',
     onDelete: 'CASCADE'
 });
 

@@ -1,5 +1,5 @@
 const Address = require('../models/m_direccion');
-//const place_container = require('../models/m_places_container');
+//const place_container = require('../models/m_lugares_contenedor');
 const UbicacionesGeograficas = require('../models/m_ubicaciones_geograficas');
 
 //Manejo de fechas

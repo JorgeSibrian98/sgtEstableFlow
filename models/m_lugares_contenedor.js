@@ -4,37 +4,46 @@ const Address = require('./m_direccion');
 const Frequent_Place = require('./m_lugares_frecuentes');
 const Folo_06 = require('./m_folo6');
 
-const Places_container = db.define('SGT_Lugares_Contenedor', {
-    date_of_visit: {
+const Places_container = db.define('TRA_Lugares_Contenedor', {
+    IDLugarContenedor: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        allowNull: false,
+        autoIncrement: true,
+        validate: {
+            notEmpty: true,
+        }
+    },
+    FechaDeVisita: {
         type: Sequelize.DATEONLY,
         allowNull: true,
         validate: {
             notEmpty: true,
         }
     },
-    created_by: {
+    CreadoPor: {
         type: Sequelize.INTEGER,
         allowNull: true,
     },
-    updated_by: {
+    ActualizadoPor: {
         type: Sequelize.INTEGER,
         allowNull: true,
     },
 }, {
-    underscored: true,
+    underscored: false,
     timestamps: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
+    createdAt: 'FechaCreacion',
+    updatedAt: 'FechaActualizacion',
     freezeTableName: true,
 });
 
 Address.belongsTo(Places_container, {
-    foreignKey: 'container_id',
+    foreignKey: 'IDLugarContenedor',
     onDelete: 'cascade'
 });
 
 Places_container.belongsTo(Frequent_Place, {
-    foreignKey: 'frequent_place_id'
+    foreignKey: 'IDLugarFrecuente'
 });
 
 module.exports = Places_container;
