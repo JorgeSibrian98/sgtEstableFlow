@@ -115,8 +115,8 @@ class auth_controller {
     redirectByRol(roles_names) {
         var url = encodeURI('/home');;
 
-        if (roles_names.includes('emp       ')) url = encodeURI('/solicitud_nueva');
-        if (roles_names.includes('unitC ')) url = encodeURI('/vales');
+        if (roles_names.includes('emp')) url = encodeURI('/solicitud_nueva');
+        if (roles_names.includes('unitC')) url = encodeURI('/vales');
         if (roles_names.includes('adminIT')) url = encodeURI('/usuarios');
         if (roles_names.includes('adminV')) url = encodeURI('/asignacion_de_combustible/vales');
         if (roles_names.includes('adminVe')) url = encodeURI('/vehiculos');

@@ -2,7 +2,6 @@ const Sequelize = require('sequelize');
 const db = require('../dbconfig/conex');
 const Address = require('./m_direccion');
 const Frequent_Place = require('./m_lugares_frecuentes');
-const Folo_06 = require('./m_folo6');
 
 const Places_container = db.define('TRA_Lugares_Contenedor', {
     IDLugarContenedor: {

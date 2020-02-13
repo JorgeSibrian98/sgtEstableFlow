@@ -10,35 +10,30 @@ const Frequent_Place = require('./m_lugares_frecuentes');
 const Voucher = require('./m_voucher');
 const Voucher_procu_assign = require('./m_voucher_procu_assign');
 const Voucher_folo6_assign = require('./m_voucher_folo6_assign');
-const Folo6 = require('./m_folo6');
+
 const Employee = require('./m_employee');
 const Unit = require('./m_unit');
-const Places_container = require('./m_lugares_contenedor');
 const Folo6_Approve_State = require('./m_folo6_approve_state');
  */
+const Folo6 = require('./m_folo6');
+const Places_container = require('./m_lugares_contenedor');
+
 const User = require('./m_usuario');
 const Rol = require('./m_perfil');
 const UserRol = require('./m_usuario_por_perfil');
 const Reporte = require('./m_reporte');
 const ReportePorPerfil = require('./m_reporte_por_perfil');
+const Mision = require('../models/m_mision');
+
 /* const ProcurementBill = require('./m_bill');
 const CosumedBill = require('./m_bill_close');
-const Mision = require('../models/m_mision');
 const Driver = require('./m_driver');
 const Driver_assign = require('./m_driver_assign');
 const Vehicle_folo6_assign = require('../models/m_vehicle_folo6_assign'); */
 
 class Migration {
     constructor() {
-        Mision.sync({
-            alter: false
-        });
-        Folo6.sync({
-            alter: false
-        });
-        Places_container.sync({
-            alter: false
-        });
+
         /* 
         Driver.sync({
             alter: false

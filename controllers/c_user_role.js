@@ -91,15 +91,22 @@ class user_role_controller {
     */
     async getList(user) {
         try {
+            //Array que contendra los roles que posee el usuario
             var linked_roles = [];
-            var roles = await User_Role.findAll({
+
+            await User_Role.findAll({
+                attributes: ['CodigoPerfil'],
                 where: {
                     CodigoUsuario: user.CodigoUsuario
                 }
+            }).then(roles => {
+                //Por cada tupla encontrada
+                roles.forEach(rol => {
+                    //Asigna rol sin espacios
+                    linked_roles.push((rol.CodigoPerfil).trim());
+                })
             });
-            roles.forEach(role => {
-                linked_roles.push(role);
-            })
+
             console.log("Lista de roles enviada: " + linked_roles);
             return linked_roles;
         } catch (error) {

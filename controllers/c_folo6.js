@@ -44,11 +44,14 @@ class folo6_controllers {
                }); */
 
             let misiones = await Mision.findAll({
-                attributes: ['Nombre']
-
+                attributes: ['IDMision', 'NombreMision'],
+                where: {
+                    MisionActiva: '1'
+                }
             })
             return res.render('./folo6/folo6.html', {
                 // Departamentos
+                misiones
             });
         } catch (error) {
             console.log(error);
@@ -1629,7 +1632,7 @@ class folo6_controllers {
         console.dir("form: " + JSON.stringify(motorista + "Y del tipo:" + typeof (motorista)));
         form = JSON.parse(req.body.form);
         console.dir("form: " + JSON.stringify(form));
-        emp = JSON.parse(req.body.emp);
+        empInfo = JSON.parse(req.body.empInfo);
         console.dir("emp: " + JSON.stringify(emp) + "id: " + emp.id);
         fplaces = JSON.parse(req.body.fplaces)
         console.dir("Recibi estos lugares frecuentes: " + fplaces);
@@ -1658,14 +1661,14 @@ class folo6_controllers {
                 //Si en el folo 6 selecciono motorista se llenará con estos datos la BD
                 if (motorista) {
                     folo = await Folo6.create({
-                        request_unit: emp.unit_id,
-                        off_date: date,
-                        off_hour: t,
-                        return_hour: t1,
-                        passengers_number: form.passengers_i,
-                        with_driver: motorista,
-                        person_who_drive: null,
-                        license_type: null,
+                        IDRelacionUbicacion: empInfo.IDRelacionUnidadUbicacion,
+                        FechaSalida: date,
+                        HoraSalida: t,
+                        HoraRetorno: t1,
+                        CantidadDePasajeros: form.passengers_i,
+                        ConMotorista: motorista,
+                        PersonaQueConducira: null,
+                        TipoDeLicencia: null,
                         mission: form.mision_i,
                         observation: form.details_i,
                         created_by: emp.id

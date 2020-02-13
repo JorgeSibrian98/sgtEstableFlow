@@ -92,7 +92,7 @@ Folo6.hasMany(Place_container, {
     onDelete: 'CASCADE'
 });
 
-Folo6.hasMany(Mision, {
+Folo6.hasOne(Mision, {
     foreignKey: 'IDMision',
     onDelete: 'CASCADE',
 });
