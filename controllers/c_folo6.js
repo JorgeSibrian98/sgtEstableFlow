@@ -1626,19 +1626,23 @@ class folo6_controllers {
     };
     //Este metodo recibe los parametros del req y con ellos crea el folo en la BD
     async createFolo6(req, res) {
-        var form, emp, date, motorista, fplaces, address, folo;
+        var form, empInfo, date, motorista, fplaces, address, folo;
         //Convierte los json enviados por un post de ajax
         motorista = JSON.parse(req.body.motorista);
         console.dir("form: " + JSON.stringify(motorista + "Y del tipo:" + typeof (motorista)));
         form = JSON.parse(req.body.form);
         console.dir("form: " + JSON.stringify(form));
         empInfo = JSON.parse(req.body.empInfo);
-        console.dir("emp: " + JSON.stringify(emp) + "id: " + emp.id);
+        //console.dir("emp: " + JSON.stringify(empInfo) );
         fplaces = JSON.parse(req.body.fplaces)
         console.dir("Recibi estos lugares frecuentes: " + fplaces);
         address = JSON.parse(req.body.address)
         console.dir("Recibi estas direcciones: " + address)
 
+        const token = auth_controller.decode_token(req.cookies.token);
+        empInfo.user = token.user;
+
+        console.log("LA MISION QUE TRAE ES" + form.mision_i, )
         try {
             const errors = validationResult(req);
             //Conversion al formato permitido por sequelize YYYY-MM-DD y horas HH:mm (Formato 24 hrs)
@@ -1669,9 +1673,9 @@ class folo6_controllers {
                         ConMotorista: motorista,
                         PersonaQueConducira: null,
                         TipoDeLicencia: null,
-                        mission: form.mision_i,
-                        observation: form.details_i,
-                        created_by: emp.id
+                        IDMision: form.mision_i,
+                        Observacion: form.details_i,
+                        CreadoPor: empInfo.user.CodigoUsuario,
                         // procuraduria_id: emp.procuraduria_id
                     });
                     //Folo creado
@@ -1681,17 +1685,17 @@ class folo6_controllers {
                     //Si en el folo 6 NO selecciono motorista se llenará con estos datos la BD
 
                     folo = await Folo6.create({
-                        request_unit: emp.unit_id,
-                        off_date: date,
-                        off_hour: t,
-                        return_hour: t1,
-                        passengers_number: form.passengers_i,
-                        with_driver: motorista,
-                        person_who_drive: form.name_driver_i,
-                        license_type: form.license_ls,
-                        mission: form.mision_i,
-                        observation: form.details_i,
-                        created_by: emp.id,
+                        IDRelacionUbicacion: empInfo.IDRelacionUnidadUbicacion,
+                        FechaSalida: date,
+                        HoraSalida: t,
+                        HoraRetorno: t1,
+                        CantidadDePasajeros: form.passengers_i,
+                        ConMotorista: motorista,
+                        PersonaQueConducira: form.name_driver_i,
+                        TipoDeLicencia: form.license_ls,
+                        IDMision: form.mision_i,
+                        Observacion: form.details_i,
+                        CreadoPor: empInfo.user.CodigoUsuario,
                         //procuraduria_id: emp.procuraduria_id
                     });
                     console.dir("Folo creado" + folo);
