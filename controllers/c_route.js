@@ -5,6 +5,7 @@ const {
   validationResult
 } = require('express-validator');
 const querystring = require('querystring');
+const Authorize = require('./c_auth');
 
 class Route_controller {
   constructor() {}
@@ -72,6 +73,7 @@ class Route_controller {
     try {
       //Se llena variable con los resultados de la validación
       const errors = validationResult(req);
+      const token = Authorize.decode_token(req.cookies.token);
       let {
         name,
         monday,
@@ -104,6 +106,7 @@ class Route_controller {
         var ruta = await Route.create({
           Nombre: name,
           Habilitado: enabled,
+          CreadoPor: token.user.CodigoUsuario
         });
         //Guardado en la BD de las condiciones de la ruta
         var conditions = await route_conditions.create({
@@ -121,7 +124,8 @@ class Route_controller {
           CantidadMotoristasSabado: saturday_frequency,
           Domingo: sunday,
           CantidadMotoristasDomingo: sunday_frequency,
-          IDRuta: ruta.IDRuta
+          IDRuta: ruta.IDRuta,
+          CreadoPor: token.user.CodigoUsuario
         });
         console.log(conditions);
         console.log(ruta);
@@ -143,6 +147,7 @@ class Route_controller {
     try {
       //Se llena variable con los resultados de la validación
       const errors = validationResult(req);
+      const token = Authorize.decode_token(req.cookies.token);
       let {
         name,
         monday,
@@ -192,6 +197,7 @@ class Route_controller {
           CantidadMotoristasSabado: saturday_frequency,
           Domingo: sunday,
           CantidadMotoristasDomingo: sunday_frequency,
+          ActualizadoPor: token.user.CodigoUsuario
         }, {
           where: {
             IDCondicionesRuta: route_conditions_id
@@ -200,7 +206,8 @@ class Route_controller {
         //Actualización en la BD de la ruta estándar
         await Route.update({
           Nombre: name,
-          Habilitado: enabled
+          Habilitado: enabled,
+          ActualizadoPor: token.user.CodigoUsuario
         }, {
           where: {
             IDRuta: route_id

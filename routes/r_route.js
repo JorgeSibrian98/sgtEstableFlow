@@ -22,7 +22,7 @@ router.post('/gestionar', [
     body('name', 'El nombre debe ser menor a 40 caracteres.').isLength({
         max: 40
     }),
-    body('name', 'El nombre debe contener solo caracteres alfanuméricos.').matches(/^[a-zA-Záéíóúü0-9 ]+$/i),
+    body('name', 'El nombre debe contener solo caracteres alfanuméricos y el único caracter especial permitido es #.').matches(/^[a-zA-Záéíóúü0-9# ]+$/i),
     body('monday_frequency', 'Ingrese un valor entre 1 y 40 en el día lunes.').isNumeric({ gt: 1, lt: 40 }),
     body('tuesday_frequency', 'Ingrese un valor entre 1 y 40 en el día martes.').isNumeric({ gt: 1, lt: 40 }),
     body('wednesday_frequency', 'Ingrese un valor entre 1 y 40 en el día miércoles.').isNumeric({ gt: 1, lt: 40 }),
