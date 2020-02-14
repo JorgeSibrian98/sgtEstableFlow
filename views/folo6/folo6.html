@@ -27,7 +27,7 @@
                                     <label id="name_lb">-------,------</label>
                                 </div>
                             </div>
-                            <div class="six wide field">
+                            <div class="ten wide field">
                                 <div class="pair-labels">
                                     <strong>Ubicación: </strong>
                                     <label id="ubicacion_lb">Oficina ------</label>
@@ -112,9 +112,11 @@
                                     <option value="">--Seleccione un departamento--</option>
                                     {% for dep in Departamentos %}
                                     {% if (dep.CodigoUbicacionGeografica == departamento) %}
-                                    <option value="{{ dep.CodigoUbicacionGeografica }}" selected>{{ dep.NombreUbicacionGeografica }}</option>
+                                    <option value="{{ dep.CodigoUbicacionGeografica }}" selected>
+                                        {{ dep.NombreUbicacionGeografica }}</option>
                                     {% else %}
-                                    <option value="{{ dep.CodigoUbicacionGeografica }}">{{ dep.NombreUbicacionGeografica }}</option>
+                                    <option value="{{ dep.CodigoUbicacionGeografica }}">
+                                        {{ dep.NombreUbicacionGeografica }}</option>
                                     {% endif %}
                                     {% endfor %}
                                 </select>
