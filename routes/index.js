@@ -20,8 +20,8 @@ const {
 
 router.get('/home', (req, res) => {
     var username = req.query.usuario;
-    console.log("token")
-    console.log(req.cookies.token);
+    //console.log("token")
+    // console.log(req.cookies.token);
     res.render('home.html', {
         username
     });
