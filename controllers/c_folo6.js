@@ -1491,10 +1491,12 @@ class folo6_controllers {
                 //var today = moment().format("DD MMMM YYYY");
                 var trully = moment().isBefore(moment.utc(row.FechaSalida))
                 //console.log("FECHA ES: " + trully);
-                if (trully)
+                //Descomentar cuando ya se habilite el editar, eliminar e imprimir
+                /* if (trully)
                     el.buttons = '<i id="' + row.IDFolo + '" class="large print black link icon "></i><i id="' + row.IDFolo + '" class="large file grey alternate outline link icon "></i><a href="/solicitud_nueva/edit/' + row.IDFolo + '"><i class="large pencil yellow alternate link icon"></i></a><i class="large trash red alternate outline link icon" id="' + row.IDFolo + '"></i>';
                 else
                     el.buttons = '<i id="' + row.IDFolo + '" class="large print black link icon "></i><i id="' + row.IDFolo + '" class="large file grey alternate outline link icon "></i>'
+                 */
                 data.push(el);
             });
             //console.dir(data);
