@@ -59,4 +59,8 @@ router.get('/getPlaces', (req, res) => {
     controller.getPlacesByMunicipio(req, res);
 });
 
+router.post('/LugarExists', (req, res) => {
+    controller.LugarExists(req, res);
+});
+
 module.exports = router;
