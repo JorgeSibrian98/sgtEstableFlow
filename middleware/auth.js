@@ -57,7 +57,7 @@ exports.authorize = (...roles) => {
                 //Roles que posee el usuario
                 token.roles.forEach((rol, i) => {
                     //Si el rol asignado a la url es igual al rol del usuario, entonces, posee permisos
-                    if (rolDef == rol.CodigoPerfil) {
+                    if (rolDef == rol) {
                         have_rol = true;
                     };
                 })

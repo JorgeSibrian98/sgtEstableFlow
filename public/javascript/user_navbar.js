@@ -45,8 +45,6 @@ $(function () {
 
         getMenuOptions(roles);
     });
-
-
 });
 
 $('#username').change(getMenuOptions(roles));
@@ -78,7 +76,7 @@ function getMenuOptions(_roles) {
             case "unitC":
                 menuOptions = menuOptions.concat(unitC);
                 break;
-            case "dminV":
+            case "adminV":
                 break;
         }
     }

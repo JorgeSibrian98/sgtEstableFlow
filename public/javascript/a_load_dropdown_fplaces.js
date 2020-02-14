@@ -15,14 +15,14 @@ function fillPlaces() {
                 $.each(places, function (index, place) {
                     if (place.id == sPlace) {
                         placesSelect.append($('<option/>', {
-                            value: place.id,
-                            text: place.name,
+                            value: place.IDLugarFrecuente,
+                            text: place.NombreLugarFrecuente,
                             selected: true,
                         }))
                     } else {
                         placesSelect.append($('<option/>', {
-                            value: place.id,
-                            text: place.name,
+                            value: place.IDLugarFrecuente,
+                            text: place.NombreLugarFrecuente,
                         }))
                     };
                 });

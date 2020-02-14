@@ -1,0 +1,207 @@
+{% extends 'index.html' %}
+{% block views %}
+<br>
+<div class="ui container dimmable">
+    <div class="ui vertically divided grid">
+        <div class="one column row">
+            <div class="column">
+                <form class="ui form" id="folo6_form" method="POST" autocomplete="off" novalidate>
+                    <h2 class="ui blue dividing header">Solicitud de transporte FOLO-6</h2>
+                    <div class="ui info message">
+                        <div class="header"><i class="top left exclamation circle fitted info icon"></i>
+                            Recuerde:
+                        </div> Si desea que el área de transporte trate de asignarle motorista, la solicitud debe
+                        realizarse al
+                        menos 3 días antes de la fecha de salida. De lo contrario deberá indicar sus datos, o los de la
+                        persona que conducirá. Además, solicitar motirista con anticipación no asegura que lo obtendrá.
+                    </div>
+                    <div class="ui segment head-labels">
+                        <div class="fields">
+                            <div class="six wide field">
+                                <div class="pair-labels">
+                                    <strong>Fecha de solicitud: </strong>
+                                    <label id="date_lb">--/--/--</label>
+                                </div>
+                                <div class="pair-labels">
+                                    <strong>Nombre del solicitante: </strong>
+                                    <label id="name_lb">-------,------</label>
+                                </div>
+                            </div>
+                            <div class="ten wide field">
+                                <div class="pair-labels">
+                                    <strong>Ubicación: </strong>
+                                    <label id="ubicacion_lb">Oficina ------</label>
+                                </div>
+                                <div class="pair-labels">
+                                    <strong>Unidad solicitante: </strong>
+                                    <label id="unidad_lb">Unidad ------</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="three wide field">
+                        <label for="calendar1">Fecha de salida: </label>
+                        <div class="ui calendar" id="standard_calendar">
+                            <div class="ui input left icon">
+                                <i class="calendar icon"></i>
+                                <input type="text" placeholder="Seleccione fecha" name="calendar1" autocomplete="off"
+                                    id="calendar1">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fields">
+                        <div class="three wide field">
+                            <label>Hora de salida: </label>
+                            <!-- TIMER -->
+                            <div class="ui calendar" id="time_calendar" name="time_calendar">
+                                <div class="ui input left icon">
+                                    <i class="time icon"></i>
+                                    <input type="text" placeholder="Seleccione la hora" id="time" autocomplete="off"
+                                        name="time">
+                                </div>
+                            </div>
+                        </div>
+                        <p></p>
+                        <div class="three wide field">
+                            <label>Hora de retorno: </label>
+                            <!-- TIMER -->
+                            <div class="ui calendar" id="time_calendar1">
+                                <div class="ui input left icon">
+                                    <i class="time icon"></i>
+                                    <input type="text" placeholder="Seleccione la hora" id="time1" autocomplete="off"
+                                        name="time1">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="two wide field">
+                        <label for="passengers_i">Cantidad de pasajeros: </label>
+                        <input type="number" name="passengers_i" min="1" max="40" value="1" id="passengers_i">
+                    </div>
+                    <div class="three wide field">
+                        <label for="driver_i">Con Motorista</label>
+                        <div class="ui toggle checkbox" id="driver_cb">
+                            <input type="checkbox" id="driver_i" name="driver_i" checked="checked" tabindex="0"
+                                class="hidden">
+                        </div>
+                    </div>
+                    <div class="fields">
+                        <div class="six wide required field" id="name_driver_f">
+                            <label for="name_driver_i">Nombre:</label>
+                            <input type="text" placeholder="Persona que va a conducir" name="name_driver_i"
+                                id="n_driver_i" disabled="true" maxlength="100">
+                        </div>
+                        <div class="required field" id="type_license_f">
+                            <label for="license_ls_id">Tipo de licencia:</label>
+                            <select class="ui fluid dropdown" name="license_ls" id="license_ls_id" disabled="true">
+                                <option value="">Tipo de licencia</option>
+                                <option value="Particular">Particular</option>
+                                <option value="Liviana">Liviana</option>
+                                <option value="Pesada">Pesada</option>
+                                <option value="Pesada-T">Pesada-T</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- área de rutas -->
+                    <h4 class="ui blue dividing header">Lugar de destino</h4>
+                    <div class="field">
+                        <div class="two fields">
+                            <div class="required field">
+                                <label>Departamento:</label>
+                                <select class="ui fluid dropdown" id="departamento" name="departamento">
+                                    <option value="">--Seleccione un departamento--</option>
+                                    {% for dep in Departamentos %}
+                                    {% if (dep.CodigoUbicacionGeografica == departamento) %}
+                                    <option value="{{ dep.CodigoUbicacionGeografica }}" selected>
+                                        {{ dep.NombreUbicacionGeografica }}</option>
+                                    {% else %}
+                                    <option value="{{ dep.CodigoUbicacionGeografica }}">
+                                        {{ dep.NombreUbicacionGeografica }}</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="required field">
+                                <label>Municipio:</label>
+                                <select class="ui fluid dropdown" id="municipio" name="municipio">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                            <input id="idmun" type="hidden" value="{{municipio}}">
+                        </div>
+                    </div>
+                    <div class="required field">
+                        <label>Lugar de destino:</label>
+                        <select class="ui fluid dropdown" id="fplaces" name="fplaces">
+                        </select>
+                        <input id="idfplaces" type="hidden" value="{{fplaces}}">
+                    </div>
+                    <div class="field" id="otherName">
+                        <label>Nombre del destino:</label>
+                        <input type="text" id="destiny_place_i" name="destiny_place_i" disabled="disabled">
+                    </div>
+                    <div class="field" id="otherDetail">
+                        <label>Detalle de dirección:</label>
+                        <textarea rows="3" id="direction_txt" name="direction_txt" disabled="disabled"
+                            placeholder="Calle x, pasaje y, local...."></textarea>
+                    </div>
+                    <button class="ui labeled icon button" id="addAddress" name="addAddress"><i
+                            class="plus icon"></i>Agregar
+                        dirección</button>
+                    <select class="ui fluid dropdown" id="createdAddress" name="createdAddress">
+                    </select>
+                    <select class="ui fluid dropdown" id="selectedFPlace" name="selectedFPlace">
+                    </select>
+                    <table class="ui center celled collapsing table tablet stackable" id="addressTable"
+                        name="addressTable" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Nombre del destino</th>
+                                <th>Detalle de la dirección</th>
+                                <th>Departamento</th>
+                                <th>Municipio</th>
+                                <th></th>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <h4 class="ui blue dividing header">Misión</h4>
+                    <div class="required field">
+                        <label for='mision_i_id'>Misión o motivo del viaje</label>
+                        <div class="required field">
+                            <select class="ui fluid dropdown" name="mision_i" id="mision_i_id">
+                                <option selected value="">Seleccione un motivo de viaje</option>
+                                {% for m in misiones %}
+                                <option value="{{ m.IDMision }}">{{ m.NombreMision }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Observaciones (Opcional)</label>
+                        <input type="text" name="details_i"
+                            placeholder="Llevaremos cajas pesadas, esperamos al motorista en la entrada del edificio central"
+                            maxlength="150" autocomplete="off" id="details_i">
+                    </div>
+                    <div class="ui error message"></div>
+                    <a href='/home'>
+                        <div class="ui left floated animated button" style="margin-bottom:1em" type="button"
+                            id="backBtn" name="backBtn">
+                            <div class="visible content">Volver</div>
+                            <div class="hidden content"><i class="left arrow icon"></i></div>
+                        </div>
+                    </a>
+                    <button class="ui right aligned green button" id="save_print_btn">Guardar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Validaciones-->
+<script src="/javascript/folo6/a_folo6.js"></script>
+<script src="/javascript/a_direccion.js"></script>
+<script src="/javascript/a_load_dropdown_fplaces.js"></script>
+
+<!-- estilos -->
+<link rel="stylesheet" type="text/css" href="/stylesheets/folo6.css">
+
+{% endblock %}
