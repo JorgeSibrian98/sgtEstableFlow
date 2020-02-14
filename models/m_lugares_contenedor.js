@@ -3,7 +3,7 @@ const db = require('../dbconfig/conex');
 const Address = require('./m_direccion');
 const Frequent_Place = require('./m_lugares_frecuentes');
 
-const Places_container = db.define('TRA_Lugares_Contenedor', {
+const Places_container = db.define('TRA_LugaresContenedor', {
     IDLugarContenedor: {
         type: Sequelize.INTEGER,
         primaryKey: true,
