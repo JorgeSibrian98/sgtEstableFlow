@@ -49,10 +49,8 @@ class auth_controller {
                     httpOnly: true
                 }
 
-                //Para traer los roles por sus nombres que permita identificar más fácilmente que rol le pertenece y una vez iniciada sesión, a que pantalla se le va a redirigir
-                var roles_names = this.getRolesNamesCodedToken(token)
                 //redirección según rol
-                var url = this.redirectByRol(roles_names);
+                var url = this.redirectByRol(roles);
 
                 /*ENVIO DE COOKIE */
                 res.cookie('token', token, options).redirect(url);
@@ -104,11 +102,8 @@ class auth_controller {
 
     getRolesNamesCodedToken(coded_token) {
         const token = this.decode_token(coded_token);
-        var roles = [];
-        token.roles.forEach(el => {
-            roles.push(el.CodigoPerfil);
-        });
-        console.log(roles);
+        var roles = token.roles;
+        //console.log(roles);
         return roles;
     }
 

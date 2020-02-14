@@ -36,7 +36,7 @@ router.get('/logout', (req, res) => {
 router.get('/userinfo', (req, res) => {
     try {
         const token = auth_controller.decode_token(req.cookies.token);
-        var roles = auth_controller.getRolesNames(token)
+        var roles = token.roles
 
         res.send({
             user: token.user,
