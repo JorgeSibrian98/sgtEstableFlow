@@ -1,7 +1,7 @@
 const db = require('../dbconfig/conex');
 const Sequelize = require('sequelize');
 const Folo6 = require('../models/m_folo6');
-const place_container = require('../models/m_places_container');
+const place_container = require('../models/m_lugares_contenedor');
 const FPlace = require('../models/m_lugares_frecuentes');
 const Address = require('../models/m_direccion');
 //const Apanel = require('../models/m_folo6_approve_state');
@@ -10,8 +10,8 @@ const Address = require('../models/m_direccion');
 const Op = Sequelize.Op;
 const querystring = require('querystring');
 const auth_controller = require('../controllers/c_auth');
-
-
+const UbicacionesGeograficas = require('../models/m_ubicaciones_geograficas');
+const Mision = require('../models/m_mision');
 //Manejo de fechas
 var moment = require('moment');
 moment.locale("Es-SV")
@@ -36,14 +36,22 @@ class folo6_controllers {
     //Gets Departments List
     async getDepartmentList(req, res) {
         try {
-            let Departamentos = await UbicacionesGeograficas.findAll({
-                attributes: ['CodigoUbicacionGeografica', 'NombreUbicacionGeografica'],
+            /*    let Departamentos = await UbicacionesGeograficas.findAll({
+                   attributes: ['CodigoUbicacionGeografica', 'NombreUbicacionGeografica'],
+                   where: {
+                       CodigoUbicacionGeograficaSuperior: 'ES'
+                   }
+               }); */
+
+            let misiones = await Mision.findAll({
+                attributes: ['IDMision', 'NombreMision'],
                 where: {
-                  CodigoUbicacionGeograficaSuperior: 'ES'
+                    MisionActiva: '1'
                 }
-              });
+            })
             return res.render('./folo6/folo6.html', {
-                Departamentos
+                // Departamentos
+                misiones
             });
         } catch (error) {
             console.log(error);
@@ -1618,19 +1626,23 @@ class folo6_controllers {
     };
     //Este metodo recibe los parametros del req y con ellos crea el folo en la BD
     async createFolo6(req, res) {
-        var form, emp, date, motorista, fplaces, address, folo;
+        var form, empInfo, date, motorista, fplaces, address, folo;
         //Convierte los json enviados por un post de ajax
         motorista = JSON.parse(req.body.motorista);
         console.dir("form: " + JSON.stringify(motorista + "Y del tipo:" + typeof (motorista)));
         form = JSON.parse(req.body.form);
         console.dir("form: " + JSON.stringify(form));
-        emp = JSON.parse(req.body.emp);
-        console.dir("emp: " + JSON.stringify(emp) + "id: " + emp.id);
+        empInfo = JSON.parse(req.body.empInfo);
+        //console.dir("emp: " + JSON.stringify(empInfo) );
         fplaces = JSON.parse(req.body.fplaces)
         console.dir("Recibi estos lugares frecuentes: " + fplaces);
         address = JSON.parse(req.body.address)
         console.dir("Recibi estas direcciones: " + address)
 
+        const token = auth_controller.decode_token(req.cookies.token);
+        empInfo.user = token.user;
+
+        console.log("LA MISION QUE TRAE ES" + form.mision_i, )
         try {
             const errors = validationResult(req);
             //Conversion al formato permitido por sequelize YYYY-MM-DD y horas HH:mm (Formato 24 hrs)
@@ -1653,17 +1665,17 @@ class folo6_controllers {
                 //Si en el folo 6 selecciono motorista se llenará con estos datos la BD
                 if (motorista) {
                     folo = await Folo6.create({
-                        request_unit: emp.unit_id,
-                        off_date: date,
-                        off_hour: t,
-                        return_hour: t1,
-                        passengers_number: form.passengers_i,
-                        with_driver: motorista,
-                        person_who_drive: null,
-                        license_type: null,
-                        mission: form.mision_i,
-                        observation: form.details_i,
-                        created_by: emp.id
+                        IDRelacionUbicacion: empInfo.IDRelacionUnidadUbicacion,
+                        FechaSalida: date,
+                        HoraSalida: t,
+                        HoraRetorno: t1,
+                        CantidadDePasajeros: form.passengers_i,
+                        ConMotorista: motorista,
+                        PersonaQueConducira: null,
+                        TipoDeLicencia: null,
+                        IDMision: form.mision_i,
+                        Observacion: form.details_i,
+                        CreadoPor: empInfo.user.CodigoUsuario,
                         // procuraduria_id: emp.procuraduria_id
                     });
                     //Folo creado
@@ -1673,17 +1685,17 @@ class folo6_controllers {
                     //Si en el folo 6 NO selecciono motorista se llenará con estos datos la BD
 
                     folo = await Folo6.create({
-                        request_unit: emp.unit_id,
-                        off_date: date,
-                        off_hour: t,
-                        return_hour: t1,
-                        passengers_number: form.passengers_i,
-                        with_driver: motorista,
-                        person_who_drive: form.name_driver_i,
-                        license_type: form.license_ls,
-                        mission: form.mision_i,
-                        observation: form.details_i,
-                        created_by: emp.id,
+                        IDRelacionUbicacion: empInfo.IDRelacionUnidadUbicacion,
+                        FechaSalida: date,
+                        HoraSalida: t,
+                        HoraRetorno: t1,
+                        CantidadDePasajeros: form.passengers_i,
+                        ConMotorista: motorista,
+                        PersonaQueConducira: form.name_driver_i,
+                        TipoDeLicencia: form.license_ls,
+                        IDMision: form.mision_i,
+                        Observacion: form.details_i,
+                        CreadoPor: empInfo.user.CodigoUsuario,
                         //procuraduria_id: emp.procuraduria_id
                     });
                     console.dir("Folo creado" + folo);

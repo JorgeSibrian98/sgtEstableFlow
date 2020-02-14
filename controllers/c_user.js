@@ -71,11 +71,12 @@ class user_controller {
         try {
             let user;
             /* Consulta a la tabla de SIS_USUARIO */
-            await db.query('SELECT CodigoUsuario,ApellidosUsuario,NombresUsuario,CodigoUsuarioSupervisor FROM SIS_Usuarios WHERE CodigoUsuario = ? AND  dbo.SIS_FU_DesencriptarClave(ClaveUsuario) = ?', {
+            await db.query('SELECT RTRIM([CodigoUsuario]) as "CodigoUsuario" ,ApellidosUsuario,NombresUsuario,CodigoUsuarioSupervisor FROM SIS_Usuarios WHERE CodigoUsuario = ? AND  dbo.SIS_FU_DesencriptarClave(ClaveUsuario) = ?', {
                 replacements: [cod_usuario, password],
                 type: db.QueryTypes.SELECT
             }).then(data => {
                 user = data[0];
+                //console.log("CODIGO CON TRIM " + user.CodigoUsuario.trim() + "fin")
             });
             //console.dir(user);
             return user

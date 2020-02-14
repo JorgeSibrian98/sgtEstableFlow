@@ -1,7 +1,5 @@
 const Address = require('../models/m_direccion');
-const express = require('express');
-const Sequelize = require('sequelize');
-//const place_container = require('../models/m_places_container');
+//const place_container = require('../models/m_lugares_contenedor');
 const UbicacionesGeograficas = require('../models/m_ubicaciones_geograficas');
 
 //Manejo de fechas
@@ -14,19 +12,6 @@ const {
 
 class address_services {
   constructor() {}
-  //Gets Addresses list
-  async getList(req, res) {
-    try {
-      var Direcciones = await Address.findAll({
-        include: ['city', 'department']
-      });
-      return res.render('../views/address/list.html', {
-        Direcciones
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   //Gets Departments List
   async getDepartmentList(req, res) {
@@ -87,20 +72,20 @@ class address_services {
           // guardará depto y municipio del dropdown; nombre y dirección de los inputs.
           console.log("GUARDAR DIRECCION con el contenedor" + container.id)
           dir = await Address.create({
-            name: destinyPlace,
-            detail: direction, //Creo dirección
-            city_id: idSelMun,
-            department_id: idSelDepto,
+            Nombre: destinyPlace,
+            Detalle: direction, //Creo dirección
+            Cod_mun: idSelMun,
+            Cod_depto: idSelDepto,
             container_id: container.id
           });
         } else {
           // guardará depto y municipio del dropdown; nombre y dirección de los inputs.
           console.log("GUARDAR DIRECCION sn contenedor")
           dir = await Address.create({
-            name: destinyPlace,
-            detail: direction, //Creo dirección
-            city_id: idSelMun,
-            department_id: idSelDepto,
+            Nombre: destinyPlace,
+            Detalle: direction, //Creo dirección
+            Cod_mun: idSelMun,
+            Cod_depto: idSelDepto,
           });
         }
       } else {
@@ -119,60 +104,6 @@ class address_services {
     };
   };
 
-  //Gets departments list and renders edit form
-  async getUpdate(req, res) {
-    try {
-      let address_id = req.query.address_id;
-      console.log(address_id);
-      let Direccion = await Address.findByPk(address_id);
-      let Departamentos = await department_controller.getList();
-      return res.render('../views/direccion/edit.html', {
-        Direccion,
-        Departamentos
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  //Saves the edited address in the DB.
-  async updateAddress(req, res) {
-    try {
-      const errors = validationResult(req);
-      let {
-        address_id,
-        detail,
-        departamento,
-        municipio,
-      } = req.body;
-      console.log(errors.array());
-      if (!errors.isEmpty()) {
-        //If there are errors, renders the same form, otherwise saves the edited Address
-        let Direccion = await Address.findByPk(route_id);
-        let Departamentos = await department_controller.getList();
-        res.render('../views/direccion/edit.html', {
-          Direccion,
-          Departamentos,
-          errors: errors.array()
-        });
-      } else {
-        console.log(req.body);
-        Address.update({
-          detail,
-          city_id: municipio,
-          department_id: departamento
-        }, {
-          where: {
-            id: address_id
-          }
-        });
-        res.redirect('/direccion');
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   //Elimina la dirección creada a través del ícono en la tabla.
   async deleteAddress(req, res) {
     try {
@@ -189,7 +120,7 @@ class address_services {
       });
       await Address.destroy({ //Eliminación de la dirección.
         where: {
-          id: id_address,
+          IDDireccion: id_address,
         }
       });
     } catch (error) {
@@ -209,7 +140,7 @@ class address_services {
           let value = req.body[key];
           await Address.destroy({ //Eliminación de las direcciones.
             where: {
-              id: value,
+              IDDireccion: value,
             }
           });
           console.log('Se eliminó la dirección con el id ' + value); //Mensaje de éxito.

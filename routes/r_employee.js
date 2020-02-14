@@ -21,7 +21,7 @@ router.get('/info', (req, res) => {
     try {
         const token = auth_controller.decode_token(req.cookies.token);
         var user = token.user;
-        console.log("Se buscará al usuario: " + user.first_name + " " + user.last_name);
+        console.log("Se buscará al usuario: " + user.NombresUsuario + " " + user.ApellidosUsuario);
         controller.findById(user, req, res);
     } catch (err) {
         console.log(err)

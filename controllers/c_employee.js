@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 /* const Employee = require('../models/m_employee'); */
 const Unit = require('../models/m_unidad');
+const db = require('../dbconfig/conex');
 
 //Manejo de fechas
 var moment = require('moment');
@@ -52,20 +53,24 @@ class employee_controller {
     }
 
     //Metodo find por id
+    /*Se buscarán datos como ubicación del empleado, unidad,puesto y se retornanrán en la variable "empInfo" además de incluir los \
+    datos del token: nombres y apellidos del usuario*/
     async findById(user, req, res) {
         try {
-            /* let emp = await Employee.findByPk(id, {
-                attributes: ['id', 'first_name', 'last_name', 'is_unit_boss', 'unit_id']
-            }); */
-            console.log("El empleado recibido" + user);
-            let unit = await Unit.findByPk(user.unit_id, {
-                attributes: ['name_unit']
+            let empInfo;
+            /* Consulta a la tabla de SIS_USUARIO */
+            await db.query('SELECT dbo.GLO_UnidadesOrganizacionalesLey.NombreUnidadOrganizacionalLey as "Unidad",dbo.GLO_Ubicacion_O_Pad_Ley.Ubicacion_O_Pad as "Ubicacion", dbo.GLO_Relaciones_UnidadesOrganizacionalesLey.id_Relacion as "IDRelacionUnidadUbicacion", dbo.HUM_Puestos.NombrePuesto as "Puesto" FROM dbo.GLO_PersonasNaturales INNER JOIN dbo.HUM_Empleados ON dbo.GLO_PersonasNaturales.CodigoPersona = dbo.HUM_Empleados.CodigoEmpleado INNER JOIN dbo.GLO_UnidadesOrganizacionalesLey INNER JOIN dbo.GLO_Relaciones_UnidadesOrganizacionalesLey ON dbo.GLO_UnidadesOrganizacionalesLey.IdUnidadOrganizacional = dbo.GLO_Relaciones_UnidadesOrganizacionalesLey.IdUnidadOrganizacional INNER JOIN dbo.GLO_Ubicacion_O_Pad_Ley ON dbo.GLO_Relaciones_UnidadesOrganizacionalesLey.id_Ubicacion_O_Pad = dbo.GLO_Ubicacion_O_Pad_Ley.id_Ubicacion_O_Pad ON dbo.HUM_Empleados.CodigoRelacionUnidadOrganizacional = dbo.GLO_Relaciones_UnidadesOrganizacionalesLey.id_Relacion INNER JOIN dbo.HUM_Puestos ON dbo.HUM_Empleados.CodigoPuestoFuncionalEmpleado = dbo.HUM_Puestos.CodigoPuesto LEFT OUTER JOIN dbo.SIS_Usuarios ON dbo.HUM_Empleados.CodigoUsuario = dbo.SIS_Usuarios.CodigoUsuario WHERE dbo.SIS_Usuarios.CodigoUsuario = ? ', {
+                replacements: [user.CodigoUsuario],
+                type: db.QueryTypes.SELECT
+            }).then(data => {
+                empInfo = data[0];
+                console.dir(empInfo)
             });
-            console.log("De la unidad" + unit);
-
+            //Nombre y apellidos obtenidos del token
+            empInfo.NombresUsuario = user.NombresUsuario;
+            empInfo.ApellidosUsuario = user.ApellidosUsuario;
             res.send({
-                user,
-                unit
+                empInfo
             });
         } catch (err) {
             console.log(err);

@@ -1,8 +1,12 @@
+{# {% extends 'index.html' %}
+
+{% block views %} #}
+
 <section class="ui segment" id="Address">
   <h3 class="ui blue dividing header">Dirección.</h3>
   <div class="field">
     <label>Detalle:</label>
-    <input type="text" id="detail" name="detail"
+    <input type="text" id="detail" name="detail" autocomplete="off"
       placeholder="Ej: # de casa o local, # de pasaje o calle, colonia o urbanización" value="{{detail}}">
   </div>
   <div class="two fields">
@@ -38,3 +42,4 @@
 </section>
 
 <script src="/javascript/a_direccion.js"></script>
+{# {% endblock %} #}

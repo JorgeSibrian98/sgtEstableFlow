@@ -15,16 +15,28 @@
                         menos 3 días antes de la fecha de salida. De lo contrario deberá indicar sus datos, o los de la
                         persona que conducirá. Además, solicitar motirista con anticipación no asegura que lo obtendrá.
                     </div>
-                    <div class="ui segment">
-                        <div class="labels">
-                            <strong>Fecha de solicitud: </strong>
-                            <label id="date_lb">--/--/--</label>
-                            <br>
-                            <strong>Nombre del solicitante: </strong>
-                            <label id="name_lb">-------,------</label>
-                            <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                            <strong>Unidad solicitante: </strong>
-                            <label id="unidad_lb">Unidad ------</label>
+                    <div class="ui segment head-labels">
+                        <div class="fields">
+                            <div class="six wide field">
+                                <div class="pair-labels">
+                                    <strong>Fecha de solicitud: </strong>
+                                    <label id="date_lb">--/--/--</label>
+                                </div>
+                                <div class="pair-labels">
+                                    <strong>Nombre del solicitante: </strong>
+                                    <label id="name_lb">-------,------</label>
+                                </div>
+                            </div>
+                            <div class="six wide field">
+                                <div class="pair-labels">
+                                    <strong>Ubicación: </strong>
+                                    <label id="ubicacion_lb">Oficina ------</label>
+                                </div>
+                                <div class="pair-labels">
+                                    <strong>Unidad solicitante: </strong>
+                                    <label id="unidad_lb">Unidad ------</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="three wide field">
@@ -62,22 +74,19 @@
                             </div>
                         </div>
                     </div>
-                    <div class="field">
-                        <div class="fields">
-                            <div class="ui toggle checkbox" id="driver_cb">
-                                <input type="checkbox" id="driver_i" name="driver_i" checked="checked" tabindex="0"
-                                    class="hidden">
-                                <label for="driver_i">Con Motorista</label>
-                            </div>
-                            <div class="one wide field"></div>
-                            <label>Cantidad de pasajeros: </label>
-                            <div class="two wide field">
-                                <input type="number" name="passengers_i" min="1" max="40" value="1" id="passengers_i">
-                            </div>
+                    <div class="two wide field">
+                        <label for="passengers_i">Cantidad de pasajeros: </label>
+                        <input type="number" name="passengers_i" min="1" max="40" value="1" id="passengers_i">
+                    </div>
+                    <div class="three wide field">
+                        <label for="driver_i">Con Motorista</label>
+                        <div class="ui toggle checkbox" id="driver_cb">
+                            <input type="checkbox" id="driver_i" name="driver_i" checked="checked" tabindex="0"
+                                class="hidden">
                         </div>
                     </div>
                     <div class="fields">
-                        <div class="eight wide required field" id="name_driver_f">
+                        <div class="six wide required field" id="name_driver_f">
                             <label for="name_driver_i">Nombre:</label>
                             <input type="text" placeholder="Persona que va a conducir" name="name_driver_i"
                                 id="n_driver_i" disabled="true" maxlength="100">
@@ -155,9 +164,15 @@
                     </table>
                     <h4 class="ui blue dividing header">Misión</h4>
                     <div class="required field">
-                        <label>Misión o motivo del viaje</label>
-                        <input type="text" name="mision_i" placeholder="Auditoria al área laboral..." maxlength="150"
-                            id="mision_i_id" autocomplete="off">
+                        <label for='mision_i_id'>Misión o motivo del viaje</label>
+                        <div class="required field">
+                            <select class="ui fluid dropdown" name="mision_i" id="mision_i_id">
+                                <option value="">Seleccione un motivo de viaje</option>
+                                {% for m in misiones %}
+                                <option value="{{ m.IDMision }}" selected>{{ m.NombreMision }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
                     <div class="field">
                         <label>Observaciones (Opcional)</label>
@@ -183,4 +198,8 @@
 <script src="/javascript/folo6/a_folo6.js"></script>
 <script src="/javascript/a_direccion.js"></script>
 <script src="/javascript/a_load_dropdown_fplaces.js"></script>
+
+<!-- estilos -->
+<link rel="stylesheet" type="text/css" href="/stylesheets/folo6.css">
+
 {% endblock %}
