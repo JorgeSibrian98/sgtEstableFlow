@@ -1717,11 +1717,11 @@ class folo6_controllers {
                 } */
                 //CREATE para places container, esta tabla relaciona ya sean lugares frecuentes o direcciones con un folo
                 if (fplaces.length) {
-                    fplaces.forEach(id => {
+                    fplaces.forEach(IDLugar => {
                         place_container.create({
-                            folo_id: folo.id,
-                            date_of_visit: moment(),
-                            frequent_place_id: id
+                            IDFolo: folo.IDFolo,
+                            FechaDeVisita: date,
+                            IDLugarFrecuente: IDLugar
                         });
                     })
                 } else {
@@ -1731,15 +1731,15 @@ class folo6_controllers {
                     for (var i = 0; i < address.length; i++) {
                         //Se crea el place container para cada dirección creada
                         var container = await place_container.create({
-                            folo_id: folo.id,
-                            date_of_visit: moment(),
+                            IDFolo: folo.IDFolo,
+                            FechaDeVisita: date,
                         });
-                        console.log("container id:" + container.id)
+                        console.log("container id:" + container.IDLugarContenedor)
                         var a = await Address.update({
-                            container_id: container.id
+                            IDLugarContenedor: container.IDLugarContenedor
                         }, {
                             where: {
-                                id: address[i]
+                                IDDireccion: address[i]
                             }
                         });
                     }

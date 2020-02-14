@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 const db = require('../dbconfig/conex');
 const Address = require('./m_direccion');
 const Frequent_Place = require('./m_lugares_frecuentes');
+const Direccion = require('./m_direccion');
 
 const Places_container = db.define('TRA_LugaresContenedor', {
     IDLugarContenedor: {
@@ -43,6 +44,11 @@ Address.belongsTo(Places_container, {
 
 Places_container.belongsTo(Frequent_Place, {
     foreignKey: 'IDLugarFrecuente'
+});
+
+Direccion.belongsTo(Places_container, {
+    foreignKey: 'IDLugarContenedor',
+    onDelete: 'cascade'
 });
 
 module.exports = Places_container;

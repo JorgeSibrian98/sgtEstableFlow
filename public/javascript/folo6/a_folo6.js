@@ -270,8 +270,7 @@ function debugBase64(base64URL) {
 /*PARA VALIDAR QUE SE INGRESE AL MENOS UNA DIRECCIÓN */
 $('#save_print_btn').on('click', function () {
     $('.ui.toast').remove();
-    /*CUANDO YA SE HABILITEN LUGARES REMOVER EL SIMBOLO = DE LAS SENTENCIAS*/
-    if ($('#createdAddress').has('option').length >= 0 || $('#selectedFPlace').has('option').length >= 0) {
+    if ($('#createdAddress').has('option').length > 0 || $('#selectedFPlace').has('option').length > 0) {
         if ($('.ui.form').form('is valid')) {
             event.preventDefault();
 

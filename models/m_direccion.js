@@ -45,9 +45,4 @@ Direccion.belongsTo(UbicacionesGeograficas, {
     foreignKey: 'CodMun',
 });
 
-Direccion.belongsTo(LugaresContenedor, {
-    foreignKey: 'IDLugarContenedor',
-    onDelete: 'CASCADE'
-});
-
 module.exports = Direccion;
