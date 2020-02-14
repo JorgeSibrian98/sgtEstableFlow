@@ -111,10 +111,10 @@
                                 <select class="ui fluid dropdown" id="departamento" name="departamento">
                                     <option value="">--Seleccione un departamento--</option>
                                     {% for dep in Departamentos %}
-                                    {% if (dep.id == departamento) %}
-                                    <option value="{{ dep.id }}" selected>{{ dep.name }}</option>
+                                    {% if (dep.CodigoUbicacionGeografica == departamento) %}
+                                    <option value="{{ dep.CodigoUbicacionGeografica }}" selected>{{ dep.NombreUbicacionGeografica }}</option>
                                     {% else %}
-                                    <option value="{{ dep.id }}">{{ dep.name }}</option>
+                                    <option value="{{ dep.CodigoUbicacionGeografica }}">{{ dep.NombreUbicacionGeografica }}</option>
                                     {% endif %}
                                     {% endfor %}
                                 </select>

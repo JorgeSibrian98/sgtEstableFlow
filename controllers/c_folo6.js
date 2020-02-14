@@ -1,4 +1,3 @@
-const db = require('../dbconfig/conex');
 const Sequelize = require('sequelize');
 const Folo6 = require('../models/m_folo6');
 const place_container = require('../models/m_lugares_contenedor');
@@ -36,12 +35,12 @@ class folo6_controllers {
     //Gets Departments List
     async getDepartmentList(req, res) {
         try {
-            /*    let Departamentos = await UbicacionesGeograficas.findAll({
-                   attributes: ['CodigoUbicacionGeografica', 'NombreUbicacionGeografica'],
-                   where: {
-                       CodigoUbicacionGeograficaSuperior: 'ES'
-                   }
-               }); */
+            let Departamentos = await UbicacionesGeograficas.findAll({
+                attributes: ['CodigoUbicacionGeografica', 'NombreUbicacionGeografica'],
+                where: {
+                    CodigoUbicacionGeograficaSuperior: 'ES'
+                }
+            });
 
             let misiones = await Mision.findAll({
                 attributes: ['IDMision', 'NombreMision'],
@@ -50,7 +49,7 @@ class folo6_controllers {
                 }
             })
             return res.render('./folo6/folo6.html', {
-                // Departamentos
+                Departamentos,
                 misiones
             });
         } catch (error) {
