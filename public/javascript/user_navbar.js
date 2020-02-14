@@ -18,7 +18,7 @@ var reportes = "<a href=\"/reportes\" class=\"item\"><i class=\"print icon\"></i
 //Opciones de menu por Roles
 var adminIT = [reportes] //[usuarios, adminPro];
 var adminR = [rutas, controlRuta, adminFplaces, calConfig];
-var adminTrans = [flotaVehicular, reportes]; //, motorista, aprobarReq, mision];
+var adminTrans = [flotaVehicular, reportes, mision, adminFplaces, rutas]; //, motorista, aprobarReq, mision];
 var adminV = [asignarVal];
 var emp = [home, folo6];
 var uBoss = [aprobarFolos, home, folo6];
@@ -45,8 +45,6 @@ $(function () {
 
         getMenuOptions(roles);
     });
-
-
 });
 
 $('#username').change(getMenuOptions(roles));
@@ -78,7 +76,7 @@ function getMenuOptions(_roles) {
             case "unitC":
                 menuOptions = menuOptions.concat(unitC);
                 break;
-            case "dminV":
+            case "adminV":
                 break;
         }
     }

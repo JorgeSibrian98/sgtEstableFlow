@@ -20,8 +20,8 @@ const {
 
 router.get('/home', (req, res) => {
     var username = req.query.usuario;
-    console.log("token")
-    console.log(req.cookies.token);
+    //console.log("token")
+    // console.log(req.cookies.token);
     res.render('home.html', {
         username
     });
@@ -36,7 +36,7 @@ router.get('/logout', (req, res) => {
 router.get('/userinfo', (req, res) => {
     try {
         const token = auth_controller.decode_token(req.cookies.token);
-        var roles = auth_controller.getRolesNames(token)
+        var roles = token.roles
 
         res.send({
             user: token.user,

@@ -1,8 +1,7 @@
 const Address = require('../models/m_direccion');
-const express = require('express');
-const Sequelize = require('sequelize');
-//const place_container = require('../models/m_places_container');
+const place_container = require('../models/m_lugares_contenedor');
 const UbicacionesGeograficas = require('../models/m_ubicaciones_geograficas');
+const Authorize = require('./c_auth');
 
 //Manejo de fechas
 var moment = require('moment');
@@ -14,19 +13,6 @@ const {
 
 class address_services {
   constructor() {}
-  //Gets Addresses list
-  async getList(req, res) {
-    try {
-      var Direcciones = await Address.findAll({
-        include: ['city', 'department']
-      });
-      return res.render('../views/address/list.html', {
-        Direcciones
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   //Gets Departments List
   async getDepartmentList(req, res) {
@@ -77,39 +63,44 @@ class address_services {
           direction,
           selectedPlaceTxt
         } = req.body //Saco los atributos del cuerpo de la petición
+        const token = Authorize.decode_token(req.cookies.token);
         console.log(req.body); //Imprimo la petición para comprobar los datos.
         if (req.query.folo_id) {
           container = await place_container.create({
-            folo_id: req.query.folo_id,
-            date_of_visit: moment(),
+            IDFolo: req.query.folo_id,
+            FechaDeVisita: moment(),
+            CreadoPor: token.user.CodigoUsuario
           });
 
           // guardará depto y municipio del dropdown; nombre y dirección de los inputs.
           console.log("GUARDAR DIRECCION con el contenedor" + container.id)
           dir = await Address.create({
-            name: destinyPlace,
-            detail: direction, //Creo dirección
-            city_id: idSelMun,
-            department_id: idSelDepto,
-            container_id: container.id
+            Nombre: destinyPlace,
+            Detalle: direction, //Creo dirección
+            CodMun: idSelMun,
+            CodDepto: idSelDepto,
+            CreadoPor: token.user.CodigoUsuario,
+            IDLugarContenedor: container.IDLugarContenedor
           });
         } else {
           // guardará depto y municipio del dropdown; nombre y dirección de los inputs.
           console.log("GUARDAR DIRECCION sn contenedor")
           dir = await Address.create({
-            name: destinyPlace,
-            detail: direction, //Creo dirección
-            city_id: idSelMun,
-            department_id: idSelDepto,
+            Nombre: destinyPlace,
+            Detalle: direction, //Creo dirección
+            CodMun: idSelMun,
+            CodDepto: idSelDepto,
+            CreadoPor: token.user.CodigoUsuario
           });
         }
       } else {
         console.log("LUGAR FRECUENTE")
         if (req.query.folo_id) {
           await place_container.create({
-            folo_id: req.query.folo_id,
-            date_of_visit: moment(),
-            frequent_place_id: req.query.fplace_id
+            IDFolo: req.query.folo_id,
+            FechaDeVisita: moment(),
+            IDLugarFrecuente: req.query.fplace_id,
+            CreadoPor: token.user.CodigoUsuario
           });
         }
       }
@@ -117,60 +108,6 @@ class address_services {
     } catch (error) {
       console.log(error); //Muestra errores.
     };
-  };
-
-  //Gets departments list and renders edit form
-  async getUpdate(req, res) {
-    try {
-      let address_id = req.query.address_id;
-      console.log(address_id);
-      let Direccion = await Address.findByPk(address_id);
-      let Departamentos = await department_controller.getList();
-      return res.render('../views/direccion/edit.html', {
-        Direccion,
-        Departamentos
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  //Saves the edited address in the DB.
-  async updateAddress(req, res) {
-    try {
-      const errors = validationResult(req);
-      let {
-        address_id,
-        detail,
-        departamento,
-        municipio,
-      } = req.body;
-      console.log(errors.array());
-      if (!errors.isEmpty()) {
-        //If there are errors, renders the same form, otherwise saves the edited Address
-        let Direccion = await Address.findByPk(route_id);
-        let Departamentos = await department_controller.getList();
-        res.render('../views/direccion/edit.html', {
-          Direccion,
-          Departamentos,
-          errors: errors.array()
-        });
-      } else {
-        console.log(req.body);
-        Address.update({
-          detail,
-          city_id: municipio,
-          department_id: departamento
-        }, {
-          where: {
-            id: address_id
-          }
-        });
-        res.redirect('/direccion');
-      }
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   //Elimina la dirección creada a través del ícono en la tabla.
@@ -181,15 +118,15 @@ class address_services {
       } = req.body; //Se obtiene el parámetro del cuerpo de la petición.
       console.log("Eliminara la dirección" + id_address)
       var address = await Address.findByPk(id_address);
-      console.log("contenedor" + address.container_id)
+      console.log("contenedor" + address.IDLugarContenedor);
       await place_container.destroy({ //Eliminación de la dirección.
         where: {
-          id: address.container_id,
+          IDLugarContenedor: address.IDLugarContenedor,
         }
       });
       await Address.destroy({ //Eliminación de la dirección.
         where: {
-          id: id_address,
+          IDDireccion: id_address,
         }
       });
     } catch (error) {
@@ -209,7 +146,7 @@ class address_services {
           let value = req.body[key];
           await Address.destroy({ //Eliminación de las direcciones.
             where: {
-              id: value,
+              IDDireccion: value,
             }
           });
           console.log('Se eliminó la dirección con el id ' + value); //Mensaje de éxito.

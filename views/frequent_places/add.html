@@ -1,0 +1,81 @@
+{% extends 'index.html' %}
+{% block views %}
+<div class="ui container" style="margin-top: 4em;" id="bad">
+    <div class="ui vertically divided grid">
+        <div class="one column row">
+            <div class="column">
+                <form class="ui form" id="frm-prueba" action="/lugares_frecuentes/gestionar" method="POST">
+                    {% if fplace_id %}
+                    <h1 class="ui blue dividing header">Editar Lugar Frecuente</h1>
+                    {% else %}
+                    <h1 class="ui blue dividing header">Agregar una Direccion Frecuente</h1>
+                    {% endif %}
+                    <div class="two fields">
+                        <div class="required field">
+                            <label>Lugar de Destino:</label>
+                            {% if fplace_id %}
+                            <input type="text" autocomplete="off" name="name" id="name" placeholder="Nombre del Destino"
+                                maxlength="100" value="{{name | trim}}">
+                            {% else %}
+                            <input type="text" autocomplete="off" name="name" id="name" placeholder="Nombre del Destino"
+                                maxlength="100" value="{{name}}">
+                            {% endif %}
+
+                        </div>
+                        <div class="field">
+                            <label>Ruta:</label>
+                            <select class="ui fluid dropdown" id="ruta" name="ruta">
+                                <option value="">--Seleccione una ruta--</option>
+                                {% for r in rutas %}
+                                {% if(r.IDRuta == ruta) %}
+                                <option value="{{ r.IDRuta }}" selected>{{ r.Nombre }}</option>
+                                {% else %}
+                                <option value="{{ r.IDRuta }}">{{ r.Nombre }}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    {% include '../direccion/add.html' %}
+
+                    <button class="ui positive button" id="guardar" type="submit">Guardar</button>
+                    <input id="fplace_id" name="fplace_id" type="hidden" value="{{fplace_id}}">
+                    <input id="true_name" name="true_name" type="hidden" value="{{true_name}}">
+                    <a href="/lugares_frecuentes">
+                        <div class="ui left floated animated button" style="margin-bottom:1em" type="button">
+                            <div class="visible content">Volver</div>
+                            <div class="hidden content"><i class="left arrow icon"></i></div>
+                        </div>
+                    </a>
+                </form>
+                {% if errors %}
+                <div class="ui error message" style="width:30em">
+                    <i class="close icon"></i>
+                    <div class="header">
+                        Errores al Insertar
+                    </div>
+                    <ul class="list">
+                        {% for error in errors %}
+                        <li>{{error.msg}}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                {% if error %}
+                <div class="ui error message" style="width:30em">
+                    <i class="close icon"></i>
+                    <div class="header">
+                        Errores al Insertar
+                    </div>
+                    <ul class="list">
+                        <li>{{error}}</li>
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/javascript/frequent_places/a_frequent_places_add.js"></script>
+<link rel="stylesheet" href="/stylesheets/frequent_places/frequent_places_add.css">
+{% endblock %}

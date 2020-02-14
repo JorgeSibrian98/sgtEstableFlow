@@ -11,9 +11,9 @@
   <form class="ui form" action="/misiones/gestionar" method="POST">
     <div class="required field">
       <label>Nombre Mision:</label>
-      <input type="text" name="name" id="name" value="{{Misi.Nombre_mision}}" autocomplete="off">
+      <input type="text" name="name" id="name" value="{{Misi.NombreMision}}" autocomplete="off">
     </div>
-    <input type="hidden" id="Misi_id" name="Misi_id" value={{Misi.id}}>
+    <input type="hidden" id="Misi_id" name="Misi_id" value={{Misi.IDMision}}>
     <a href="/misiones">
       <div class="ui left floated animated button" type="button">
         <div class="visible content">Volver</div>

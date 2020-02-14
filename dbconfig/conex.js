@@ -19,8 +19,15 @@ require('dotenv').config()
 });*/
 
 //Local db connection
-const dbConex = new Sequelize('sgt_PGR', 'hq14006', 'hq14006', {
-  host: 'localhost',
+const dbConex = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
+  host: process.env.DB_HOST,
   dialect: 'mssql',
 });
+
+//UES db connection
+/* const dbConex = new Sequelize('sgt_PGR', 'admin', 'admin', {
+  host: 'localhost',
+  dialect: 'mssql',
+}); */
+
 module.exports = dbConex;

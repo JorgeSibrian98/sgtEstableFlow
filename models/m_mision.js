@@ -2,7 +2,16 @@ const Sequelize = require('sequelize');
 const db = require('../dbconfig/conex');
 
 const Mision = db.define('TRA_Mision', {
-    Nombre_mision: {
+    IDMision: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        allowNull: false,
+        autoIncrement: true,
+        validate: {
+            notEmpty: true,
+        }
+    },
+    NombreMision: {
         type: Sequelize.STRING(50),
         allowNull: false,
         unique: true,
@@ -10,7 +19,7 @@ const Mision = db.define('TRA_Mision', {
             notEmpty: true,
         }
     },
-    Mision_activa: {
+    MisionActiva: {
         type: Sequelize.BOOLEAN,
         allowNull: true,
         defaultValue: '1'

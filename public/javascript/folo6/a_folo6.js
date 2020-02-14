@@ -1,7 +1,6 @@
 /*****ANIMACIÓN,SETTINGS INICIALES Y VALIDACIONES******/
-var id_employee = 3;
 var motorista;
-var user, unit;;
+var empInfo;
 
 function showLoadingDimmer() {
     // $('.segment').dimmer('set active');
@@ -13,7 +12,6 @@ function showLoadingDimmer() {
     }).dimmer('show');
 }
 
-
 $(document).ready(function () {
     showLoadingDimmer()
     $.ajax({
@@ -22,15 +20,12 @@ $(document).ready(function () {
         type: 'GET',
         dataType: 'json',
         success: (data) => {
-            console.log(typeof (data.user));
-            user = data.user;
-            unit = data.unit
-            console.log(user);
-            console.log(unit);
+            empInfo = data.empInfo;
         }
     }).done(function () {
-        $("#name_lb").text(user.first_name + ", " + user.last_name);
-        $("#unidad_lb").text(unit.name_unit);
+        $("#ubicacion_lb").text(empInfo.Ubicacion);
+        $("#name_lb").text(empInfo.NombresUsuario + ", " + empInfo.ApellidosUsuario);
+        $("#unidad_lb").text(empInfo.Unidad);
         $('body').dimmer('hide');
     });
 
@@ -289,7 +284,7 @@ $('#save_print_btn').on('click', function () {
         hideDimmer();
         $('body')
             .toast({
-                title: "Lugares de destino vacíos",
+                title: "No ha seleccionado destino",
                 showIcon: false,
                 class: 'error',
                 position: 'top right',
@@ -341,13 +336,13 @@ function guardarFolo6() {
     //Valores del json que serán enviados en el ajax para guardar el folo6
     var jsonReq = {
         form: JSON.stringify(form),
-        emp: JSON.stringify(user),
+        empInfo: JSON.stringify(empInfo),
         motorista: JSON.stringify(motorista),
         fplaces: JSON.stringify(fplaces),
         address: JSON.stringify(address)
     }
     console.log("Enviará:" +
-        "form:" + JSON.stringify(form) + "emp:" + JSON.stringify(user) + "fplaces: " + JSON.stringify(fplaces) + "address:" + JSON.stringify(address));
+        "form:" + JSON.stringify(form) + "emp:" + JSON.stringify(empInfo) + "fplaces: " + JSON.stringify(fplaces) + "address:" + JSON.stringify(address));
     console.log("Empaquetado" + typeof (jsonReq));
     return $.ajax({
         type: "POST",
@@ -493,12 +488,12 @@ $('#addAddress').click(function () {
                 function (dir) {
                     if (dir != null && !jQuery.isEmptyObject(dir)) {
                         dirCreadas.append($('<option/>', {
-                            value: dir.id,
-                            text: dir.id
+                            value: dir.IDDireccion,
+                            text: dir.IDDireccion
                         }));
                     };
                     fillAddressTable(); //Se llena la tabla en la vista.
-                    addDeleteIcon(dir.id); //Agrega el ícono de eliminar
+                    addDeleteIcon(dir.IDDireccion); //Agrega el ícono de eliminar
                 });
             //Esconde los campos para poder ingresar otra dirección.
             $('#otherName').slideUp();
