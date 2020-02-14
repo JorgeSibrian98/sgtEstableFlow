@@ -43,7 +43,7 @@ class Migration {
         Mision.sync({
             alter: false
         });
-        
+        /*
         Procuraduria.sync({
             alter: false
         }); */
