@@ -489,12 +489,12 @@ $('#addAddress').click(function () {
                 function (dir) {
                     if (dir != null && !jQuery.isEmptyObject(dir)) {
                         dirCreadas.append($('<option/>', {
-                            value: dir.id,
-                            text: dir.id
+                            value: dir.IDDireccion,
+                            text: dir.IDDireccion
                         }));
                     };
                     fillAddressTable(); //Se llena la tabla en la vista.
-                    addDeleteIcon(dir.id); //Agrega el ícono de eliminar
+                    addDeleteIcon(dir.IDDireccion); //Agrega el ícono de eliminar
                 });
             //Esconde los campos para poder ingresar otra dirección.
             $('#otherName').slideUp();

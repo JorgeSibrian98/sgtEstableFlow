@@ -33,9 +33,9 @@ const Vehicle_folo6_assign = require('../models/m_vehicle_folo6_assign'); */
 
 class Migration {
     constructor() {
-        Folo6.sync({
+        /* Folo6.sync({
             alter: true
-        });
+        }); */
         /* 
         Driver.sync({
             alter: false
@@ -56,8 +56,8 @@ class Migration {
         Historial.sync({
             alter: false
         }); */
-        /* Direccion.sync({
-            force: true
+       /*  Direccion.sync({
+            alter: true
         }); */
         /* Frequent_Place.sync({
             alter: false

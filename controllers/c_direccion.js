@@ -1,6 +1,7 @@
 const Address = require('../models/m_direccion');
 //const place_container = require('../models/m_lugares_contenedor');
 const UbicacionesGeograficas = require('../models/m_ubicaciones_geograficas');
+const Authorize = require('./c_auth');
 
 //Manejo de fechas
 var moment = require('moment');
@@ -62,6 +63,7 @@ class address_services {
           direction,
           selectedPlaceTxt
         } = req.body //Saco los atributos del cuerpo de la petición
+        const token = Authorize.decode_token(req.cookies.token);
         console.log(req.body); //Imprimo la petición para comprobar los datos.
         if (req.query.folo_id) {
           container = await place_container.create({
@@ -86,6 +88,7 @@ class address_services {
             Detalle: direction, //Creo dirección
             Cod_mun: idSelMun,
             Cod_depto: idSelDepto,
+            CreadoPor: token.user.CodigoUsuario
           });
         }
       } else {

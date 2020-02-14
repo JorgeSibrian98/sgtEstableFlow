@@ -4,7 +4,7 @@ const Address = require('./m_direccion');
 const Frequent_Place = require('./m_lugares_frecuentes');
 const Folo_06 = require('./m_folo6');
 
-const Places_container = db.define('SGT_Lugares_Contenedor', {
+const Places_container = db.define('TRA_LugaresContenedor', {
     date_of_visit: {
         type: Sequelize.DATEONLY,
         allowNull: true,

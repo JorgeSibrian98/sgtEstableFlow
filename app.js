@@ -56,7 +56,7 @@ app.use('/login', require('./routes/r_login'))
 app.use(is_logged);
 app.use('/', require('./routes/index'));
 app.use('/solicitud_nueva', require('./routes/r_folo6'));
-app.use('/direccion', authorize('adminTrans'), require('./routes/r_direccion'));
+app.use('/direccion', authorize('adminTrans', 'emp'), require('./routes/r_direccion'));
 /* app.use('/vales', authorize('adminV'), require('./routes/r_voucher'));
 app.use('/instituciones', authorize('adminIT'), require('./routes/r_procuraduria'));*/
 app.use('/misiones', authorize('adminTrans', 'adminR'), require('./routes/r_misiones'));
