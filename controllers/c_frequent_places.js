@@ -2,6 +2,9 @@ const frequent_place = require('../models/m_lugares_frecuentes');
 const UbicacionesGeograficas = require('../models/m_ubicaciones_geograficas');
 const route_controller = require('./c_route');
 const Authorize = require('./c_auth');
+const {
+    Op
+} = require("sequelize");
 const querystring = require('querystring');
 const {
     validationResult
@@ -323,6 +326,34 @@ class frequent_place_controller {
             res.redirect('/lugares_frecuentes?&' + query);
         }
     };
+
+    //Función para verificar que el Lugar Frecuente tenga nombre único.
+    async LugarExists(req, res) {
+        try {
+            //Se obtiene el valor del campo 'name'
+            let name = req.body.name;
+            let query = name + '%';
+            console.log(name);
+            console.log(query);
+            let exists; //Bandera
+            //Obtiene solo el campo 'name' de la tabla de rutas en la BD.
+            let LFrec = await frequent_place.count({
+                where: {
+                    NombreLugarFrecuente: {
+                        [Op.like]: query
+                    }
+                }
+            });
+            if (LFrec != 0) {
+                exists = 'yes'
+            }
+            //Se envía la bandera a la vista.
+            res.send(exists);
+        } catch (error) {
+            console.log(error); //Muestra errores si los hay.
+        };
+    };
+
 
     //Gets frequent places list based on the selected municipio
     async getPlacesByMunicipio(req, res) {
