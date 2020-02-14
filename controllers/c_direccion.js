@@ -1,5 +1,5 @@
 const Address = require('../models/m_direccion');
-//const place_container = require('../models/m_lugares_contenedor');
+const place_container = require('../models/m_lugares_contenedor');
 const UbicacionesGeograficas = require('../models/m_ubicaciones_geograficas');
 const Authorize = require('./c_auth');
 
@@ -67,8 +67,9 @@ class address_services {
         console.log(req.body); //Imprimo la petición para comprobar los datos.
         if (req.query.folo_id) {
           container = await place_container.create({
-            folo_id: req.query.folo_id,
-            date_of_visit: moment(),
+            IDFolo: req.query.folo_id,
+            FechaDeVisita: moment(),
+            CreadoPor: token.user.CodigoUsuario
           });
 
           // guardará depto y municipio del dropdown; nombre y dirección de los inputs.
@@ -78,7 +79,8 @@ class address_services {
             Detalle: direction, //Creo dirección
             Cod_mun: idSelMun,
             Cod_depto: idSelDepto,
-            container_id: container.id
+            CreadoPor: token.user.CodigoUsuario,
+            IDLugarContenedor: container.IDLugarContenedor
           });
         } else {
           // guardará depto y municipio del dropdown; nombre y dirección de los inputs.
@@ -95,9 +97,10 @@ class address_services {
         console.log("LUGAR FRECUENTE")
         if (req.query.folo_id) {
           await place_container.create({
-            folo_id: req.query.folo_id,
-            date_of_visit: moment(),
-            frequent_place_id: req.query.fplace_id
+            IDFolo: req.query.folo_id,
+            FechaDeVisita: moment(),
+            IDLugarFrecuente: req.query.fplace_id,
+            CreadoPor: token.user.CodigoUsuario
           });
         }
       }
@@ -115,10 +118,10 @@ class address_services {
       } = req.body; //Se obtiene el parámetro del cuerpo de la petición.
       console.log("Eliminara la dirección" + id_address)
       var address = await Address.findByPk(id_address);
-      console.log("contenedor" + address.container_id)
+      console.log("contenedor" + address.IDLugarContenedor);
       await place_container.destroy({ //Eliminación de la dirección.
         where: {
-          id: address.container_id,
+          IDLugarContenedor: address.IDLugarContenedor,
         }
       });
       await Address.destroy({ //Eliminación de la dirección.

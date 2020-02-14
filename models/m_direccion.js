@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const db = require('../dbconfig/conex');
 const UbicacionesGeograficas = require('./m_ubicaciones_geograficas');
+const LugaresContenedor = require('./m_lugares_contenedor');
 
 const Direccion = db.define('TRA_Direccion', {
     IDDireccion: {
@@ -37,11 +38,16 @@ const Direccion = db.define('TRA_Direccion', {
 });
 
 Direccion.belongsTo(UbicacionesGeograficas, {
-    foreignKey: 'Cod_depto',
+    foreignKey: 'CodDepto',
 });
 
 Direccion.belongsTo(UbicacionesGeograficas, {
-    foreignKey: 'Cod_mun',
+    foreignKey: 'CodMun',
+});
+
+Direccion.belongsTo(LugaresContenedor, {
+    foreignKey: 'IDLugarContenedor',
+    onDelete: 'CASCADE'
 });
 
 module.exports = Direccion;
