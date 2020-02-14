@@ -1469,9 +1469,9 @@ class folo6_controllers {
         try {
             /******FALTA: LISTAR LOS VALES QUE CORRESPONDEN A UN SOLO EMPLEADO*/
             var folos = await Folo6.findAll({
-                attributes: ['id', 'off_date', 'off_hour', 'return_hour', 'passengers_number', 'with_driver', 'created_at'],
+                attributes: ['IDFolo', 'FechaSalida', 'HoraSalida', 'HoraRetorno', 'CantidadDePasajeros', 'ConMotorista', 'FechaCreacion'],
                 where: {
-                    created_by: token.user.id
+                    CreadoPor: token.user.CodigoUsuario
                 }
             });
             //console.log(d);
@@ -1480,21 +1480,23 @@ class folo6_controllers {
             folos.forEach((row, i) => {
                 var el = new Object();
                 //La BD envia las fechas y horas en formato utc por ello se debe convertir al formato especificado en el método format(). Revisar documentación de moment.js
-                el.off_date = moment.utc(row.off_date).format("DD MMMM YYYY");
-                el.off_hour = moment.utc(row.off_hour).format("h:mm A");
-                el.return_hour = moment.utc(row.return_hour).format("h:mm A");
-                el.passengers_number = row.passengers_number;
+                el.off_date = moment.utc(row.FechaSalida).format("DD MMMM YYYY");
+                el.off_hour = moment.utc(row.HoraSalida).format("h:mm A");
+                el.return_hour = moment.utc(row.HoraRetorno).format("h:mm A");
+                el.passengers_number = row.CantidadDePasajeros;
                 //Si with_driver = true, envía la cadena "Si"
-                el.with_driver = row.with_driver ? "Si" : "No";
-                el.created_at = moment.parseZone(row.created_at).local().format("DD/MM/YYYY h:mm A");
+                el.with_driver = row.ConMotorista ? "Si" : "No";
+                el.created_at = moment.parseZone(row.FechaCreacion).local().format("DD/MM/YYYY h:mm A");
                 //Icono para visualizar el folo. Enlance y un icono de lapiz para editar el folo. Un icono de eliminado. Ambos tiene por identificardor el id del folo que ha ido a traer a la BD
                 //var today = moment().format("DD MMMM YYYY");
-                var trully = moment().isBefore(moment.utc(row.off_date))
+                var trully = moment().isBefore(moment.utc(row.FechaSalida))
                 //console.log("FECHA ES: " + trully);
-                if (trully)
-                    el.buttons = '<i id="' + row.id + '" class="large print black link icon "></i><i id="' + row.id + '" class="large file grey alternate outline link icon "></i><a href="/solicitud_nueva/edit/' + row.id + '"><i class="large pencil yellow alternate link icon"></i></a><i class="large trash red alternate outline link icon" id="' + row.id + '"></i>';
+                //Descomentar cuando ya se habilite el editar, eliminar e imprimir
+                /* if (trully)
+                    el.buttons = '<i id="' + row.IDFolo + '" class="large print black link icon "></i><i id="' + row.IDFolo + '" class="large file grey alternate outline link icon "></i><a href="/solicitud_nueva/edit/' + row.IDFolo + '"><i class="large pencil yellow alternate link icon"></i></a><i class="large trash red alternate outline link icon" id="' + row.IDFolo + '"></i>';
                 else
-                    el.buttons = '<i id="' + row.id + '" class="large print black link icon "></i><i id="' + row.id + '" class="large file grey alternate outline link icon "></i>'
+                    el.buttons = '<i id="' + row.IDFolo + '" class="large print black link icon "></i><i id="' + row.IDFolo + '" class="large file grey alternate outline link icon "></i>'
+                 */
                 data.push(el);
             });
             //console.dir(data);

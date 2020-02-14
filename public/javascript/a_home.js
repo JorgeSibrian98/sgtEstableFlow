@@ -101,15 +101,17 @@ function fillTable() {
             },
             {
                 "data": "created_at"
-            },
-            {
-                "data": "buttons",
-                //Indicarle que lo que se renderizará son los iconos que trae data del controlador
-                "render": function (data, type, row, meta) {
-                    return data;
-                }
-
             }
+            //Descomentar cuando se habilite las acciones
+            /* ,
+                        {
+                            "data": "buttons",
+                            //Indicarle que lo que se renderizará son los iconos que trae data del controlador
+                            "render": function (data, type, row, meta) {
+                                return data;
+                            }
+
+                        } */
         ]
     });
 
