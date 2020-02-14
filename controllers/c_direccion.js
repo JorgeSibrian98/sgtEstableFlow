@@ -77,8 +77,8 @@ class address_services {
           dir = await Address.create({
             Nombre: destinyPlace,
             Detalle: direction, //Creo dirección
-            Cod_mun: idSelMun,
-            Cod_depto: idSelDepto,
+            CodM: idSelMun,
+            CodDepto: idSelDepto,
             CreadoPor: token.user.CodigoUsuario,
             IDLugarContenedor: container.IDLugarContenedor
           });
@@ -88,8 +88,8 @@ class address_services {
           dir = await Address.create({
             Nombre: destinyPlace,
             Detalle: direction, //Creo dirección
-            Cod_mun: idSelMun,
-            Cod_depto: idSelDepto,
+            CodMun: idSelMun,
+            CodDepto: idSelDepto,
             CreadoPor: token.user.CodigoUsuario
           });
         }
