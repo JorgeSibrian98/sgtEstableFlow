@@ -15,58 +15,60 @@ $('#name').on('blur', function () {
 $('#name').on('change', function () {
     var name = $('#name').val(); //Se obtiene el valor del campo 'name'.
     //Petición ajax post.
-    $.post('/rutas/routeNameExists', {
-        name
-    },
-        function (exists) {
-            console.log(exists);
-            /* Si se determina que el nombre ya existe, deshabilita el botón de guardado y
-            muestra mensaje de error. */
-            if (exists == 'yes') {
-                $('#guardar').prop('disabled', true);
-                $('body')
-                    .toast({
-                        title: '¡Error!',
-                        position: 'top right',
-                        class: 'error',
-                        displayTime: 3000,
-                        showProgress: 'top',
-                        classProgress: 'red',
-                        progressUp: false,
-                        closeIcon: true,
-                        message: 'El nombre de la ruta ya existe en la base de datos. Ingrese otro nombre.',
-                        pauseOnHover: false,
-                        transition: {
-                            showMethod: 'zoom',
-                            showDuration: 100,
-                            hideMethod: 'fade',
-                            hideDuration: 500
-                        }
-                    });
-            } else {
-                //De no existir, procede con normalidad y muestra mensaje de éxito.
-                $('body')
-                    .toast({
-                        title: '¡Éxito!',
-                        position: 'top right',
-                        class: 'success',
-                        displayTime: 3000,
-                        showProgress: 'top',
-                        classProgress: 'red',
-                        progressUp: false,
-                        closeIcon: true,
-                        message: 'El nombre de la ruta es válido.',
-                        pauseOnHover: false,
-                        transition: {
-                            showMethod: 'zoom',
-                            showDuration: 100,
-                            hideMethod: 'fade',
-                            hideDuration: 500
-                        }
-                    });
-                $('#guardar').prop('disabled', false);
-            };
-        });
+    if ($('.ui.form').form('is valid', 'name')) {
+        $.post('/rutas/routeNameExists', {
+            name
+        },
+            function (exists) {
+                console.log(exists);
+                /* Si se determina que el nombre ya existe, deshabilita el botón de guardado y
+                muestra mensaje de error. */
+                if (exists == 'yes') {
+                    $('#guardar').prop('disabled', true);
+                    $('body')
+                        .toast({
+                            title: '¡Error!',
+                            position: 'top right',
+                            class: 'error',
+                            displayTime: 3000,
+                            showProgress: 'top',
+                            classProgress: 'red',
+                            progressUp: false,
+                            closeIcon: true,
+                            message: 'El nombre de la ruta ya existe en la base de datos. Ingrese otro nombre.',
+                            pauseOnHover: false,
+                            transition: {
+                                showMethod: 'zoom',
+                                showDuration: 100,
+                                hideMethod: 'fade',
+                                hideDuration: 500
+                            }
+                        });
+                } else {
+                    //De no existir, procede con normalidad y muestra mensaje de éxito.
+                    $('body')
+                        .toast({
+                            title: '¡Éxito!',
+                            position: 'top right',
+                            class: 'success',
+                            displayTime: 3000,
+                            showProgress: 'top',
+                            classProgress: 'red',
+                            progressUp: false,
+                            closeIcon: true,
+                            message: 'El nombre de la ruta es válido.',
+                            pauseOnHover: false,
+                            transition: {
+                                showMethod: 'zoom',
+                                showDuration: 100,
+                                hideMethod: 'fade',
+                                hideDuration: 500
+                            }
+                        });
+                    $('#guardar').prop('disabled', false);
+                };
+            });
+    }
 });
 
 //Validación del formulario
@@ -83,6 +85,9 @@ $('.ui.form')
                 }, {
                     type: 'maxLength[40]',
                     prompt: 'El nombre debe ser menor a 40 caracteres'
+                }, {
+                    type: 'regExp[/^[A-Za-z0-9ÁáÉéÍíÓóÚúñ ]+$/g]',
+                    prompt: 'El nombre debe contener únicamente caracteres alfanuméricos.'
                 }]
             },
             monday_frequency: {
@@ -170,9 +175,53 @@ $('body')
 $('#guardar').on('click', function () {
     event.preventDefault();
     if ($('#route_id').val()) {
-        updateRoute();
+        if($('.ui.form').form('is valid')){
+            updateRoute();
+        } else {
+            $('body')
+                .toast({
+                    title: '¡Error!',
+                    position: 'top right',
+                    class: 'error',
+                    showProgress: 'top',
+                    classProgress: 'red',
+                    progressUp: false,
+                    closeIcon: true,
+                    displayTime: 3000,
+                    message: 'El formulario no es válido. Corrija los campos e intente nuevamente.',
+                    pauseOnHover: false,
+                    transition: {
+                        showMethod: 'zoom',
+                        showDuration: 100,
+                        hideMethod: 'fade',
+                        hideDuration: 500
+                    }
+                });
+        }
     } else {
-        createRoute();
+        if($('.ui.form').form('is valid')){
+            createRoute();
+        } else {
+            $('body')
+                .toast({
+                    title: '¡Error!',
+                    position: 'top right',
+                    class: 'error',
+                    showProgress: 'top',
+                    classProgress: 'red',
+                    progressUp: false,
+                    closeIcon: true,
+                    displayTime: 3000,
+                    message: 'El formulario no es válido. Corrija los campos e intente nuevamente.',
+                    pauseOnHover: false,
+                    transition: {
+                        showMethod: 'zoom',
+                        showDuration: 100,
+                        hideMethod: 'fade',
+                        hideDuration: 500
+                    }
+                });
+        }
     };
 });
 
@@ -323,9 +372,9 @@ function updateRoute() {
     //Un 'false' indica que ese día no se brindará servicio a la ruta.
     //En este caso la cantidad de motoristas se cambia a 0.
     if($('#monday').is(':checked')){
-        monday = true;
+        monday = 1;
     } else {
-        monday = false;
+        monday = 0;
         monday_frequency = 0;
     };
 
