@@ -110,7 +110,7 @@ class Mision_controller {
         });
         const query = querystring.stringify({
           title: "Guardado exitoso",
-          message: "Misi&oacute; actualizada",
+          message: "Misi&oacute;n actualizada",
           class: "success"
         });
         res.redirect('/misiones?&' + query);
