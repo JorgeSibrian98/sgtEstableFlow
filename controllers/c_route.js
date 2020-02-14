@@ -21,7 +21,10 @@ class Route_controller {
   async getRouteList(req, res) {
     try {
       var Routes = await Route.findAll({
-        order: Sequelize.literal('IDRuta ASC')
+        order: Sequelize.literal('IDRuta ASC'),
+        where: {
+          Habilitado: '1'
+        }
       });
       return Routes
     } catch (error) {

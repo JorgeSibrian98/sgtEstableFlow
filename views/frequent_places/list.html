@@ -45,10 +45,10 @@
                         <!-- Recibiendo todas las direcciones e insertandolas en la tabla -->
                         {% for fplace in fplaces %}
                         <tr data-id="{{fplace.IDLugarFrecuente}}">
-                            <td>{{ fplace.NombreLugarFrecuente}}</td>
-                            <td>{{ fplace.DetalleLugarFrecuente }}</td>
-                            <td>{{ fplace.Departamento.NombreUbicacionGeografica }}</td>
-                            <td>{{ fplace.Municipio.NombreUbicacionGeografica }}</td>
+                            <td>{{ fplace.NombreLugarFrecuente | trim }}</td>
+                            <td>{{ fplace.DetalleLugarFrecuente | trim }}</td>
+                            <td>{{ fplace.Departamento.NombreUbicacionGeografica | trim }}</td>
+                            <td>{{ fplace.Municipio.NombreUbicacionGeografica | trim }}</td>
                             <td>
                                 <i class="large pencil yellow alternate link icon"
                                     value={{fplace.IDLugarFrecuente}}></i>
