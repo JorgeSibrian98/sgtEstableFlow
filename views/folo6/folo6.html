@@ -169,9 +169,9 @@
                         <label for='mision_i_id'>Misión o motivo del viaje</label>
                         <div class="required field">
                             <select class="ui fluid dropdown" name="mision_i" id="mision_i_id">
-                                <option value="">Seleccione un motivo de viaje</option>
+                                <option selected value="">Seleccione un motivo de viaje</option>
                                 {% for m in misiones %}
-                                <option value="{{ m.IDMision }}" selected>{{ m.NombreMision }}</option>
+                                <option value="{{ m.IDMision }}">{{ m.NombreMision }}</option>
                                 {% endfor %}
                             </select>
                         </div>
