@@ -168,8 +168,13 @@ class Route_controller {
         route_id,
         route_conditions_id,
       } = req.body; //Se obtienen variables del cuerpo de la petición
-      console.log(req.body);
+      console.log(monday);
       console.log(errors.array());
+      var v;
+      if(monday == 0) {
+        v = 0;
+        console.log(v);
+      };
       if (!errors.isEmpty()) {
         //If there are errors, renders the same form, otherwise saves the new route in the DB.
         let Ruta = await Route.findByPk(route_id);
@@ -240,7 +245,7 @@ class Route_controller {
       /* Itera los nombres obtenidos de la BD y compara cada uno con el nombre que proviene del campo
       en la vista. Si son iguales, se indica en la bandera y se rompe el ciclo. */
       for (var ruta of Rutas) {
-        if (name == ruta.name) {
+        if (name == ruta.Nombre) {
           exists = 'yes';
           break;
         };
