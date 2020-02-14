@@ -13,8 +13,14 @@
                     <div class="two fields">
                         <div class="required field">
                             <label>Lugar de Destino:</label>
+                            {% if fplace_id %}
                             <input type="text" autocomplete="off" name="name" id="name" placeholder="Nombre del Destino"
-                                maxlength="150" value="{{name}}">
+                                maxlength="100" value="{{name | trim}}">
+                            {% else %}
+                            <input type="text" autocomplete="off" name="name" id="name" placeholder="Nombre del Destino"
+                                maxlength="100" value="{{name}}">
+                            {% endif %}
+
                         </div>
                         <div class="field">
                             <label>Ruta:</label>

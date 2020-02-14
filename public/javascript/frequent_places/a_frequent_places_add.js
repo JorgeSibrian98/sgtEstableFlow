@@ -9,8 +9,8 @@ $(function () {
                     type: 'empty',
                     prompt: 'Ingrese un nombre para la Dirección'
                 }, {
-                    type: 'maxLength[150]',
-                    prompt: 'Longitud Maxima de nombre 150 caracteres'
+                    type: 'maxLength[100]',
+                    prompt: 'Longitud Maxima de nombre 100 caracteres'
                 }, {
                     type: 'Alphanumeric',
                     prompt: 'El campo nombre solo acepta caracteres alfanumericos.'
@@ -19,8 +19,8 @@ $(function () {
             detail: {
                 identifier: 'detail',
                 rules: [{
-                    type: 'maxLength[200]',
-                    prompt: 'Longitud Maxima del detalle 200 caracteres'
+                    type: 'maxLength[150]',
+                    prompt: 'Longitud Maxima del detalle 150 caracteres'
                 }]
             },
             departamento: {
@@ -35,6 +35,13 @@ $(function () {
                 rules: [{
                     type: 'empty',
                     prompt: 'Seleccione un Municipio'
+                }]
+            },
+            ruta: {
+                identifier: 'ruta',
+                rules: [{
+                    type: 'empty',
+                    prompt: 'Seleccione una Ruta'
                 }]
             },
         }

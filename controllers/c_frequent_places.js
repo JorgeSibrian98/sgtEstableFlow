@@ -207,7 +207,7 @@ class frequent_place_controller {
                 fplace_id
             } = req.body;
             if (!errors.isEmpty()) {
-                let Departamentos = await department_controller.getList();
+                let Departamentos = await this.getDepartmentList();
                 res.render('../views/frequent_places/add.html', {
                     name,
                     detail,
@@ -244,7 +244,7 @@ class frequent_place_controller {
                 } catch (error) {
                     console.log(error);
                     error = 'El Lugar de Destino ingresado ya existe.';
-                    let Departamentos = await department_controller.getList();
+                    let Departamentos = await this.getDepartmentList();
                     let rutas = await route_controller.getRouteList();
                     name = true_name;
                     res.render('../views/frequent_places/add.html', {

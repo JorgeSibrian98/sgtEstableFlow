@@ -6,8 +6,13 @@
   <h3 class="ui blue dividing header">Dirección.</h3>
   <div class="field">
     <label>Detalle:</label>
-    <input type="text" id="detail" name="detail" autocomplete="off"
+    {% if fplace_id %}
+    <input type="text" id="detail" name="detail" autocomplete="off" maxlength="150"
+      placeholder="Ej: # de casa o local, # de pasaje o calle, colonia o urbanización" value="{{detail | trim}}">
+    {% else %}
+    <input type="text" id="detail" name="detail" autocomplete="off" maxlength="150"
       placeholder="Ej: # de casa o local, # de pasaje o calle, colonia o urbanización" value="{{detail}}">
+    {% endif %}
   </div>
   <div class="two fields">
     <div class="field">
@@ -18,7 +23,8 @@
             <option value="">--Seleccione un departamento--</option>
             {% for dep in Departamentos %}
             {% if(dep.CodigoUbicacionGeografica == departamento) %}
-            <option value="{{ dep.CodigoUbicacionGeografica }}" selected>{{ dep.NombreUbicacionGeografica }}</option>
+            <option value="{{ dep.CodigoUbicacionGeografica }}" selected>{{ dep.NombreUbicacionGeografica }}
+            </option>
             {% else %}
             <option value="{{ dep.CodigoUbicacionGeografica }}">{{ dep.NombreUbicacionGeografica }}</option>
             {% endif %}

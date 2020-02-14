@@ -9,7 +9,7 @@ function fillMunicipio() {
         }, function (municipios) {
             if (municipios != null && !jQuery.isEmptyObject(municipios)) {
                 municipiosSelect.append($('<option/>', {
-                    value: null,
+                    value: '',
                     text: "--Seleccione un municipio--"
                 }));
                 $.each(municipios, function (index, municipio) {
