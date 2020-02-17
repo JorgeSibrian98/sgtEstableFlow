@@ -110,15 +110,16 @@ class employee_controller {
     async findUnitByUser(user) {
         try {
             var unit = new Object();
-            unit.id = user.unit_id;
-            await Unit.findByPk(user.unit_id, {
-                attributes: ['name_unit']
-            }).then(u => {
-                // console.log("DE LA UNIDAD" + unit + " De tipo " + typeof (unit));
-                unit.name = u.name_unit
+            /* Consulta a la tabla de SIS_USUARIO */
+            await db.query('SELECT dbo.GLO_UnidadesOrganizacionalesLey.NombreUnidadOrganizacionalLey as "Unidad",dbo.GLO_Ubicacion_O_Pad_Ley.Ubicacion_O_Pad as "Ubicacion", dbo.GLO_Relaciones_UnidadesOrganizacionalesLey.id_Relacion as "IDRelacionUnidadUbicacion", dbo.HUM_Puestos.NombrePuesto as "Puesto" FROM dbo.GLO_PersonasNaturales INNER JOIN dbo.HUM_Empleados ON dbo.GLO_PersonasNaturales.CodigoPersona = dbo.HUM_Empleados.CodigoEmpleado INNER JOIN dbo.GLO_UnidadesOrganizacionalesLey INNER JOIN dbo.GLO_Relaciones_UnidadesOrganizacionalesLey ON dbo.GLO_UnidadesOrganizacionalesLey.IdUnidadOrganizacional = dbo.GLO_Relaciones_UnidadesOrganizacionalesLey.IdUnidadOrganizacional INNER JOIN dbo.GLO_Ubicacion_O_Pad_Ley ON dbo.GLO_Relaciones_UnidadesOrganizacionalesLey.id_Ubicacion_O_Pad = dbo.GLO_Ubicacion_O_Pad_Ley.id_Ubicacion_O_Pad ON dbo.HUM_Empleados.CodigoRelacionUnidadOrganizacional = dbo.GLO_Relaciones_UnidadesOrganizacionalesLey.id_Relacion INNER JOIN dbo.HUM_Puestos ON dbo.HUM_Empleados.CodigoPuestoFuncionalEmpleado = dbo.HUM_Puestos.CodigoPuesto LEFT OUTER JOIN dbo.SIS_Usuarios ON dbo.HUM_Empleados.CodigoUsuario = dbo.SIS_Usuarios.CodigoUsuario WHERE dbo.SIS_Usuarios.CodigoUsuario = ? ', {
+                replacements: [user.CodigoUsuario],
+                type: db.QueryTypes.SELECT
+            }).then(data => {
+                unit = data[0].Unidad;
             });
 
             console.log("DE LA UNIDAD" + unit + " De tipo " + typeof (unit));
+
             return unit;
         } catch (err) {
             console.log(err);

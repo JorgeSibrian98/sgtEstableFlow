@@ -30,6 +30,18 @@ class Mision_controller {
     }
   };
 
+  //Trae informacion de una mision a traves del ID
+  async getOne(IDMision) {
+    let mision;
+    await Mision.findByPk(IDMision, {
+      attributes: ['IDMision', 'NombreMision', 'MisionActiva']
+    }).then(m => {
+      mision.IDMision = m.IDMision;
+      mision.NombreMision = m.NombreMision;
+      mision.MisionActiva = m.MisionActiva ? 'Activa' : 'Inactiva';
+    })
+    return mision;
+  }
   //Listado de las misiones disponibles para folo06
   async getList(req, res) {
     try {

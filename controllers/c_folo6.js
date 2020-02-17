@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const Folo6 = require('../models/m_folo6');
-const place_container = require('../models/m_lugares_contenedor');
+const LugaresContenedor = require('../models/m_lugares_contenedor');
 const FPlace = require('../models/m_lugares_frecuentes');
 const Address = require('../models/m_direccion');
 //const Apanel = require('../models/m_folo6_approve_state');
@@ -11,13 +11,13 @@ const querystring = require('querystring');
 const auth_controller = require('../controllers/c_auth');
 const UbicacionesGeograficas = require('../models/m_ubicaciones_geograficas');
 const Mision = require('../models/m_mision');
+const mision_controller = require('../controllers/c_misiones');
 //Manejo de fechas
 var moment = require('moment');
 moment.locale("Es-SV")
 
 //Para manejar el área de direcciones y lugares frecuentes
-//const department_controller = require('../controllers/c_department');
-//const municipio_controller = require('../controllers/c_city');
+const direcciones_controller = require('../controllers/c_direccion');
 const pdfPrinter = require('pdfmake/src/printer'); //Copiar esto
 const employee_controller = require('../controllers/c_employee');
 /* const Migration = require('../models/migrations');
@@ -1154,19 +1154,17 @@ class folo6_controllers {
 
     async foloInfo(req) {
         try {
-            console.log("FOLO QUE VOY A VERIFICAR" + req.body.id_folo)
-            var folo = await Folo6.findAll({
-                where: {
-                    id: req.body.id_folo
-                },
-                attributes: ['id', 'off_date', 'off_hour', 'return_hour', 'passengers_number', 'with_driver', 'person_who_drive', 'license_type', 'mission', 'observation', 'created_at', 'employee_id']
+            console.log("FOLO QUE VOY A VERIFICAR" + req.body.IDFolo)
+            var folo = await Folo6.findByPK(req.body.IDFolo, {
+                attributes: ['IDFolo', 'IDRelacionUbicacion', 'FechaSalida', 'HoraSalida', 'HoraRetorno', 'CantidadDePasajeros', 'ConMotorista', 'PersonaQueConducira', 'TipoDeLicencia', 'IDMision', 'Observacion', 'CreadoPor', 'FechaCreacion']
             });
             //console.dir(folo);
             var el = new Object();
             folo.forEach((folo, i) => {
-                console.log("FOLO QUE VOY RECIBI" + folo.id)
+                console.log("FOLO QUE VOY RECIBI" + folo.IDFolo)
 
-                el.id = folo.id;
+                el.IDFolo = folo.IDFolo;
+                el.IDRelacionUbicacion = folo.IDRelacionUbicacion;
                 //La BD envia las fechas y horas en formato utc por ello se debe convertir al formato especificado en el método format(). Revisar documentación de moment.js
                 /*CORRECCIÓN HECHA POR AXEL HERNÁNDEZ - 21/11/2019:
                 Al mostrar el PDF desde el listado de solicitudes, la fecha de salida se mostraba con un día
@@ -1174,19 +1172,19 @@ class folo6_controllers {
                 Esto sucedía por la resta del tiempo UTC de -6 horas. La fecha de salida es guardada en la BD
                 con valores de 0 horas, 0 minutos, 0 segundos (como si se hubiera guardado exactamente a medianoche),
                 y al restarle las 6 horas se devolvía al día anterior.*/
-                el.off_date = moment.utc(folo.off_date).format("DD/MM/YYYY");
-                el.off_hour = moment.utc(folo.off_hour).format("h:mm A");
-                el.return_hour = moment.utc(folo.return_hour).format("h:mm A");
-                el.passengers_number = folo.passengers_number;
-                el.with_driver = folo.with_driver ? 1 : 0;
-                el.person_who_drive = folo.person_who_drive;
-                el.license_type = folo.license_type;
-                el.mission = folo.mission;
-                el.observation = folo.observation;
-                el.created_at = moment.utc(folo.created_at).utcOffset("-06:00").format("DD/MM/YYYY");
-                el.employee_id = folo.employee_id;
+                el.FechaSalida = moment.utc(folo.FechaSalida).format("DD/MM/YYYY");
+                el.HoraSalida = moment.utc(folo.HoraSalida).format("h:mm A");
+                el.HoraRetorno = moment.utc(folo.HoraRetorno).format("h:mm A");
+                el.CantidadDePasajeros = folo.CantidadDePasajeros;
+                el.ConMotorista = folo.ConMotorista ? 1 : 0;
+                el.PersonaQueConducira = folo.PersonaQueConducira;
+                el.TipoDeLicencia = folo.TipoDeLicencia;
+                el.Mision = mision_controller.getOne(folo.IDMision);
+                el.Observacion = folo.Observacion;
+                el.FechaCreacion = moment.utc(folo.FechaCreacion).utcOffset("-06:00").format("DD/MM/YYYY");
+                el.CreadoPor = folo.CreadoPor;
             });
-            console.log(el.id);
+            console.log(el.IDFolo);
             /**APROBACION FOLO***/
             /* var estados = await Apanel.findAll({
                 where: {
@@ -1214,36 +1212,31 @@ class folo6_controllers {
             //Contendra el total de direcciones que se han creaddo para el folo que se solicita
             el.fplaces = [];
             //Para traer todos los lugares frecuentes ligados a ese folo
-            await place_container.findAll({
+            await LugaresContenedor.findAll({
                 where: {
-                    folo_id: req.body.id_folo
+                    IDFolo: req.body.IDFolo
                 },
-                attributes: ['frequent_place_id'],
+                attributes: ['IDLugarFrecuente'],
                 include: [FPlace]
             }).then(Fplaces => {
                 //console.dir("Conglomerado de fplac:" + JSON.stringify(Fplaces) + " eS DEL TIPO " + typeof (Fplaces));
                 Fplaces.forEach(row => {
-                    //console.dir(row.SGT_Lugar_Frecuente);
-                    if (row.SGT_Lugar_Frecuente) {
-                        console.dir("Datos del lugar:" + JSON.stringify(row.SGT_Lugar_Frecuente.name));
+                    //console.dir(row.TRA_LugaresFrecuentes);
+                    if (row.TRA_LugaresFrecuentes) {
+                        console.dir("Datos del lugar:" + JSON.stringify(row.TRA_LugaresFrecuentes.NombreLugarFrecuente));
                         var f = new Object();
                         f.city = new Object();
                         f.department = new Object();
 
-                        f.id = row.SGT_Lugar_Frecuente.id;
-                        f.name = row.SGT_Lugar_Frecuente.name;
-                        f.detail = row.SGT_Lugar_Frecuente.detail;
-                        //SE GUARDA EL NOMBRE DEL MUNICIPIO
-                        f.city.id = row.SGT_Lugar_Frecuente.city_id;
-                        municipio_controller.getName(row.SGT_Lugar_Frecuente.city_id).then(name => {
-                            f.city.name = name;
+                        f.IDLugarFrecuente = row.TRA_LugaresFrecuentes.IDLugarFrecuente;
+                        f.NombreLugarFrecuente = row.TRA_LugaresFrecuentes.NombreLugarFrecuente;
+                        f.DetalleLugarFrecuente = row.TRA_LugaresFrecuentes.DetalleLugarFrecuente;
+                        //SE GUARDA EL NOMBRE DEL MUNICIPIO Y DEPARTAMENTO
+                        direcciones_controller.getMunicipioYDto(row.TRA_LugaresFrecuentes.CodMunicipio).then(ubicaciones => {
+                            f.Municipio = ubicaciones.Municipio;
+                            f.Departamento = ubicaciones.Departamento;
                         });
-                        //SE GUARDA EL NOMBRE DEL DEPARTAMENTO
-                        f.department.id = row.SGT_Lugar_Frecuente.department_id;
-                        department_controller.getName(row.SGT_Lugar_Frecuente.department_id).then(name => {
-                            f.department.name = name;
-                        });
-                        f.procu_id = row.SGT_Lugar_Frecuente.procuraduria_id;
+                        //f.procu_id = row.TRA_LugaresFrecuentes.procuraduria_id;
                         el.fplaces.push(f);
                         el.b++;
                     }
@@ -1272,10 +1265,10 @@ class folo6_controllers {
             //Contendra el total de direcciones que se han creaddo para el folo que se solicita
             el.address = [];
             //Para traer todos las direcciones ligados a ese folo
-            var containers = await place_container.findAll({
+            var containers = await LugaresContenedor.findAll({
                 where: {
-                    folo_id: req.body.id_folo,
-                    frequent_place_id: {
+                    IDFolo: req.body.IDFolo,
+                    IDLugarFrecuente: {
                         [Op.is]: null
                     }
                 }
@@ -1286,32 +1279,23 @@ class folo6_controllers {
                 //console.dir(row.SGT_Direccion);
                 var array = await Address.findAll({
                     where: {
-                        container_id: container.id
+                        IDLugarContenedor: container.IDLugarContenedor
                     }
                 })
                 var row = array[0];
                 console.log("Direccion: " + row.name + " " + row.detail);
                 var dir = new Object();
-                dir.city = new Object();
-                dir.department = new Object();
-                dir.id = row.id;
-                dir.name = row.name;
-                dir.detail = row.detail;
-                dir.city.id = row.city_id;
-                //SE GUARDA EL NOMBRE DEL MUNICIPIO
-                municipio_controller.getName(row.city_id).then(name => {
-                    dir.city.name = name;
-                });
-                dir.department.id = row.department_id
-                //SE GUARDA EL NOMBRE DEL DEPARTAMENTO
-                department_controller.getName(row.department_id).then(name => {
-                    dir.department.name = name;
+                dir.IDDireccion = row.IDDireccion;
+                dir.Nombre = row.Nombre;
+                dir.Detalle = row.Detalle;
+                //SE GUARDA EL NOMBRE DEL MUNICIPIO Y DEPARTAMENTO
+                direcciones_controller.getMunicipioYDto(row.TRA_LugaresFrecuentes.CodMunicipio).then(ubicaciones => {
+                    dir.Municipio = ubicaciones.Municipio;
+                    dir.Departamento = ubicaciones.Departamento;
                 });
                 //dir.procu_id = row.address.procuraduria_id;
-
                 el.address.push(dir);
                 el.b++;
-
             });
 
             el.emp = new Object();
@@ -1366,7 +1350,7 @@ class folo6_controllers {
             //Contendra el total de direcciones que se han creaddo para el folo que se solicita
             el.fplaces = [];
             //Para traer todos los lugares frecuentes ligados a ese folo
-            await place_container.findAll({
+            await LugaresContenedor.findAll({
                 where: {
                     folo_id: req.params.id
                 },
@@ -1375,26 +1359,26 @@ class folo6_controllers {
             }).then(Fplaces => {
                 console.dir("Conglomerado de fplac:" + JSON.stringify(Fplaces) + " eS DEL TIPO " + typeof (Fplaces))
                 Fplaces.forEach(row => {
-                    if (row.SGT_Lugar_Frecuente) {
+                    if (row.TRA_LugaresFrecuentes) {
                         //console.dir("Datos del lugar:" + JSON.stringify(row.frequent_place.name));
                         var f = new Object();
                         f.city = new Object();
                         f.department = new Object();
 
-                        f.id = row.SGT_Lugar_Frecuente.id;
-                        f.name = row.SGT_Lugar_Frecuente.name;
-                        f.detail = row.SGT_Lugar_Frecuente.detail;
+                        f.id = row.TRA_LugaresFrecuentes.id;
+                        f.name = row.TRA_LugaresFrecuentes.name;
+                        f.detail = row.TRA_LugaresFrecuentes.detail;
                         //SE GUARDA EL NOMBRE DEL MUNICIPIO
-                        f.city.id = row.SGT_Lugar_Frecuente.city_id;
-                        municipio_controller.getName(row.SGT_Lugar_Frecuente.city_id).then(name => {
+                        f.city.id = row.TRA_LugaresFrecuentes.city_id;
+                        municipio_controller.getName(row.TRA_LugaresFrecuentes.city_id).then(name => {
                             f.city.name = name;
                         });
                         //SE GUARDA EL NOMBRE DEL DEPARTAMENTO
-                        f.department.id = row.SGT_Lugar_Frecuente.department_id;
-                        department_controller.getName(row.SGT_Lugar_Frecuente.department_id).then(name => {
+                        f.department.id = row.TRA_LugaresFrecuentes.department_id;
+                        department_controller.getName(row.TRA_LugaresFrecuentes.department_id).then(name => {
                             f.department.name = name;
                         });
-                        f.procu_id = row.SGT_Lugar_Frecuente.procuraduria_id;
+                        f.procu_id = row.TRA_LugaresFrecuentes.procuraduria_id;
                         el.fplaces.push(f);
                         el.b++;
                     }
@@ -1404,7 +1388,7 @@ class folo6_controllers {
             el.address = [];
             //Para traer todos las direcciones ligados a ese folo
             //Para traer todos las direcciones ligados a ese folo
-            var containers = await place_container.findAll({
+            var containers = await LugaresContenedor.findAll({
                 where: {
                     folo_id: req.params.id,
                     frequent_place_id: {
@@ -1579,7 +1563,7 @@ class folo6_controllers {
             //Contendra el total de direcciones que se han creaddo para el folo que se solicita
             el.fplaces = [];
             //Para traer todos los lugares frecuentes ligados a ese folo
-            await place_container.findAll({
+            await LugaresContenedor.findAll({
                 where: {
                     folo_id: req.params.id
                 },
@@ -1598,7 +1582,7 @@ class folo6_controllers {
             //Contendra el total de direcciones que se han creaddo para el folo que se solicita
             el.address = [];
             //Para traer todos las direcciones ligados a ese folo
-            await place_container.findAll({
+            await LugaresContenedor.findAll({
                 where: {
                     folo_id: req.params.id
                 },
@@ -1720,7 +1704,7 @@ class folo6_controllers {
                 //CREATE para places container, esta tabla relaciona ya sean lugares frecuentes o direcciones con un folo
                 if (fplaces.length) {
                     fplaces.forEach(IDLugar => {
-                        place_container.create({
+                        LugaresContenedor.create({
                             IDFolo: folo.IDFolo,
                             FechaDeVisita: date,
                             IDLugarFrecuente: IDLugar
@@ -1732,7 +1716,7 @@ class folo6_controllers {
                 if (address.length) {
                     for (var i = 0; i < address.length; i++) {
                         //Se crea el place container para cada dirección creada
-                        var container = await place_container.create({
+                        var container = await LugaresContenedor.create({
                             IDFolo: folo.IDFolo,
                             FechaDeVisita: date,
                         });
@@ -1853,13 +1837,13 @@ class folo6_controllers {
 
                 //Departamento
                 console.log("sali del create");
-                var places = place_container.findAll({
+                var places = LugaresContenedor.findAll({
                     where: {
                         folo_id: form.folo_id
                     }
                 });
                 await asyncForEach(places, async (container) => {
-                    await place_container.update({
+                    await LugaresContenedor.update({
                         date_of_visit: date
                     }, {
                         where: {
@@ -1892,7 +1876,7 @@ class folo6_controllers {
     async deleteFolo(req, res) {
         try {
             /* Elimina de la tabla la unión del folo con los lugares y/o direcciones*/
-            await place_container.destroy({
+            await LugaresContenedor.destroy({
                 where: {
                     folo_id: req.params.id
                 }
@@ -1928,14 +1912,14 @@ class folo6_controllers {
                 id_frequent_place
             } = req.body;
             if (id_address != null) {
-                place_container.destroy({
+                LugaresContenedor.destroy({
                     where: {
                         address_id: id_address
                     }
                 });
             };
             if (id_frequent_place != null) {
-                place_container.destroy({
+                LugaresContenedor.destroy({
                     where: {
                         frequent_place_id: id_frequent_place
                     }
@@ -1961,14 +1945,14 @@ class folo6_controllers {
             //Si seleccionó "Otro" en el dropdown de lugares frecuentes crea un registro en "places_container"
             //con el id de la dirección creada
             if (selectedPlaceTxt == 'Otro') {
-                place_container.create({
+                LugaresContenedor.create({
                     date_of_visit,
                     address_id,
                     folo_id
                 });
             } else {
                 //Si seleccionó otra opción crea un registro en "places_container" con el id del lugar frecuente seleccionado
-                place_container.create({
+                LugaresContenedor.create({
                     date_of_visit,
                     frequent_place_id: selectedPlace,
                     folo_id
