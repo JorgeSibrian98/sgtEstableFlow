@@ -125,9 +125,6 @@ class employee_controller {
             console.log(err);
         }
     }
-
-
-
 };
 
 module.exports = new employee_controller();

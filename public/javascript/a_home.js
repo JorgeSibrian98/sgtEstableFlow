@@ -85,33 +85,33 @@ function fillTable() {
             type: 'GET',
         },
         "columns": [{
-                "data": "off_date"
+                "data": "FechaSalida"
             },
             {
-                "data": "off_hour"
+                "data": "HoraSalida"
             },
             {
-                "data": "return_hour"
+                "data": "HoraRetorno"
             },
             {
-                "data": "passengers_number"
+                "data": "CantidadDePasajeros"
             },
             {
-                "data": "with_driver"
+                "data": "ConMotorista"
             },
             {
-                "data": "created_at"
+                "data": "FechaCreacion"
             }
             //Descomentar cuando se habilite las acciones
-            /* ,
-                        {
-                            "data": "buttons",
-                            //Indicarle que lo que se renderizará son los iconos que trae data del controlador
-                            "render": function (data, type, row, meta) {
-                                return data;
-                            }
+            ,
+            {
+                "data": "buttons",
+                //Indicarle que lo que se renderizará son los iconos que trae data del controlador
+                "render": function (data, type, row, meta) {
+                    return data;
+                }
 
-                        } */
+            }
         ]
     });
 
@@ -247,8 +247,8 @@ function debugBase64(base64URL) {
 //PARA MOSTRAR EL PDF DEL FOLO SELECCIONADO
 $('#mytable tbody').on('click', '.print.link.icon', function (event) {
     showLoadingPDFDimmer();
-    var id_folo = parseInt($(this).attr('id'));
-    console.log("Usted desea imprimir el folo:" + id_folo);
+    var IDFolo = parseInt($(this).attr('id'));
+    console.log("Usted desea imprimir el folo:" + IDFolo);
     //$('.segment').dimmer('set disabled');
 
     $.ajax({
@@ -257,7 +257,7 @@ $('#mytable tbody').on('click', '.print.link.icon', function (event) {
         type: 'POST',
         dataType: 'json',
         data: {
-            id_folo: JSON.stringify(id_folo)
+            IDFolo: JSON.stringify(IDFolo)
         },
         success: (data) => {
             console.log("El folo se mostrará en seguida")

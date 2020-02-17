@@ -1154,13 +1154,12 @@ class folo6_controllers {
 
     async foloInfo(req) {
         try {
-            console.log("FOLO QUE VOY A VERIFICAR" + req.body.IDFolo)
-            var folo = await Folo6.findByPK(req.body.IDFolo, {
-                attributes: ['IDFolo', 'IDRelacionUbicacion', 'FechaSalida', 'HoraSalida', 'HoraRetorno', 'CantidadDePasajeros', 'ConMotorista', 'PersonaQueConducira', 'TipoDeLicencia', 'IDMision', 'Observacion', 'CreadoPor', 'FechaCreacion']
-            });
-            //console.dir(folo);
             var el = new Object();
-            folo.forEach((folo, i) => {
+
+            console.log("FOLO QUE VOY A VERIFICAR" + req.body.IDFolo)
+            var folo = await Folo6.findByPk(req.body.IDFolo, {
+                attributes: ['IDFolo', 'IDRelacionUbicacion', 'FechaSalida', 'HoraSalida', 'HoraRetorno', 'CantidadDePasajeros', 'ConMotorista', 'PersonaQueConducira', 'TipoDeLicencia', 'IDMision', 'Observacion', 'CreadoPor', 'FechaCreacion']
+            }).then(folo => {
                 console.log("FOLO QUE VOY RECIBI" + folo.IDFolo)
 
                 el.IDFolo = folo.IDFolo;
@@ -1179,7 +1178,9 @@ class folo6_controllers {
                 el.ConMotorista = folo.ConMotorista ? 1 : 0;
                 el.PersonaQueConducira = folo.PersonaQueConducira;
                 el.TipoDeLicencia = folo.TipoDeLicencia;
-                el.Mision = mision_controller.getOne(folo.IDMision);
+                mision_controller.getOne(folo.IDMision).then(m => {
+                    el.Mision = m;
+                });
                 el.Observacion = folo.Observacion;
                 el.FechaCreacion = moment.utc(folo.FechaCreacion).utcOffset("-06:00").format("DD/MM/YYYY");
                 el.CreadoPor = folo.CreadoPor;
@@ -1460,13 +1461,13 @@ class folo6_controllers {
             folos.forEach((row, i) => {
                 var el = new Object();
                 //La BD envia las fechas y horas en formato utc por ello se debe convertir al formato especificado en el método format(). Revisar documentación de moment.js
-                el.off_date = moment.utc(row.FechaSalida).format("DD MMMM YYYY");
-                el.off_hour = moment.utc(row.HoraSalida).format("h:mm A");
-                el.return_hour = moment.utc(row.HoraRetorno).format("h:mm A");
-                el.passengers_number = row.CantidadDePasajeros;
+                el.FechaSalida = moment.utc(row.FechaSalida).format("DD MMMM YYYY");
+                el.HoraSalida = moment.utc(row.HoraSalida).format("h:mm A");
+                el.HoraRetorno = moment.utc(row.HoraRetorno).format("h:mm A");
+                el.CantidadDePasajeros = row.CantidadDePasajeros;
                 //Si with_driver = true, envía la cadena "Si"
-                el.with_driver = row.ConMotorista ? "Si" : "No";
-                el.created_at = moment.parseZone(row.FechaCreacion).local().format("DD/MM/YYYY h:mm A");
+                el.ConMotorista = row.ConMotorista ? "Si" : "No";
+                el.FechaCreacion = moment.parseZone(row.FechaCreacion).local().format("DD/MM/YYYY h:mm A");
                 //Icono para visualizar el folo. Enlance y un icono de lapiz para editar el folo. Un icono de eliminado. Ambos tiene por identificardor el id del folo que ha ido a traer a la BD
                 //var today = moment().format("DD MMMM YYYY");
                 var trully = moment().isBefore(moment.utc(row.FechaSalida))
@@ -1477,6 +1478,8 @@ class folo6_controllers {
                 else
                     el.buttons = '<i id="' + row.IDFolo + '" class="large print black link icon "></i><i id="' + row.IDFolo + '" class="large file grey alternate outline link icon "></i>'
                  */
+                //SOLO PARA PROBAR IMPRESION
+                el.buttons = '<i id="' + row.IDFolo + '" class="large print black link icon "></i>';
                 data.push(el);
             });
             //console.dir(data);

@@ -33,6 +33,7 @@ class Mision_controller {
   //Trae informacion de una mision a traves del ID
   async getOne(IDMision) {
     let mision;
+    console.log("MISION QUE BUSCARE" + IDMision)
     await Mision.findByPk(IDMision, {
       attributes: ['IDMision', 'NombreMision', 'MisionActiva']
     }).then(m => {
