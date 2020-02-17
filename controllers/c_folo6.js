@@ -67,17 +67,17 @@ class folo6_controllers {
         try {
             let folo = await this.foloInfo(req);
             console.dir("EN SHOW RECIBI ESTO" + JSON.stringify(folo));
-            var fechaSolicitud = folo.created_at;
-            var unidadSolicitante = folo.emp.unit.name;
-            var personaSolicitante = folo.emp.first_name + ', ' + folo.emp.last_name;
-            var fechaSalida = folo.off_date;
-            var f1 = moment(folo.off_date, "DD/MM/YYYY"); //Para determinar con moment JS qué día de la semana es
-            var horaSalida = folo.off_hour;
-            var horaRetorno = folo.return_hour;
-            var motorista = folo.with_driver ? "Sí" : "No";
-            var cantidadPasajeros = folo.passengers_number;
-            var personaConducir = folo.person_who_drive;
-            var tipoLicencia = folo.license_type;
+            var fechaSolicitud = folo.CreadoPor;
+            var unidadSolicitante = folo.emp.unit;
+            var personaSolicitante = folo.emp.NombresUsuario + ', ' + folo.emp.ApellidosUsuario;
+            var fechaSalida = folo.FechaSalida;
+            var f1 = moment(folo.HoraSalida, "DD/MM/YYYY"); //Para determinar con moment JS qué día de la semana es
+            var horaSalida = folo.HoraRetorno;
+            var horaRetorno = folo.HoraRetorno;
+            var motorista = folo.ConMotorista ? "Sí" : "No";
+            var cantidadPasajeros = folo.CantidadDePasajeros;
+            var personaConducir = folo.PersonaQueConducira;
+            var tipoLicencia = folo.TipoDeLicencia;
             //B es un contador definido por la cantidad de direcciones que posee una solicitud
             var b = folo.b
             var direccion;
@@ -100,11 +100,11 @@ class folo6_controllers {
             if (b === 1) {
                 //Si existe lugar frecuente; si no, lo ingresado es una dirección
                 if (folo.fplaces.length) {
-                    direccion = folo.fplaces[0].name + " ," + folo.fplaces[0].detail + " ," + folo.fplaces[0].city.name + " ," + folo.fplaces[0].department.name;
+                    direccion = folo.fplaces[0].NombreLugarFrecuente + " ," + folo.fplaces[0].DetalleLugarFrecuente + " ," + folo.fplaces[0].Municipio + " ," + folo.fplaces[0].Departamento;
                 } else {
                     //Para verificar que address no está vacío
                     if (folo.address.length)
-                        direccion = folo.address[0].name + " ," + folo.address[0].detail + " ," + folo.address[0].city.name + " ," + folo.address[0].department.name;
+                        direccion = folo.address[0].Nombre + " ," + folo.address[0].Detalle + " ," + folo.address[0].Municipio + " ," + folo.address[0].Departamento;
                 }
             } else {
                 //Si existe más de una ruta o de un lugar frecuente
@@ -112,27 +112,27 @@ class folo6_controllers {
                 if (folo.fplaces.length) {
                     folo.fplaces.forEach(ele => {
                         var direcciones = [];
-                        direcciones.push(ele.name);
-                        direcciones.push(ele.detail);
-                        direcciones.push(ele.city.name);
-                        direcciones.push(ele.department.name);
+                        direcciones.push(ele.NombreLugarFrecuente);
+                        direcciones.push(ele.DetalleLugarFrecuente);
+                        direcciones.push(ele.Municipio);
+                        direcciones.push(ele.Departamento);
                         bodyData.push(direcciones);
                     });
                 };
                 if (folo.address.length) {
                     folo.address.forEach(ele => {
                         var direcciones = [];
-                        direcciones.push(ele.name);
-                        direcciones.push(ele.detail);
-                        direcciones.push(ele.city.name);
-                        direcciones.push(ele.department.name);
+                        direcciones.push(ele.Nombre);
+                        direcciones.push(ele.Detalle);
+                        direcciones.push(ele.Municipio);
+                        direcciones.push(ele.Departamento);
                         bodyData.push(direcciones);
                     });
                 };
             };
             console.log(typeof (b) + " cantidad " + b)
-            var mision = folo.mission;
-            var observaciones = folo.observation;
+            var mision = folo.Mision;
+            var observaciones = folo.Observacion;
             var horasNoHabiles = ['12:00 AM', '12:30 AM', '1:00 AM', '1:30 AM', '2:00 AM', '2:30 AM',
                 '3:00 AM', '3:30 AM', '4:00 AM', '4:30 AM', '5:00 AM', '5:30 AM', '6:00 AM', '6:30 AM',
                 '7:00 AM', '7:30 AM', '4:30 PM', '5:00 PM', '5:30 PM', '6:00 PM', '6:30 PM', '7:00 PM',
@@ -1225,9 +1225,6 @@ class folo6_controllers {
                     if (row.TRA_LugaresFrecuentes) {
                         console.dir("Datos del lugar:" + JSON.stringify(row.TRA_LugaresFrecuentes.NombreLugarFrecuente));
                         var f = new Object();
-                        f.city = new Object();
-                        f.department = new Object();
-
                         f.IDLugarFrecuente = row.TRA_LugaresFrecuentes.IDLugarFrecuente;
                         f.NombreLugarFrecuente = row.TRA_LugaresFrecuentes.NombreLugarFrecuente;
                         f.DetalleLugarFrecuente = row.TRA_LugaresFrecuentes.DetalleLugarFrecuente;
@@ -1283,7 +1280,7 @@ class folo6_controllers {
                     }
                 })
                 var row = array[0];
-                console.log("Direccion: " + row.name + " " + row.detail);
+                console.log("Direccion: " + row.Nombre + " " + row.Detalle);
                 var dir = new Object();
                 dir.IDDireccion = row.IDDireccion;
                 dir.Nombre = row.Nombre;
@@ -1301,7 +1298,6 @@ class folo6_controllers {
             el.emp = new Object();
             const token = auth_controller.decode_token(req.cookies.token);
             el.emp = token.user;
-            el.emp.unit = new Object();
             el.emp.unit = await employee_controller.findUnitByUser(token.user)
 
             console.dir("Datos del folo" + JSON.stringify(el) + "\nDatos el empleado: " + JSON.stringify(el.emp));
