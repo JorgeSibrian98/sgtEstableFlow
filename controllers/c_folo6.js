@@ -1287,7 +1287,7 @@ class folo6_controllers {
                 dir.Nombre = row.Nombre;
                 dir.Detalle = row.Detalle;
                 //SE GUARDA EL NOMBRE DEL MUNICIPIO Y DEPARTAMENTO
-                direcciones_controller.getMunicipioYDto(row.TRA_LugaresFrecuentes.CodMunicipio).then(ubicaciones => {
+                direcciones_controller.getMunicipioYDto(row.CodMunicipio).then(ubicaciones => {
                     dir.Municipio = ubicaciones.Municipio;
                     dir.Departamento = ubicaciones.Departamento;
                 });
