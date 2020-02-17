@@ -67,7 +67,7 @@ class folo6_controllers {
         try {
             let folo = await this.foloInfo(req);
             console.dir("EN SHOW RECIBI ESTO" + JSON.stringify(folo));
-            var fechaSolicitud = folo.CreadoPor;
+            var fechaSolicitud = folo.FechaCreacion;
             var unidadSolicitante = folo.emp.unit;
             var personaSolicitante = folo.emp.NombresUsuario + ', ' + folo.emp.ApellidosUsuario;
             var fechaSalida = folo.FechaSalida;
@@ -138,7 +138,7 @@ class folo6_controllers {
                 '7:00 AM', '7:30 AM', '4:30 PM', '5:00 PM', '5:30 PM', '6:00 PM', '6:30 PM', '7:00 PM',
                 '7:30 PM', '8:00 PM', '8:30 PM', '9:00 PM', '9:30 PM', '10:00 PM', '10:30 PM',
                 '11:00 PM', '11:30 PM'
-            ]; //Para verificar si las horas de salida o returno son NO hábiles.
+            ]; //Para verificar si las horas de salida o retorno son NO hábiles.
             var crearFOLO13; //Variable a enviar a la vista en el response.
             var diaSemana = f1.weekday(); //Método para obtener qué día de la semana es de la fecha provista.
             console.log(diaSemana);
