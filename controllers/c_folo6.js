@@ -71,8 +71,8 @@ class folo6_controllers {
             var unidadSolicitante = folo.emp.unit;
             var personaSolicitante = folo.emp.NombresUsuario + ', ' + folo.emp.ApellidosUsuario;
             var fechaSalida = folo.FechaSalida;
-            var f1 = moment(folo.HoraSalida, "DD/MM/YYYY"); //Para determinar con moment JS qué día de la semana es
-            var horaSalida = folo.HoraRetorno;
+            var f1 = moment(folo.FechaSalida, "DD/MM/YYYY"); //Para determinar con moment JS qué día de la semana es
+            var horaSalida = folo.HoraSalida;
             var horaRetorno = folo.HoraRetorno;
             var motorista = folo.ConMotorista ? "Sí" : "No";
             var cantidadPasajeros = folo.CantidadDePasajeros;
