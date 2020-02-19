@@ -1222,19 +1222,19 @@ class folo6_controllers {
             }).then(Fplaces => {
                 //console.dir("Conglomerado de fplac:" + JSON.stringify(Fplaces) + " eS DEL TIPO " + typeof (Fplaces));
                 Fplaces.forEach(row => {
-                    //console.dir(row.TRA_LugaresFrecuentes);
-                    if (row.TRA_LugaresFrecuentes) {
-                        console.dir("Datos del lugar:" + JSON.stringify(row.TRA_LugaresFrecuentes.NombreLugarFrecuente));
+                    //console.dir(row);
+                    if (row.TRA_LugaresFrecuente) {
+                        console.dir("Datos del lugar:" + JSON.stringify(row.TRA_LugaresFrecuente.NombreLugarFrecuente));
                         var f = new Object();
-                        f.IDLugarFrecuente = row.TRA_LugaresFrecuentes.IDLugarFrecuente;
-                        f.NombreLugarFrecuente = row.TRA_LugaresFrecuentes.NombreLugarFrecuente;
-                        f.DetalleLugarFrecuente = row.TRA_LugaresFrecuentes.DetalleLugarFrecuente;
+                        f.IDLugarFrecuente = row.TRA_LugaresFrecuente.IDLugarFrecuente;
+                        f.NombreLugarFrecuente = row.TRA_LugaresFrecuente.NombreLugarFrecuente;
+                        f.DetalleLugarFrecuente = row.TRA_LugaresFrecuente.DetalleLugarFrecuente;
                         //SE GUARDA EL NOMBRE DEL MUNICIPIO Y DEPARTAMENTO
-                        direcciones_controller.getMunicipioYDto(row.TRA_LugaresFrecuentes.CodMunicipio).then(ubicaciones => {
+                        direcciones_controller.getMunicipioYDto(row.TRA_LugaresFrecuente.CodMunicipio).then(ubicaciones => {
                             f.Municipio = ubicaciones.Municipio;
                             f.Departamento = ubicaciones.Departamento;
                         });
-                        //f.procu_id = row.TRA_LugaresFrecuentes.procuraduria_id;
+                        //f.procu_id = row.TRA_LugaresFrecuente.procuraduria_id;
                         el.fplaces.push(f);
                         el.b++;
                     }
@@ -1287,7 +1287,7 @@ class folo6_controllers {
                 dir.Nombre = row.Nombre;
                 dir.Detalle = row.Detalle;
                 //SE GUARDA EL NOMBRE DEL MUNICIPIO Y DEPARTAMENTO
-                direcciones_controller.getMunicipioYDto(row.CodMunicipio).then(ubicaciones => {
+                await direcciones_controller.getMunicipioYDto(row.CodMun).then(ubicaciones => {
                     dir.Municipio = ubicaciones.Municipio;
                     dir.Departamento = ubicaciones.Departamento;
                 });
@@ -1306,6 +1306,7 @@ class folo6_controllers {
             console.dir("Direcciones: " + JSON.stringify(el.address));
             // console.dir(data);
             //Envía los datos de 'el' a la vista. En ella se debe acceder a sus atributos en forma: data.folo.x; x es cualquier atributo del folo enviado
+            console.log("Folo contiene esta cantidad de direcciones y lugares" + el.b)
             return el;
         } catch (error) {
             console.log(error);
@@ -1356,26 +1357,26 @@ class folo6_controllers {
             }).then(Fplaces => {
                 console.dir("Conglomerado de fplac:" + JSON.stringify(Fplaces) + " eS DEL TIPO " + typeof (Fplaces))
                 Fplaces.forEach(row => {
-                    if (row.TRA_LugaresFrecuentes) {
+                    if (row.TRA_LugaresFrecuente) {
                         //console.dir("Datos del lugar:" + JSON.stringify(row.frequent_place.name));
                         var f = new Object();
                         f.city = new Object();
                         f.department = new Object();
 
-                        f.id = row.TRA_LugaresFrecuentes.id;
-                        f.name = row.TRA_LugaresFrecuentes.name;
-                        f.detail = row.TRA_LugaresFrecuentes.detail;
+                        f.id = row.TRA_LugaresFrecuente.id;
+                        f.name = row.TRA_LugaresFrecuente.name;
+                        f.detail = row.TRA_LugaresFrecuente.detail;
                         //SE GUARDA EL NOMBRE DEL MUNICIPIO
-                        f.city.id = row.TRA_LugaresFrecuentes.city_id;
-                        municipio_controller.getName(row.TRA_LugaresFrecuentes.city_id).then(name => {
+                        f.city.id = row.TRA_LugaresFrecuente.city_id;
+                        municipio_controller.getName(row.TRA_LugaresFrecuente.city_id).then(name => {
                             f.city.name = name;
                         });
                         //SE GUARDA EL NOMBRE DEL DEPARTAMENTO
-                        f.department.id = row.TRA_LugaresFrecuentes.department_id;
-                        department_controller.getName(row.TRA_LugaresFrecuentes.department_id).then(name => {
+                        f.department.id = row.TRA_LugaresFrecuente.department_id;
+                        department_controller.getName(row.TRA_LugaresFrecuente.department_id).then(name => {
                             f.department.name = name;
                         });
-                        f.procu_id = row.TRA_LugaresFrecuentes.procuraduria_id;
+                        f.procu_id = row.TRA_LugaresFrecuente.procuraduria_id;
                         el.fplaces.push(f);
                         el.b++;
                     }
