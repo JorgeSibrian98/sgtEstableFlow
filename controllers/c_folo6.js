@@ -100,11 +100,16 @@ class folo6_controllers {
             if (b === 1) {
                 //Si existe lugar frecuente; si no, lo ingresado es una dirección
                 if (folo.fplaces.length) {
-                    direccion = folo.fplaces[0].NombreLugarFrecuente + " ," + folo.fplaces[0].DetalleLugarFrecuente + " ," + folo.fplaces[0].Municipio + " ," + folo.fplaces[0].Departamento;
+                    if (folo.fplaces[0].DetalleLugarFrecuente.trim().length == 0) {
+                        direccion = folo.fplaces[0].NombreLugarFrecuente.trim() + ", " + folo.fplaces[0].Municipio.trim() + ", " + folo.fplaces[0].Departamento.trim();
+                    } else {
+                        direccion = folo.fplaces[0].NombreLugarFrecuente.trim() + ", " + folo.fplaces[0].DetalleLugarFrecuente.trim() + ", " + folo.fplaces[0].Municipio.trim() + ", " + folo.fplaces[0].Departamento.trim();
+                    }
+                    
                 } else {
                     //Para verificar que address no está vacío
                     if (folo.address.length)
-                        direccion = folo.address[0].Nombre + " ," + folo.address[0].Detalle + " ," + folo.address[0].Municipio + " ," + folo.address[0].Departamento;
+                        direccion = folo.address[0].Nombre.trim() + ", " + folo.address[0].Detalle.trim() + ", " + folo.address[0].Municipio.trim() + ", " + folo.address[0].Departamento.trim();
                 }
             } else {
                 //Si existe más de una ruta o de un lugar frecuente
@@ -112,20 +117,25 @@ class folo6_controllers {
                 if (folo.fplaces.length) {
                     folo.fplaces.forEach(ele => {
                         var direcciones = [];
-                        direcciones.push(ele.NombreLugarFrecuente);
-                        direcciones.push(ele.DetalleLugarFrecuente);
-                        direcciones.push(ele.Municipio);
-                        direcciones.push(ele.Departamento);
+                        direcciones.push(ele.NombreLugarFrecuente.trim());
+                        if (ele.DetalleLugarFrecuente.trim().length == 0) {
+                            ele.DetalleLugarFrecuente = 'No especificado';
+                            direcciones.push(ele.DetalleLugarFrecuente);
+                        } else {
+                            direcciones.push(ele.DetalleLugarFrecuente.trim());
+                        };
+                        direcciones.push(ele.Municipio.trim());
+                        direcciones.push(ele.Departamento.trim());
                         bodyData.push(direcciones);
                     });
                 };
                 if (folo.address.length) {
                     folo.address.forEach(ele => {
                         var direcciones = [];
-                        direcciones.push(ele.Nombre);
-                        direcciones.push(ele.Detalle);
-                        direcciones.push(ele.Municipio);
-                        direcciones.push(ele.Departamento);
+                        direcciones.push(ele.Nombre.trim());
+                        direcciones.push(ele.Detalle.trim());
+                        direcciones.push(ele.Municipio.trim());
+                        direcciones.push(ele.Departamento.trim());
                         bodyData.push(direcciones);
                     });
                 };
@@ -146,33 +156,31 @@ class folo6_controllers {
             if (diaSemana == 5 || diaSemana == 6) {
                 crearFOLO13 = "Sí";
             } else {
-                crearFOLO13 = "No";
+                /*Horas de salida y retorno serán tratadas como hábiles hasta que sea encontrada en el arreglo 
+                de 'horasNoHabiles'. De encontrarse se rompe el ciclo.*/
+                for (var ele of horasNoHabiles) {
+                    //Condicionales separadas por cada hora para más claridad.
+                    if (ele == horaSalida) {
+                        crearFOLO13 = "Sí";
+                        break;
+                    } else {
+                        crearFOLO13 = "No";
+                    };
+
+                    if (ele == horaRetorno) {
+                        crearFOLO13 = "Sí";
+                        break;
+                    } else {
+                        crearFOLO13 = "No";
+                    };
+                };
+                console.log('¿Se creará FOLO-13? ' + crearFOLO13);
             };
             console.log(horaSalida);
             console.log(horaRetorno);
-            /*Horas de salida y retorno serán tratadas como hábiles hasta que sea encontrada en el arreglo 
-            de 'horasNoHabiles'. De encontrarse se rompe el ciclo.*/
-            for (var ele of horasNoHabiles) {
-                //Condicionales separadas por cada hora para más claridad.
-                if (ele == horaSalida) {
-                    crearFOLO13 = "Sí";
-                    console.log(horaSalida + ' no es una hora hábil.');
-                    break;
-                } else {
-                    crearFOLO13 = "No";
-                    console.log(horaSalida + ' es una hora hábil.');
-                };
-
-                if (ele == horaRetorno) {
-                    crearFOLO13 = "Sí";
-                    console.log(horaRetorno + ' no es una hora hábil.');
-                    break;
-                } else {
-                    crearFOLO13 = "No";
-                    console.log(horaRetorno + ' es una hora hábil.');
-                };
-            };
-
+            const token = auth_controller.decode_token(req.cookies.token);
+            var today = new Date();
+            var fileName = 'Solicitud_de_transporte_FOLO-06_' + today.getDate() + '/' + month + '/' + today.getFullYear() + '.pdf';
             //Sí quiere motorista y hay más de una dirección.
             if (motorista == "Sí" && b > 1) {
                 console.log("CON MOTORISTA Y MÁS UNA DIRECCION");
@@ -187,7 +195,6 @@ class folo6_controllers {
                 };
                 //'printer' se encarga de escribir en el lienzo.
                 const printer = new pdfPrinter(fonts);
-                var today = new Date();
                 var month = today.getMonth() + 1;
                 // CUERPO DEL DOCUMENTO. NO TOCAR. >:V
                 var docDefinition = {
@@ -196,13 +203,29 @@ class folo6_controllers {
                         title: 'Solicitud de transporte FOLO-06 ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
                     },
                     pageSize: 'LETTER',
-                    footer: {
-                        text: 'Fecha de impresión: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
-                        alignment: 'right',
-                        fontSize: '8',
-                        color: 'gray',
-                        italics: true,
-                        margin: [15, 5]
+                    footer: function (currentPage, pageCount) {
+                        return [{
+                                text: 'Fecha de generación: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
+                                alignment: 'right',
+                                fontSize: '9',
+                                italics: true,
+                                margin: [15, 0]
+                            },
+                            {
+                                text: 'Generado por: ' + token.user.NombresUsuario + ' ' + token.user.ApellidosUsuario,
+                                alignment: 'right',
+                                fontSize: '9',
+                                italics: true,
+                                margin: [15, 0]
+                            },
+                            {
+                                text: 'Página ' + currentPage.toString() + ' de ' + pageCount.toString(),
+                                alignment: 'right',
+                                fontSize: '9',
+                                italics: true,
+                                margin: [15, 0]
+                            }
+                        ];
                     },
                     content: [{
                             image: 'public/images/logopgr1.png',
@@ -375,13 +398,18 @@ class folo6_controllers {
                 y se guarda en 'result'. Este buffer es enviado a la vista en el response.*/
                 doc.on('end', () => {
                     result = Buffer.concat(chunks);
-                    //Se especifica el tipo de contenido que recibirá.
-                    /* res.writeHead(200, {
-                        'Content-Type': 'application/pdf',
-                        'Content-Disposition': 'attachment; filename="folo6.pdf"'
-                    }); */
-                    //res.setHeader('content-type', 'application/pdf');
-                    //Envío del PDF en forma base64.
+                /*Para visualizar el PDF sin descargarlo directamente, descomentar la siguiente línea de código.
+                Mozilla Firefox: Al descargar el PDF con el botón Descargar del visor, 
+                se descarga como 'document.pdf'. Si se descarga dando clic derecho en el documento y
+                luego clic en "Guardar como", se descarga con el nombre de la ruta relativa (reporteLoteVehicular.pdf).
+                Google Chrome: El PDF se descarga con el nombre de la ruta relativa de ambas formas.*/
+
+                    /* res.setHeader('content-type', 'application/pdf'); */
+
+                    /*Para descargar el PDF directamente sin visualización en navegador.
+                    Esta forma permite asignar nombre al documento a descargar de manera dinámica.*/
+                    res.setHeader('content-type', 'application/pdf');
+                    res.setHeader('Content-Disposition', 'attachment; filename=' + fileName);
                     res.send({
                         link: "data:application/pdf;base64," + result.toString('base64'),
                         imprimir: crearFOLO13
@@ -410,13 +438,29 @@ class folo6_controllers {
                         title: 'Solicitud de transporte FOLO-06 ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
                     },
                     pageSize: 'LETTER',
-                    footer: {
-                        text: 'Fecha de impresión: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
-                        alignment: 'right',
-                        fontSize: '8',
-                        color: 'gray',
-                        italics: true,
-                        margin: [15, 5]
+                    footer: function (currentPage, pageCount) {
+                        return [{
+                                text: 'Fecha de generación: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
+                                alignment: 'right',
+                                fontSize: '9',
+                                italics: true,
+                                margin: [15, 0]
+                            },
+                            {
+                                text: 'Generado por: ' + token.user.NombresUsuario + ' ' + token.user.ApellidosUsuario,
+                                alignment: 'right',
+                                fontSize: '9',
+                                italics: true,
+                                margin: [15, 0]
+                            },
+                            {
+                                text: 'Página ' + currentPage.toString() + ' de ' + pageCount.toString(),
+                                alignment: 'right',
+                                fontSize: '9',
+                                italics: true,
+                                margin: [15, 0]
+                            }
+                        ];
                     },
                     content: [{
                             image: 'public/images/logopgr1.png',
@@ -594,7 +638,18 @@ class folo6_controllers {
                 //doc.pipe(fs.createWriteStream('document1.pdf'));
                 doc.on('end', () => {
                     result = Buffer.concat(chunks);
-                    //res.setHeader('content-type', 'application/pdf');
+                /*Para visualizar el PDF sin descargarlo directamente, descomentar la siguiente línea de código.
+                Mozilla Firefox: Al descargar el PDF con el botón Descargar del visor, 
+                se descarga como 'document.pdf'. Si se descarga dando clic derecho en el documento y
+                luego clic en "Guardar como", se descarga con el nombre de la ruta relativa (reporteLoteVehicular.pdf).
+                Google Chrome: El PDF se descarga con el nombre de la ruta relativa de ambas formas.*/
+
+                    /* res.setHeader('content-type', 'application/pdf'); */
+
+                    /*Para descargar el PDF directamente sin visualización en navegador.
+                    Esta forma permite asignar nombre al documento a descargar de manera dinámica.*/
+                    res.setHeader('content-type', 'application/pdf');
+                    res.setHeader('Content-Disposition', 'attachment; filename=' + fileName);
                     res.send({
                         link: "data:application/pdf;base64," + result.toString('base64'),
                         imprimir: crearFOLO13
@@ -623,13 +678,29 @@ class folo6_controllers {
                         title: 'Solicitud de transporte FOLO-06 ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
                     },
                     pageSize: 'LETTER',
-                    footer: {
-                        text: 'Fecha de impresión: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
-                        alignment: 'right',
-                        fontSize: '8',
-                        color: 'gray',
-                        italics: true,
-                        margin: [15, 5]
+                    footer: function (currentPage, pageCount) {
+                        return [{
+                                text: 'Fecha de generación: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
+                                alignment: 'right',
+                                fontSize: '9',
+                                italics: true,
+                                margin: [15, 0]
+                            },
+                            {
+                                text: 'Generado por: ' + token.user.NombresUsuario + ' ' + token.user.ApellidosUsuario,
+                                alignment: 'right',
+                                fontSize: '9',
+                                italics: true,
+                                margin: [15, 0]
+                            },
+                            {
+                                text: 'Página ' + currentPage.toString() + ' de ' + pageCount.toString(),
+                                alignment: 'right',
+                                fontSize: '9',
+                                italics: true,
+                                margin: [15, 0]
+                            }
+                        ];
                     },
                     content: [{
                             image: 'public/images/logopgr1.png',
@@ -784,11 +855,18 @@ class folo6_controllers {
                 //doc.pipe(fs.createWriteStream('document1.pdf'));
                 doc.on('end', () => {
                     result = Buffer.concat(chunks);
-                    /* res.writeHead(200, {
-                        'Content-Type': 'application/pdf',
-                        'Content-Disposition': 'attachment; filename="folo6.pdf"'
-                    }); */
-                    //delete req.headers;
+                /*Para visualizar el PDF sin descargarlo directamente, descomentar la siguiente línea de código.
+                Mozilla Firefox: Al descargar el PDF con el botón Descargar del visor, 
+                se descarga como 'document.pdf'. Si se descarga dando clic derecho en el documento y
+                luego clic en "Guardar como", se descarga con el nombre de la ruta relativa (reporteLoteVehicular.pdf).
+                Google Chrome: El PDF se descarga con el nombre de la ruta relativa de ambas formas.*/
+
+                    /* res.setHeader('content-type', 'application/pdf'); */
+
+                    /*Para descargar el PDF directamente sin visualización en navegador.
+                    Esta forma permite asignar nombre al documento a descargar de manera dinámica.*/
+                    res.setHeader('content-type', 'application/pdf');
+                    res.setHeader('Content-Disposition', 'attachment; filename=' + fileName);
                     res.send({
                         link: "data:application/pdf;base64," + result.toString('base64'),
                         imprimir: crearFOLO13
@@ -817,13 +895,29 @@ class folo6_controllers {
                         title: 'Solicitud de transporte FOLO-06 ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
                     },
                     pageSize: 'LETTER',
-                    footer: {
-                        text: 'Fecha de impresión: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
-                        alignment: 'right',
-                        fontSize: '8',
-                        color: 'gray',
-                        italics: true,
-                        margin: [15, 5]
+                    footer: function (currentPage, pageCount) {
+                        return [{
+                                text: 'Fecha de generación: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
+                                alignment: 'right',
+                                fontSize: '9',
+                                italics: true,
+                                margin: [15, 0]
+                            },
+                            {
+                                text: 'Generado por: ' + token.user.NombresUsuario + ' ' + token.user.ApellidosUsuario,
+                                alignment: 'right',
+                                fontSize: '9',
+                                italics: true,
+                                margin: [15, 0]
+                            },
+                            {
+                                text: 'Página ' + currentPage.toString() + ' de ' + pageCount.toString(),
+                                alignment: 'right',
+                                fontSize: '9',
+                                italics: true,
+                                margin: [15, 0]
+                            }
+                        ];
                     },
                     content: [{
                             image: 'public/images/logopgr1.png',
@@ -986,7 +1080,18 @@ class folo6_controllers {
                 //doc.pipe(fs.createWriteStream('document1.pdf'));
                 doc.on('end', () => {
                     result = Buffer.concat(chunks);
-                    //res.setHeader('content-type', 'application/pdf');
+                /*Para visualizar el PDF sin descargarlo directamente, descomentar la siguiente línea de código.
+                Mozilla Firefox: Al descargar el PDF con el botón Descargar del visor, 
+                se descarga como 'document.pdf'. Si se descarga dando clic derecho en el documento y
+                luego clic en "Guardar como", se descarga con el nombre de la ruta relativa (reporteLoteVehicular.pdf).
+                Google Chrome: El PDF se descarga con el nombre de la ruta relativa de ambas formas.*/
+
+                    /* res.setHeader('content-type', 'application/pdf'); */
+
+                    /*Para descargar el PDF directamente sin visualización en navegador.
+                    Esta forma permite asignar nombre al documento a descargar de manera dinámica.*/
+                    res.setHeader('content-type', 'application/pdf');
+                    res.setHeader('Content-Disposition', 'attachment; filename=' + fileName);
                     res.send({
                         link: "data:application/pdf;base64," + result.toString('base64'),
                         imprimir: crearFOLO13
@@ -1004,15 +1109,16 @@ class folo6_controllers {
         //Misma documentación del método anterior.
         try {
             let folo = await this.foloInfo(req);
-            var fechaSolicitud = folo.created_at;
-            var unidadSolicitante = folo.emp.unit.name;
-            var personaSolicitante = folo.emp.first_name + ', ' + folo.emp.last_name;
-            var fechaSalida = folo.off_date;
-            var horaSalida = folo.off_hour;
-            var horaRetorno = folo.return_hour;
-            var motorista = folo.with_driver ? "Sí" : "No";
-            var personaConducir = folo.person_who_drive;
-            var mision = folo.mission;
+            var fechaSolicitud = folo.FechaCreacion;
+            var unidadSolicitante = folo.emp.unit;
+            var personaSolicitante = folo.emp.NombresUsuario + ', ' + folo.emp.ApellidosUsuario;
+            var fechaSalida = folo.FechaSalida;
+            var horaSalida = folo.HoraSalida;
+            var horaRetorno = folo.HoraRetorno;
+            var mision = folo.Mision.NombreMision;
+            const token = auth_controller.decode_token(req.cookies.token);
+            var today = new Date();
+            var fileName = 'Hoja_de_Misión_Oficial_FOLO-13_' + today.getDate() + '/' + month + '/' + today.getFullYear() + '.pdf';
 
             const fonts = {
                 Roboto: {
@@ -1023,7 +1129,6 @@ class folo6_controllers {
                 }
             };
             const printer = new pdfPrinter(fonts);
-            var today = new Date();
             var month = today.getMonth() + 1;
             var docDefinition = {
                 info: {
@@ -1031,14 +1136,21 @@ class folo6_controllers {
                     title: 'Hoja de Misión Oficial FOLO-13 ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
                 },
                 pageSize: 'LETTER',
-                footer: {
-                    text: 'Fecha de impresión: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
+                footer: [{
+                    text: 'Fecha de generación: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
                     alignment: 'right',
-                    fontSize: '8',
-                    color: 'gray',
+                    fontSize: '9',
                     italics: true,
-                    margin: [15, 5]
+                    margin: [15, 0]
                 },
+                {
+                    text: 'Generado por: ' + token.user.NombresUsuario + ' ' + token.user.ApellidosUsuario,
+                    alignment: 'right',
+                    fontSize: '9',
+                    italics: true,
+                    margin: [15, 0]
+                },
+            ],
                 content: [{
                         image: 'public/images/logopgr1.png',
                         fit: [60, 60],
@@ -1116,7 +1228,7 @@ class folo6_controllers {
                         text: [{
                             text: '\nPeríodo de la misión: ',
                             bold: true
-                        }, ''],
+                        }, '' + fechaSalida + ' de ' + horaSalida + ' a ' + horaRetorno],
                     },
                     {
                         text: '\nAutorizado por: ',
@@ -1142,6 +1254,19 @@ class folo6_controllers {
             });
             doc.on('end', () => {
                 result = Buffer.concat(chunks);
+                /*Para visualizar el PDF sin descargarlo directamente, descomentar la siguiente línea de código.
+                Mozilla Firefox: Al descargar el PDF con el botón Descargar del visor, 
+                se descarga como 'document.pdf'. Si se descarga dando clic derecho en el documento y
+                luego clic en "Guardar como", se descarga con el nombre de la ruta relativa (reporteLoteVehicular.pdf).
+                Google Chrome: El PDF se descarga con el nombre de la ruta relativa de ambas formas.*/
+
+                /* res.setHeader('content-type', 'application/pdf'); */
+
+                /*Para descargar el PDF directamente sin visualización en navegador.
+                Esta forma permite asignar nombre al documento a descargar de manera dinámica.*/
+                res.setHeader('content-type', 'application/pdf');
+                res.setHeader('Content-Disposition', 'attachment; filename=' + fileName);
+                //res.setHeader('Content-Disposition', 'attachment; filename=' + fileName);
                 res.send({
                     link: "data:application/pdf;base64," + result.toString('base64')
                 });

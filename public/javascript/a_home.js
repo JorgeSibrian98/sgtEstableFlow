@@ -248,9 +248,8 @@ function debugBase64(base64URL) {
 $('#mytable tbody').on('click', '.print.link.icon', function (event) {
     showLoadingPDFDimmer();
     var IDFolo = parseInt($(this).attr('id'));
+    var folo13; //Bandera para determinar si se mostrará FOLO-13
     console.log("Usted desea imprimir el folo:" + IDFolo);
-    //$('.segment').dimmer('set disabled');
-
     $.ajax({
         url: '/solicitud_nueva/showPDF',
         async: true,
@@ -263,8 +262,26 @@ $('#mytable tbody').on('click', '.print.link.icon', function (event) {
             console.log("El folo se mostrará en seguida")
         }
     }).done(function (data, textStatus, jqXHR) {
-        console.log("imprimi")
         debugBase64(data.link);
+        folo13 = data.imprimir;
+        console.log(folo13);
+        //Si la bandera marca 'Sí', se imprime FOLO-13
+        if (folo13 == 'Sí') {
+            $.ajax({
+                url: '/solicitud_nueva/showPDF_Folo13',
+                async: true,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    IDFolo: JSON.stringify(IDFolo)
+                },
+                success: (data) => {
+                    console.log("El folo se mostrará en seguida");
+                }
+            }).done(function (data, textStatus, jqXHR) {
+                debugBase64(data.link); //Genera PDF en una nueva ventana.
+            });
+        }
         $('.segment').dimmer('hide');
     })
 });
@@ -447,13 +464,6 @@ function noAnimateAddButton() {
         $('.segment').dimmer('hide');
         //enable_elements();
     }
-}
-
-function debugBase64(base64URL) {
-    var win = window.open();
-    win.document.write('<iframe src="' + base64URL + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
-    console.log(base64URL)
-    win.document.close()
 }
 
 function progressBar(valor, motivo) {
