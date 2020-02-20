@@ -85,33 +85,33 @@ function fillTable() {
             type: 'GET',
         },
         "columns": [{
-                "data": "off_date"
+                "data": "FechaSalida"
             },
             {
-                "data": "off_hour"
+                "data": "HoraSalida"
             },
             {
-                "data": "return_hour"
+                "data": "HoraRetorno"
             },
             {
-                "data": "passengers_number"
+                "data": "CantidadDePasajeros"
             },
             {
-                "data": "with_driver"
+                "data": "ConMotorista"
             },
             {
-                "data": "created_at"
+                "data": "FechaCreacion"
             }
             //Descomentar cuando se habilite las acciones
-            /* ,
-                        {
-                            "data": "buttons",
-                            //Indicarle que lo que se renderizará son los iconos que trae data del controlador
-                            "render": function (data, type, row, meta) {
-                                return data;
-                            }
+            ,
+            {
+                "data": "buttons",
+                //Indicarle que lo que se renderizará son los iconos que trae data del controlador
+                "render": function (data, type, row, meta) {
+                    return data;
+                }
 
-                        } */
+            }
         ]
     });
 
@@ -247,24 +247,41 @@ function debugBase64(base64URL) {
 //PARA MOSTRAR EL PDF DEL FOLO SELECCIONADO
 $('#mytable tbody').on('click', '.print.link.icon', function (event) {
     showLoadingPDFDimmer();
-    var id_folo = parseInt($(this).attr('id'));
-    console.log("Usted desea imprimir el folo:" + id_folo);
-    //$('.segment').dimmer('set disabled');
-
+    var IDFolo = parseInt($(this).attr('id'));
+    var folo13; //Bandera para determinar si se mostrará FOLO-13
+    console.log("Usted desea imprimir el folo:" + IDFolo);
     $.ajax({
         url: '/solicitud_nueva/showPDF',
         async: true,
         type: 'POST',
         dataType: 'json',
         data: {
-            id_folo: JSON.stringify(id_folo)
+            IDFolo: JSON.stringify(IDFolo)
         },
         success: (data) => {
             console.log("El folo se mostrará en seguida")
         }
     }).done(function (data, textStatus, jqXHR) {
-        console.log("imprimi")
         debugBase64(data.link);
+        folo13 = data.imprimir;
+        console.log(folo13);
+        //Si la bandera marca 'Sí', se imprime FOLO-13
+        if (folo13 == 'Sí') {
+            $.ajax({
+                url: '/solicitud_nueva/showPDF_Folo13',
+                async: true,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    IDFolo: JSON.stringify(IDFolo)
+                },
+                success: (data) => {
+                    console.log("El folo se mostrará en seguida");
+                }
+            }).done(function (data, textStatus, jqXHR) {
+                debugBase64(data.link); //Genera PDF en una nueva ventana.
+            });
+        }
         $('.segment').dimmer('hide');
     })
 });
@@ -447,13 +464,6 @@ function noAnimateAddButton() {
         $('.segment').dimmer('hide');
         //enable_elements();
     }
-}
-
-function debugBase64(base64URL) {
-    var win = window.open();
-    win.document.write('<iframe src="' + base64URL + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
-    console.log(base64URL)
-    win.document.close()
 }
 
 function progressBar(valor, motivo) {

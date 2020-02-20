@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const Folo6 = require('../models/m_folo6');
-const place_container = require('../models/m_lugares_contenedor');
+const LugaresContenedor = require('../models/m_lugares_contenedor');
 const FPlace = require('../models/m_lugares_frecuentes');
 const Address = require('../models/m_direccion');
 //const Apanel = require('../models/m_folo6_approve_state');
@@ -11,13 +11,13 @@ const querystring = require('querystring');
 const auth_controller = require('../controllers/c_auth');
 const UbicacionesGeograficas = require('../models/m_ubicaciones_geograficas');
 const Mision = require('../models/m_mision');
+const mision_controller = require('../controllers/c_misiones');
 //Manejo de fechas
 var moment = require('moment');
 moment.locale("Es-SV")
 
 //Para manejar el área de direcciones y lugares frecuentes
-//const department_controller = require('../controllers/c_department');
-//const municipio_controller = require('../controllers/c_city');
+const direcciones_controller = require('../controllers/c_direccion');
 const pdfPrinter = require('pdfmake/src/printer'); //Copiar esto
 const employee_controller = require('../controllers/c_employee');
 /* const Migration = require('../models/migrations');
@@ -67,17 +67,17 @@ class folo6_controllers {
         try {
             let folo = await this.foloInfo(req);
             console.dir("EN SHOW RECIBI ESTO" + JSON.stringify(folo));
-            var fechaSolicitud = folo.created_at;
-            var unidadSolicitante = folo.emp.unit.name;
-            var personaSolicitante = folo.emp.first_name + ', ' + folo.emp.last_name;
-            var fechaSalida = folo.off_date;
-            var f1 = moment(folo.off_date, "DD/MM/YYYY"); //Para determinar con moment JS qué día de la semana es
-            var horaSalida = folo.off_hour;
-            var horaRetorno = folo.return_hour;
-            var motorista = folo.with_driver ? "Sí" : "No";
-            var cantidadPasajeros = folo.passengers_number;
-            var personaConducir = folo.person_who_drive;
-            var tipoLicencia = folo.license_type;
+            var fechaSolicitud = folo.FechaCreacion;
+            var unidadSolicitante = folo.emp.unit;
+            var personaSolicitante = folo.emp.NombresUsuario + ', ' + folo.emp.ApellidosUsuario;
+            var fechaSalida = folo.FechaSalida;
+            var f1 = moment(folo.FechaSalida, "DD/MM/YYYY"); //Para determinar con moment JS qué día de la semana es
+            var horaSalida = folo.HoraSalida;
+            var horaRetorno = folo.HoraRetorno;
+            var motorista = folo.ConMotorista ? "Sí" : "No";
+            var cantidadPasajeros = folo.CantidadDePasajeros;
+            var personaConducir = folo.PersonaQueConducira;
+            var tipoLicencia = folo.TipoDeLicencia;
             //B es un contador definido por la cantidad de direcciones que posee una solicitud
             var b = folo.b
             var direccion;
@@ -100,11 +100,16 @@ class folo6_controllers {
             if (b === 1) {
                 //Si existe lugar frecuente; si no, lo ingresado es una dirección
                 if (folo.fplaces.length) {
-                    direccion = folo.fplaces[0].name + " ," + folo.fplaces[0].detail + " ," + folo.fplaces[0].city.name + " ," + folo.fplaces[0].department.name;
+                    if (folo.fplaces[0].DetalleLugarFrecuente.trim().length == 0) {
+                        direccion = folo.fplaces[0].NombreLugarFrecuente.trim() + ", " + folo.fplaces[0].Municipio.trim() + ", " + folo.fplaces[0].Departamento.trim();
+                    } else {
+                        direccion = folo.fplaces[0].NombreLugarFrecuente.trim() + ", " + folo.fplaces[0].DetalleLugarFrecuente.trim() + ", " + folo.fplaces[0].Municipio.trim() + ", " + folo.fplaces[0].Departamento.trim();
+                    }
+                    
                 } else {
                     //Para verificar que address no está vacío
                     if (folo.address.length)
-                        direccion = folo.address[0].name + " ," + folo.address[0].detail + " ," + folo.address[0].city.name + " ," + folo.address[0].department.name;
+                        direccion = folo.address[0].Nombre.trim() + ", " + folo.address[0].Detalle.trim() + ", " + folo.address[0].Municipio.trim() + ", " + folo.address[0].Departamento.trim();
                 }
             } else {
                 //Si existe más de una ruta o de un lugar frecuente
@@ -112,33 +117,38 @@ class folo6_controllers {
                 if (folo.fplaces.length) {
                     folo.fplaces.forEach(ele => {
                         var direcciones = [];
-                        direcciones.push(ele.name);
-                        direcciones.push(ele.detail);
-                        direcciones.push(ele.city.name);
-                        direcciones.push(ele.department.name);
+                        direcciones.push(ele.NombreLugarFrecuente.trim());
+                        if (ele.DetalleLugarFrecuente.trim().length == 0) {
+                            ele.DetalleLugarFrecuente = 'No especificado';
+                            direcciones.push(ele.DetalleLugarFrecuente);
+                        } else {
+                            direcciones.push(ele.DetalleLugarFrecuente.trim());
+                        };
+                        direcciones.push(ele.Municipio.trim());
+                        direcciones.push(ele.Departamento.trim());
                         bodyData.push(direcciones);
                     });
                 };
                 if (folo.address.length) {
                     folo.address.forEach(ele => {
                         var direcciones = [];
-                        direcciones.push(ele.name);
-                        direcciones.push(ele.detail);
-                        direcciones.push(ele.city.name);
-                        direcciones.push(ele.department.name);
+                        direcciones.push(ele.Nombre.trim());
+                        direcciones.push(ele.Detalle.trim());
+                        direcciones.push(ele.Municipio.trim());
+                        direcciones.push(ele.Departamento.trim());
                         bodyData.push(direcciones);
                     });
                 };
             };
             console.log(typeof (b) + " cantidad " + b)
-            var mision = folo.mission;
-            var observaciones = folo.observation;
+            var mision = folo.Mision.NombreMision;
+            var observaciones = folo.Observacion;
             var horasNoHabiles = ['12:00 AM', '12:30 AM', '1:00 AM', '1:30 AM', '2:00 AM', '2:30 AM',
                 '3:00 AM', '3:30 AM', '4:00 AM', '4:30 AM', '5:00 AM', '5:30 AM', '6:00 AM', '6:30 AM',
                 '7:00 AM', '7:30 AM', '4:30 PM', '5:00 PM', '5:30 PM', '6:00 PM', '6:30 PM', '7:00 PM',
                 '7:30 PM', '8:00 PM', '8:30 PM', '9:00 PM', '9:30 PM', '10:00 PM', '10:30 PM',
                 '11:00 PM', '11:30 PM'
-            ]; //Para verificar si las horas de salida o returno son NO hábiles.
+            ]; //Para verificar si las horas de salida o retorno son NO hábiles.
             var crearFOLO13; //Variable a enviar a la vista en el response.
             var diaSemana = f1.weekday(); //Método para obtener qué día de la semana es de la fecha provista.
             console.log(diaSemana);
@@ -146,33 +156,31 @@ class folo6_controllers {
             if (diaSemana == 5 || diaSemana == 6) {
                 crearFOLO13 = "Sí";
             } else {
-                crearFOLO13 = "No";
+                /*Horas de salida y retorno serán tratadas como hábiles hasta que sea encontrada en el arreglo 
+                de 'horasNoHabiles'. De encontrarse se rompe el ciclo.*/
+                for (var ele of horasNoHabiles) {
+                    //Condicionales separadas por cada hora para más claridad.
+                    if (ele == horaSalida) {
+                        crearFOLO13 = "Sí";
+                        break;
+                    } else {
+                        crearFOLO13 = "No";
+                    };
+
+                    if (ele == horaRetorno) {
+                        crearFOLO13 = "Sí";
+                        break;
+                    } else {
+                        crearFOLO13 = "No";
+                    };
+                };
+                console.log('¿Se creará FOLO-13? ' + crearFOLO13);
             };
             console.log(horaSalida);
             console.log(horaRetorno);
-            /*Horas de salida y retorno serán tratadas como hábiles hasta que sea encontrada en el arreglo 
-            de 'horasNoHabiles'. De encontrarse se rompe el ciclo.*/
-            for (var ele of horasNoHabiles) {
-                //Condicionales separadas por cada hora para más claridad.
-                if (ele == horaSalida) {
-                    crearFOLO13 = "Sí";
-                    console.log(horaSalida + ' no es una hora hábil.');
-                    break;
-                } else {
-                    crearFOLO13 = "No";
-                    console.log(horaSalida + ' es una hora hábil.');
-                };
-
-                if (ele == horaRetorno) {
-                    crearFOLO13 = "Sí";
-                    console.log(horaRetorno + ' no es una hora hábil.');
-                    break;
-                } else {
-                    crearFOLO13 = "No";
-                    console.log(horaRetorno + ' es una hora hábil.');
-                };
-            };
-
+            const token = auth_controller.decode_token(req.cookies.token);
+            var today = new Date();
+            var fileName = 'Solicitud_de_transporte_FOLO-06_' + today.getDate() + '/' + month + '/' + today.getFullYear() + '.pdf';
             //Sí quiere motorista y hay más de una dirección.
             if (motorista == "Sí" && b > 1) {
                 console.log("CON MOTORISTA Y MÁS UNA DIRECCION");
@@ -187,7 +195,6 @@ class folo6_controllers {
                 };
                 //'printer' se encarga de escribir en el lienzo.
                 const printer = new pdfPrinter(fonts);
-                var today = new Date();
                 var month = today.getMonth() + 1;
                 // CUERPO DEL DOCUMENTO. NO TOCAR. >:V
                 var docDefinition = {
@@ -196,13 +203,29 @@ class folo6_controllers {
                         title: 'Solicitud de transporte FOLO-06 ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
                     },
                     pageSize: 'LETTER',
-                    footer: {
-                        text: 'Fecha de impresión: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
-                        alignment: 'right',
-                        fontSize: '8',
-                        color: 'gray',
-                        italics: true,
-                        margin: [15, 5]
+                    footer: function (currentPage, pageCount) {
+                        return [{
+                                text: 'Fecha de generación: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
+                                alignment: 'right',
+                                fontSize: '9',
+                                italics: true,
+                                margin: [15, 0]
+                            },
+                            {
+                                text: 'Generado por: ' + token.user.NombresUsuario + ' ' + token.user.ApellidosUsuario,
+                                alignment: 'right',
+                                fontSize: '9',
+                                italics: true,
+                                margin: [15, 0]
+                            },
+                            {
+                                text: 'Página ' + currentPage.toString() + ' de ' + pageCount.toString(),
+                                alignment: 'right',
+                                fontSize: '9',
+                                italics: true,
+                                margin: [15, 0]
+                            }
+                        ];
                     },
                     content: [{
                             image: 'public/images/logopgr1.png',
@@ -375,13 +398,18 @@ class folo6_controllers {
                 y se guarda en 'result'. Este buffer es enviado a la vista en el response.*/
                 doc.on('end', () => {
                     result = Buffer.concat(chunks);
-                    //Se especifica el tipo de contenido que recibirá.
-                    /* res.writeHead(200, {
-                        'Content-Type': 'application/pdf',
-                        'Content-Disposition': 'attachment; filename="folo6.pdf"'
-                    }); */
-                    //res.setHeader('content-type', 'application/pdf');
-                    //Envío del PDF en forma base64.
+                /*Para visualizar el PDF sin descargarlo directamente, descomentar la siguiente línea de código.
+                Mozilla Firefox: Al descargar el PDF con el botón Descargar del visor, 
+                se descarga como 'document.pdf'. Si se descarga dando clic derecho en el documento y
+                luego clic en "Guardar como", se descarga con el nombre de la ruta relativa (reporteLoteVehicular.pdf).
+                Google Chrome: El PDF se descarga con el nombre de la ruta relativa de ambas formas.*/
+
+                    /* res.setHeader('content-type', 'application/pdf'); */
+
+                    /*Para descargar el PDF directamente sin visualización en navegador.
+                    Esta forma permite asignar nombre al documento a descargar de manera dinámica.*/
+                    res.setHeader('content-type', 'application/pdf');
+                    res.setHeader('Content-Disposition', 'attachment; filename=' + fileName);
                     res.send({
                         link: "data:application/pdf;base64," + result.toString('base64'),
                         imprimir: crearFOLO13
@@ -410,13 +438,29 @@ class folo6_controllers {
                         title: 'Solicitud de transporte FOLO-06 ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
                     },
                     pageSize: 'LETTER',
-                    footer: {
-                        text: 'Fecha de impresión: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
-                        alignment: 'right',
-                        fontSize: '8',
-                        color: 'gray',
-                        italics: true,
-                        margin: [15, 5]
+                    footer: function (currentPage, pageCount) {
+                        return [{
+                                text: 'Fecha de generación: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
+                                alignment: 'right',
+                                fontSize: '9',
+                                italics: true,
+                                margin: [15, 0]
+                            },
+                            {
+                                text: 'Generado por: ' + token.user.NombresUsuario + ' ' + token.user.ApellidosUsuario,
+                                alignment: 'right',
+                                fontSize: '9',
+                                italics: true,
+                                margin: [15, 0]
+                            },
+                            {
+                                text: 'Página ' + currentPage.toString() + ' de ' + pageCount.toString(),
+                                alignment: 'right',
+                                fontSize: '9',
+                                italics: true,
+                                margin: [15, 0]
+                            }
+                        ];
                     },
                     content: [{
                             image: 'public/images/logopgr1.png',
@@ -594,7 +638,18 @@ class folo6_controllers {
                 //doc.pipe(fs.createWriteStream('document1.pdf'));
                 doc.on('end', () => {
                     result = Buffer.concat(chunks);
-                    //res.setHeader('content-type', 'application/pdf');
+                /*Para visualizar el PDF sin descargarlo directamente, descomentar la siguiente línea de código.
+                Mozilla Firefox: Al descargar el PDF con el botón Descargar del visor, 
+                se descarga como 'document.pdf'. Si se descarga dando clic derecho en el documento y
+                luego clic en "Guardar como", se descarga con el nombre de la ruta relativa (reporteLoteVehicular.pdf).
+                Google Chrome: El PDF se descarga con el nombre de la ruta relativa de ambas formas.*/
+
+                    /* res.setHeader('content-type', 'application/pdf'); */
+
+                    /*Para descargar el PDF directamente sin visualización en navegador.
+                    Esta forma permite asignar nombre al documento a descargar de manera dinámica.*/
+                    res.setHeader('content-type', 'application/pdf');
+                    res.setHeader('Content-Disposition', 'attachment; filename=' + fileName);
                     res.send({
                         link: "data:application/pdf;base64," + result.toString('base64'),
                         imprimir: crearFOLO13
@@ -623,13 +678,29 @@ class folo6_controllers {
                         title: 'Solicitud de transporte FOLO-06 ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
                     },
                     pageSize: 'LETTER',
-                    footer: {
-                        text: 'Fecha de impresión: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
-                        alignment: 'right',
-                        fontSize: '8',
-                        color: 'gray',
-                        italics: true,
-                        margin: [15, 5]
+                    footer: function (currentPage, pageCount) {
+                        return [{
+                                text: 'Fecha de generación: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
+                                alignment: 'right',
+                                fontSize: '9',
+                                italics: true,
+                                margin: [15, 0]
+                            },
+                            {
+                                text: 'Generado por: ' + token.user.NombresUsuario + ' ' + token.user.ApellidosUsuario,
+                                alignment: 'right',
+                                fontSize: '9',
+                                italics: true,
+                                margin: [15, 0]
+                            },
+                            {
+                                text: 'Página ' + currentPage.toString() + ' de ' + pageCount.toString(),
+                                alignment: 'right',
+                                fontSize: '9',
+                                italics: true,
+                                margin: [15, 0]
+                            }
+                        ];
                     },
                     content: [{
                             image: 'public/images/logopgr1.png',
@@ -784,11 +855,18 @@ class folo6_controllers {
                 //doc.pipe(fs.createWriteStream('document1.pdf'));
                 doc.on('end', () => {
                     result = Buffer.concat(chunks);
-                    /* res.writeHead(200, {
-                        'Content-Type': 'application/pdf',
-                        'Content-Disposition': 'attachment; filename="folo6.pdf"'
-                    }); */
-                    //delete req.headers;
+                /*Para visualizar el PDF sin descargarlo directamente, descomentar la siguiente línea de código.
+                Mozilla Firefox: Al descargar el PDF con el botón Descargar del visor, 
+                se descarga como 'document.pdf'. Si se descarga dando clic derecho en el documento y
+                luego clic en "Guardar como", se descarga con el nombre de la ruta relativa (reporteLoteVehicular.pdf).
+                Google Chrome: El PDF se descarga con el nombre de la ruta relativa de ambas formas.*/
+
+                    /* res.setHeader('content-type', 'application/pdf'); */
+
+                    /*Para descargar el PDF directamente sin visualización en navegador.
+                    Esta forma permite asignar nombre al documento a descargar de manera dinámica.*/
+                    res.setHeader('content-type', 'application/pdf');
+                    res.setHeader('Content-Disposition', 'attachment; filename=' + fileName);
                     res.send({
                         link: "data:application/pdf;base64," + result.toString('base64'),
                         imprimir: crearFOLO13
@@ -817,13 +895,29 @@ class folo6_controllers {
                         title: 'Solicitud de transporte FOLO-06 ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
                     },
                     pageSize: 'LETTER',
-                    footer: {
-                        text: 'Fecha de impresión: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
-                        alignment: 'right',
-                        fontSize: '8',
-                        color: 'gray',
-                        italics: true,
-                        margin: [15, 5]
+                    footer: function (currentPage, pageCount) {
+                        return [{
+                                text: 'Fecha de generación: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
+                                alignment: 'right',
+                                fontSize: '9',
+                                italics: true,
+                                margin: [15, 0]
+                            },
+                            {
+                                text: 'Generado por: ' + token.user.NombresUsuario + ' ' + token.user.ApellidosUsuario,
+                                alignment: 'right',
+                                fontSize: '9',
+                                italics: true,
+                                margin: [15, 0]
+                            },
+                            {
+                                text: 'Página ' + currentPage.toString() + ' de ' + pageCount.toString(),
+                                alignment: 'right',
+                                fontSize: '9',
+                                italics: true,
+                                margin: [15, 0]
+                            }
+                        ];
                     },
                     content: [{
                             image: 'public/images/logopgr1.png',
@@ -986,7 +1080,18 @@ class folo6_controllers {
                 //doc.pipe(fs.createWriteStream('document1.pdf'));
                 doc.on('end', () => {
                     result = Buffer.concat(chunks);
-                    //res.setHeader('content-type', 'application/pdf');
+                /*Para visualizar el PDF sin descargarlo directamente, descomentar la siguiente línea de código.
+                Mozilla Firefox: Al descargar el PDF con el botón Descargar del visor, 
+                se descarga como 'document.pdf'. Si se descarga dando clic derecho en el documento y
+                luego clic en "Guardar como", se descarga con el nombre de la ruta relativa (reporteLoteVehicular.pdf).
+                Google Chrome: El PDF se descarga con el nombre de la ruta relativa de ambas formas.*/
+
+                    /* res.setHeader('content-type', 'application/pdf'); */
+
+                    /*Para descargar el PDF directamente sin visualización en navegador.
+                    Esta forma permite asignar nombre al documento a descargar de manera dinámica.*/
+                    res.setHeader('content-type', 'application/pdf');
+                    res.setHeader('Content-Disposition', 'attachment; filename=' + fileName);
                     res.send({
                         link: "data:application/pdf;base64," + result.toString('base64'),
                         imprimir: crearFOLO13
@@ -1004,15 +1109,16 @@ class folo6_controllers {
         //Misma documentación del método anterior.
         try {
             let folo = await this.foloInfo(req);
-            var fechaSolicitud = folo.created_at;
-            var unidadSolicitante = folo.emp.unit.name;
-            var personaSolicitante = folo.emp.first_name + ', ' + folo.emp.last_name;
-            var fechaSalida = folo.off_date;
-            var horaSalida = folo.off_hour;
-            var horaRetorno = folo.return_hour;
-            var motorista = folo.with_driver ? "Sí" : "No";
-            var personaConducir = folo.person_who_drive;
-            var mision = folo.mission;
+            var fechaSolicitud = folo.FechaCreacion;
+            var unidadSolicitante = folo.emp.unit;
+            var personaSolicitante = folo.emp.NombresUsuario + ', ' + folo.emp.ApellidosUsuario;
+            var fechaSalida = folo.FechaSalida;
+            var horaSalida = folo.HoraSalida;
+            var horaRetorno = folo.HoraRetorno;
+            var mision = folo.Mision.NombreMision;
+            const token = auth_controller.decode_token(req.cookies.token);
+            var today = new Date();
+            var fileName = 'Hoja_de_Misión_Oficial_FOLO-13_' + today.getDate() + '/' + month + '/' + today.getFullYear() + '.pdf';
 
             const fonts = {
                 Roboto: {
@@ -1023,7 +1129,6 @@ class folo6_controllers {
                 }
             };
             const printer = new pdfPrinter(fonts);
-            var today = new Date();
             var month = today.getMonth() + 1;
             var docDefinition = {
                 info: {
@@ -1031,14 +1136,21 @@ class folo6_controllers {
                     title: 'Hoja de Misión Oficial FOLO-13 ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
                 },
                 pageSize: 'LETTER',
-                footer: {
-                    text: 'Fecha de impresión: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
+                footer: [{
+                    text: 'Fecha de generación: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
                     alignment: 'right',
-                    fontSize: '8',
-                    color: 'gray',
+                    fontSize: '9',
                     italics: true,
-                    margin: [15, 5]
+                    margin: [15, 0]
                 },
+                {
+                    text: 'Generado por: ' + token.user.NombresUsuario + ' ' + token.user.ApellidosUsuario,
+                    alignment: 'right',
+                    fontSize: '9',
+                    italics: true,
+                    margin: [15, 0]
+                },
+            ],
                 content: [{
                         image: 'public/images/logopgr1.png',
                         fit: [60, 60],
@@ -1116,7 +1228,7 @@ class folo6_controllers {
                         text: [{
                             text: '\nPeríodo de la misión: ',
                             bold: true
-                        }, ''],
+                        }, '' + fechaSalida + ' de ' + horaSalida + ' a ' + horaRetorno],
                     },
                     {
                         text: '\nAutorizado por: ',
@@ -1142,6 +1254,19 @@ class folo6_controllers {
             });
             doc.on('end', () => {
                 result = Buffer.concat(chunks);
+                /*Para visualizar el PDF sin descargarlo directamente, descomentar la siguiente línea de código.
+                Mozilla Firefox: Al descargar el PDF con el botón Descargar del visor, 
+                se descarga como 'document.pdf'. Si se descarga dando clic derecho en el documento y
+                luego clic en "Guardar como", se descarga con el nombre de la ruta relativa (reporteLoteVehicular.pdf).
+                Google Chrome: El PDF se descarga con el nombre de la ruta relativa de ambas formas.*/
+
+                /* res.setHeader('content-type', 'application/pdf'); */
+
+                /*Para descargar el PDF directamente sin visualización en navegador.
+                Esta forma permite asignar nombre al documento a descargar de manera dinámica.*/
+                res.setHeader('content-type', 'application/pdf');
+                res.setHeader('Content-Disposition', 'attachment; filename=' + fileName);
+                //res.setHeader('Content-Disposition', 'attachment; filename=' + fileName);
                 res.send({
                     link: "data:application/pdf;base64," + result.toString('base64')
                 });
@@ -1154,19 +1279,16 @@ class folo6_controllers {
 
     async foloInfo(req) {
         try {
-            console.log("FOLO QUE VOY A VERIFICAR" + req.body.id_folo)
-            var folo = await Folo6.findAll({
-                where: {
-                    id: req.body.id_folo
-                },
-                attributes: ['id', 'off_date', 'off_hour', 'return_hour', 'passengers_number', 'with_driver', 'person_who_drive', 'license_type', 'mission', 'observation', 'created_at', 'employee_id']
-            });
-            //console.dir(folo);
             var el = new Object();
-            folo.forEach((folo, i) => {
-                console.log("FOLO QUE VOY RECIBI" + folo.id)
 
-                el.id = folo.id;
+            console.log("FOLO QUE VOY A VERIFICAR" + req.body.IDFolo)
+            var folo = await Folo6.findByPk(req.body.IDFolo, {
+                attributes: ['IDFolo', 'IDRelacionUbicacion', 'FechaSalida', 'HoraSalida', 'HoraRetorno', 'CantidadDePasajeros', 'ConMotorista', 'PersonaQueConducira', 'TipoDeLicencia', 'IDMision', 'Observacion', 'CreadoPor', 'FechaCreacion']
+            }).then(folo => {
+                console.log("FOLO QUE VOY RECIBI" + folo.IDFolo)
+
+                el.IDFolo = folo.IDFolo;
+                el.IDRelacionUbicacion = folo.IDRelacionUbicacion;
                 //La BD envia las fechas y horas en formato utc por ello se debe convertir al formato especificado en el método format(). Revisar documentación de moment.js
                 /*CORRECCIÓN HECHA POR AXEL HERNÁNDEZ - 21/11/2019:
                 Al mostrar el PDF desde el listado de solicitudes, la fecha de salida se mostraba con un día
@@ -1174,19 +1296,21 @@ class folo6_controllers {
                 Esto sucedía por la resta del tiempo UTC de -6 horas. La fecha de salida es guardada en la BD
                 con valores de 0 horas, 0 minutos, 0 segundos (como si se hubiera guardado exactamente a medianoche),
                 y al restarle las 6 horas se devolvía al día anterior.*/
-                el.off_date = moment.utc(folo.off_date).format("DD/MM/YYYY");
-                el.off_hour = moment.utc(folo.off_hour).format("h:mm A");
-                el.return_hour = moment.utc(folo.return_hour).format("h:mm A");
-                el.passengers_number = folo.passengers_number;
-                el.with_driver = folo.with_driver ? 1 : 0;
-                el.person_who_drive = folo.person_who_drive;
-                el.license_type = folo.license_type;
-                el.mission = folo.mission;
-                el.observation = folo.observation;
-                el.created_at = moment.utc(folo.created_at).utcOffset("-06:00").format("DD/MM/YYYY");
-                el.employee_id = folo.employee_id;
+                el.FechaSalida = moment.utc(folo.FechaSalida).format("DD/MM/YYYY");
+                el.HoraSalida = moment.utc(folo.HoraSalida).format("h:mm A");
+                el.HoraRetorno = moment.utc(folo.HoraRetorno).format("h:mm A");
+                el.CantidadDePasajeros = folo.CantidadDePasajeros;
+                el.ConMotorista = folo.ConMotorista ? 1 : 0;
+                el.PersonaQueConducira = folo.PersonaQueConducira;
+                el.TipoDeLicencia = folo.TipoDeLicencia;
+                mision_controller.getOne(folo.IDMision).then(m => {
+                    el.Mision = m;
+                });
+                el.Observacion = folo.Observacion;
+                el.FechaCreacion = moment.utc(folo.FechaCreacion).utcOffset("-06:00").format("DD/MM/YYYY");
+                el.CreadoPor = folo.CreadoPor;
             });
-            console.log(el.id);
+            console.log(el.IDFolo);
             /**APROBACION FOLO***/
             /* var estados = await Apanel.findAll({
                 where: {
@@ -1214,36 +1338,28 @@ class folo6_controllers {
             //Contendra el total de direcciones que se han creaddo para el folo que se solicita
             el.fplaces = [];
             //Para traer todos los lugares frecuentes ligados a ese folo
-            await place_container.findAll({
+            await LugaresContenedor.findAll({
                 where: {
-                    folo_id: req.body.id_folo
+                    IDFolo: req.body.IDFolo
                 },
-                attributes: ['frequent_place_id'],
+                attributes: ['IDLugarFrecuente'],
                 include: [FPlace]
             }).then(Fplaces => {
                 //console.dir("Conglomerado de fplac:" + JSON.stringify(Fplaces) + " eS DEL TIPO " + typeof (Fplaces));
                 Fplaces.forEach(row => {
-                    //console.dir(row.SGT_Lugar_Frecuente);
-                    if (row.SGT_Lugar_Frecuente) {
-                        console.dir("Datos del lugar:" + JSON.stringify(row.SGT_Lugar_Frecuente.name));
+                    //console.dir(row);
+                    if (row.TRA_LugaresFrecuente) {
+                        console.dir("Datos del lugar:" + JSON.stringify(row.TRA_LugaresFrecuente.NombreLugarFrecuente));
                         var f = new Object();
-                        f.city = new Object();
-                        f.department = new Object();
-
-                        f.id = row.SGT_Lugar_Frecuente.id;
-                        f.name = row.SGT_Lugar_Frecuente.name;
-                        f.detail = row.SGT_Lugar_Frecuente.detail;
-                        //SE GUARDA EL NOMBRE DEL MUNICIPIO
-                        f.city.id = row.SGT_Lugar_Frecuente.city_id;
-                        municipio_controller.getName(row.SGT_Lugar_Frecuente.city_id).then(name => {
-                            f.city.name = name;
+                        f.IDLugarFrecuente = row.TRA_LugaresFrecuente.IDLugarFrecuente;
+                        f.NombreLugarFrecuente = row.TRA_LugaresFrecuente.NombreLugarFrecuente;
+                        f.DetalleLugarFrecuente = row.TRA_LugaresFrecuente.DetalleLugarFrecuente;
+                        //SE GUARDA EL NOMBRE DEL MUNICIPIO Y DEPARTAMENTO
+                        direcciones_controller.getMunicipioYDto(row.TRA_LugaresFrecuente.CodMunicipio).then(ubicaciones => {
+                            f.Municipio = ubicaciones.Municipio;
+                            f.Departamento = ubicaciones.Departamento;
                         });
-                        //SE GUARDA EL NOMBRE DEL DEPARTAMENTO
-                        f.department.id = row.SGT_Lugar_Frecuente.department_id;
-                        department_controller.getName(row.SGT_Lugar_Frecuente.department_id).then(name => {
-                            f.department.name = name;
-                        });
-                        f.procu_id = row.SGT_Lugar_Frecuente.procuraduria_id;
+                        //f.procu_id = row.TRA_LugaresFrecuente.procuraduria_id;
                         el.fplaces.push(f);
                         el.b++;
                     }
@@ -1272,10 +1388,10 @@ class folo6_controllers {
             //Contendra el total de direcciones que se han creaddo para el folo que se solicita
             el.address = [];
             //Para traer todos las direcciones ligados a ese folo
-            var containers = await place_container.findAll({
+            var containers = await LugaresContenedor.findAll({
                 where: {
-                    folo_id: req.body.id_folo,
-                    frequent_place_id: {
+                    IDFolo: req.body.IDFolo,
+                    IDLugarFrecuente: {
                         [Op.is]: null
                     }
                 }
@@ -1286,38 +1402,28 @@ class folo6_controllers {
                 //console.dir(row.SGT_Direccion);
                 var array = await Address.findAll({
                     where: {
-                        container_id: container.id
+                        IDLugarContenedor: container.IDLugarContenedor
                     }
                 })
                 var row = array[0];
-                console.log("Direccion: " + row.name + " " + row.detail);
+                console.log("Direccion: " + row.Nombre + " " + row.Detalle);
                 var dir = new Object();
-                dir.city = new Object();
-                dir.department = new Object();
-                dir.id = row.id;
-                dir.name = row.name;
-                dir.detail = row.detail;
-                dir.city.id = row.city_id;
-                //SE GUARDA EL NOMBRE DEL MUNICIPIO
-                municipio_controller.getName(row.city_id).then(name => {
-                    dir.city.name = name;
-                });
-                dir.department.id = row.department_id
-                //SE GUARDA EL NOMBRE DEL DEPARTAMENTO
-                department_controller.getName(row.department_id).then(name => {
-                    dir.department.name = name;
+                dir.IDDireccion = row.IDDireccion;
+                dir.Nombre = row.Nombre;
+                dir.Detalle = row.Detalle;
+                //SE GUARDA EL NOMBRE DEL MUNICIPIO Y DEPARTAMENTO
+                await direcciones_controller.getMunicipioYDto(row.CodMun).then(ubicaciones => {
+                    dir.Municipio = ubicaciones.Municipio;
+                    dir.Departamento = ubicaciones.Departamento;
                 });
                 //dir.procu_id = row.address.procuraduria_id;
-
                 el.address.push(dir);
                 el.b++;
-
             });
 
             el.emp = new Object();
             const token = auth_controller.decode_token(req.cookies.token);
             el.emp = token.user;
-            el.emp.unit = new Object();
             el.emp.unit = await employee_controller.findUnitByUser(token.user)
 
             console.dir("Datos del folo" + JSON.stringify(el) + "\nDatos el empleado: " + JSON.stringify(el.emp));
@@ -1325,6 +1431,7 @@ class folo6_controllers {
             console.dir("Direcciones: " + JSON.stringify(el.address));
             // console.dir(data);
             //Envía los datos de 'el' a la vista. En ella se debe acceder a sus atributos en forma: data.folo.x; x es cualquier atributo del folo enviado
+            console.log("Folo contiene esta cantidad de direcciones y lugares" + el.b)
             return el;
         } catch (error) {
             console.log(error);
@@ -1366,7 +1473,7 @@ class folo6_controllers {
             //Contendra el total de direcciones que se han creaddo para el folo que se solicita
             el.fplaces = [];
             //Para traer todos los lugares frecuentes ligados a ese folo
-            await place_container.findAll({
+            await LugaresContenedor.findAll({
                 where: {
                     folo_id: req.params.id
                 },
@@ -1375,26 +1482,26 @@ class folo6_controllers {
             }).then(Fplaces => {
                 console.dir("Conglomerado de fplac:" + JSON.stringify(Fplaces) + " eS DEL TIPO " + typeof (Fplaces))
                 Fplaces.forEach(row => {
-                    if (row.SGT_Lugar_Frecuente) {
+                    if (row.TRA_LugaresFrecuente) {
                         //console.dir("Datos del lugar:" + JSON.stringify(row.frequent_place.name));
                         var f = new Object();
                         f.city = new Object();
                         f.department = new Object();
 
-                        f.id = row.SGT_Lugar_Frecuente.id;
-                        f.name = row.SGT_Lugar_Frecuente.name;
-                        f.detail = row.SGT_Lugar_Frecuente.detail;
+                        f.id = row.TRA_LugaresFrecuente.id;
+                        f.name = row.TRA_LugaresFrecuente.name;
+                        f.detail = row.TRA_LugaresFrecuente.detail;
                         //SE GUARDA EL NOMBRE DEL MUNICIPIO
-                        f.city.id = row.SGT_Lugar_Frecuente.city_id;
-                        municipio_controller.getName(row.SGT_Lugar_Frecuente.city_id).then(name => {
+                        f.city.id = row.TRA_LugaresFrecuente.city_id;
+                        municipio_controller.getName(row.TRA_LugaresFrecuente.city_id).then(name => {
                             f.city.name = name;
                         });
                         //SE GUARDA EL NOMBRE DEL DEPARTAMENTO
-                        f.department.id = row.SGT_Lugar_Frecuente.department_id;
-                        department_controller.getName(row.SGT_Lugar_Frecuente.department_id).then(name => {
+                        f.department.id = row.TRA_LugaresFrecuente.department_id;
+                        department_controller.getName(row.TRA_LugaresFrecuente.department_id).then(name => {
                             f.department.name = name;
                         });
-                        f.procu_id = row.SGT_Lugar_Frecuente.procuraduria_id;
+                        f.procu_id = row.TRA_LugaresFrecuente.procuraduria_id;
                         el.fplaces.push(f);
                         el.b++;
                     }
@@ -1404,7 +1511,7 @@ class folo6_controllers {
             el.address = [];
             //Para traer todos las direcciones ligados a ese folo
             //Para traer todos las direcciones ligados a ese folo
-            var containers = await place_container.findAll({
+            var containers = await LugaresContenedor.findAll({
                 where: {
                     folo_id: req.params.id,
                     frequent_place_id: {
@@ -1480,13 +1587,13 @@ class folo6_controllers {
             folos.forEach((row, i) => {
                 var el = new Object();
                 //La BD envia las fechas y horas en formato utc por ello se debe convertir al formato especificado en el método format(). Revisar documentación de moment.js
-                el.off_date = moment.utc(row.FechaSalida).format("DD MMMM YYYY");
-                el.off_hour = moment.utc(row.HoraSalida).format("h:mm A");
-                el.return_hour = moment.utc(row.HoraRetorno).format("h:mm A");
-                el.passengers_number = row.CantidadDePasajeros;
+                el.FechaSalida = moment.utc(row.FechaSalida).format("DD MMMM YYYY");
+                el.HoraSalida = moment.utc(row.HoraSalida).format("h:mm A");
+                el.HoraRetorno = moment.utc(row.HoraRetorno).format("h:mm A");
+                el.CantidadDePasajeros = row.CantidadDePasajeros;
                 //Si with_driver = true, envía la cadena "Si"
-                el.with_driver = row.ConMotorista ? "Si" : "No";
-                el.created_at = moment.parseZone(row.FechaCreacion).local().format("DD/MM/YYYY h:mm A");
+                el.ConMotorista = row.ConMotorista ? "Si" : "No";
+                el.FechaCreacion = moment.parseZone(row.FechaCreacion).local().format("DD/MM/YYYY h:mm A");
                 //Icono para visualizar el folo. Enlance y un icono de lapiz para editar el folo. Un icono de eliminado. Ambos tiene por identificardor el id del folo que ha ido a traer a la BD
                 //var today = moment().format("DD MMMM YYYY");
                 var trully = moment().isBefore(moment.utc(row.FechaSalida))
@@ -1497,6 +1604,8 @@ class folo6_controllers {
                 else
                     el.buttons = '<i id="' + row.IDFolo + '" class="large print black link icon "></i><i id="' + row.IDFolo + '" class="large file grey alternate outline link icon "></i>'
                  */
+                //SOLO PARA PROBAR IMPRESION
+                el.buttons = '<i id="' + row.IDFolo + '" class="large print black link icon "></i>';
                 data.push(el);
             });
             //console.dir(data);
@@ -1579,7 +1688,7 @@ class folo6_controllers {
             //Contendra el total de direcciones que se han creaddo para el folo que se solicita
             el.fplaces = [];
             //Para traer todos los lugares frecuentes ligados a ese folo
-            await place_container.findAll({
+            await LugaresContenedor.findAll({
                 where: {
                     folo_id: req.params.id
                 },
@@ -1598,7 +1707,7 @@ class folo6_controllers {
             //Contendra el total de direcciones que se han creaddo para el folo que se solicita
             el.address = [];
             //Para traer todos las direcciones ligados a ese folo
-            await place_container.findAll({
+            await LugaresContenedor.findAll({
                 where: {
                     folo_id: req.params.id
                 },
@@ -1720,7 +1829,7 @@ class folo6_controllers {
                 //CREATE para places container, esta tabla relaciona ya sean lugares frecuentes o direcciones con un folo
                 if (fplaces.length) {
                     fplaces.forEach(IDLugar => {
-                        place_container.create({
+                        LugaresContenedor.create({
                             IDFolo: folo.IDFolo,
                             FechaDeVisita: date,
                             IDLugarFrecuente: IDLugar
@@ -1732,7 +1841,7 @@ class folo6_controllers {
                 if (address.length) {
                     for (var i = 0; i < address.length; i++) {
                         //Se crea el place container para cada dirección creada
-                        var container = await place_container.create({
+                        var container = await LugaresContenedor.create({
                             IDFolo: folo.IDFolo,
                             FechaDeVisita: date,
                         });
@@ -1853,13 +1962,13 @@ class folo6_controllers {
 
                 //Departamento
                 console.log("sali del create");
-                var places = place_container.findAll({
+                var places = LugaresContenedor.findAll({
                     where: {
                         folo_id: form.folo_id
                     }
                 });
                 await asyncForEach(places, async (container) => {
-                    await place_container.update({
+                    await LugaresContenedor.update({
                         date_of_visit: date
                     }, {
                         where: {
@@ -1892,7 +2001,7 @@ class folo6_controllers {
     async deleteFolo(req, res) {
         try {
             /* Elimina de la tabla la unión del folo con los lugares y/o direcciones*/
-            await place_container.destroy({
+            await LugaresContenedor.destroy({
                 where: {
                     folo_id: req.params.id
                 }
@@ -1928,14 +2037,14 @@ class folo6_controllers {
                 id_frequent_place
             } = req.body;
             if (id_address != null) {
-                place_container.destroy({
+                LugaresContenedor.destroy({
                     where: {
                         address_id: id_address
                     }
                 });
             };
             if (id_frequent_place != null) {
-                place_container.destroy({
+                LugaresContenedor.destroy({
                     where: {
                         frequent_place_id: id_frequent_place
                     }
@@ -1961,14 +2070,14 @@ class folo6_controllers {
             //Si seleccionó "Otro" en el dropdown de lugares frecuentes crea un registro en "places_container"
             //con el id de la dirección creada
             if (selectedPlaceTxt == 'Otro') {
-                place_container.create({
+                LugaresContenedor.create({
                     date_of_visit,
                     address_id,
                     folo_id
                 });
             } else {
                 //Si seleccionó otra opción crea un registro en "places_container" con el id del lugar frecuente seleccionado
-                place_container.create({
+                LugaresContenedor.create({
                     date_of_visit,
                     frequent_place_id: selectedPlace,
                     folo_id

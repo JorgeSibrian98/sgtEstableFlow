@@ -166,7 +166,7 @@ $('#standard_calendar').calendar({
         var days = date.getDate() - today.getDate();
         var months = (date.getMonth() + 1) - (today.getMonth() + 1);
         var years = date.getFullYear() - today.getFullYear();
-
+    
         //Controlará si la fecha de salida es menor a tres días del día en que se llena y mes-año actual
         if (days < 3 && months === 0 && years === 0) {
             console.log("Solicitó con: " + days + " días hábiles, Tendrá que manejar por su cuenta");
@@ -178,7 +178,39 @@ $('#standard_calendar').calendar({
             $('#driver_cb').checkbox('check');
             $('.ui.checkbox').checkbox('enable');
             motorista = 1;
-        }
+        };
+    },
+    onChange: function (date) { 
+        //Se obtiene fecha seleccionada.
+        var fecha = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
+        console.log(fecha);
+        //Petición Post para saber si la fecha seleccionada es un día hábil.
+        $.post('/solicitud_nueva/esDiaHabil', {
+            fecha
+        }, function (day) {
+            //Si el día es sábado o domingo, muestra mensaje de advertencia.
+            if(day == '5' || day == '6'){
+                $('body')
+                    .toast({
+                        title: '¡Atención!',
+                        position: 'top right',
+                        class: 'warning',
+                        showProgress: 'top',
+                        classProgress: 'red',
+                        progressUp: false,
+                        closeIcon: true,
+                        displayTime: 5000,
+                        message: 'El día seleccionado no es un día hábil. Se generará la hoja de misión oficial FOLO-13.',
+                        pauseOnHover: false,
+                        transition: {
+                            showMethod: 'zoom',
+                            showDuration: 100,
+                            hideMethod: 'fade',
+                            hideDuration: 500
+                        }
+                    });
+            };
+        });
     }
 }).calendar('focus');
 /*--Checkbox motorista--*/
@@ -228,12 +260,42 @@ $('#time_calendar')
     .calendar({
         type: 'time',
         minTimeGap: '30',
-        endCalendar: $('#time_calendar1'),
+        //Modificación por Axel Hernández: Quité el parámetro 'endCalendar' porque hacía que el evento
+        //'onHide' se disparara dos veces.
         onHide: function (date, text, mode) {
+            //Se obtiene la hora seleccionada.
+            var dat = new Date($('#time_calendar').calendar('get date'));
+            //Formato a horas.
+            var hora = dat.getHours() + ':' + dat.getMinutes();
+            console.log(hora);
+            //Petición Post para verificar si la hora de salida seleccionada es hora hábil.
+            $.post('/solicitud_nueva/esHoraHabil', {
+                hora
+            }, function (habil) {
+                //Si la hora de salida seleccionada NO es hábil, muestra mensaje de advertencia.
+                if (habil == 'no'){
+                    $('body')
+                    .toast({
+                        title: '¡Atención!',
+                        position: 'top right',
+                        class: 'warning',
+                        showProgress: 'top',
+                        classProgress: 'red',
+                        progressUp: false,
+                        closeIcon: true,
+                        displayTime: 5000,
+                        message: 'La hora de salida seleccionada no es hora hábil. Se generará la hoja de misión oficial FOLO-13.',
+                        pauseOnHover: false,
+                        transition: {
+                            showMethod: 'zoom',
+                            showDuration: 100,
+                            hideMethod: 'fade',
+                            hideDuration: 500
+                        }
+                    }); 
+                }
+            });
             $(".ui.form").form('validate field', 'time');
-        },
-        onchange: function (date, text, mode) {
-            console.log("Hora de salida: " + date + " Formato string" + text + " y mode:" + mode);
         }
     });
 $('#time_calendar1')
@@ -241,12 +303,39 @@ $('#time_calendar1')
         type: 'time',
         minTimeGap: '30',
         startCalendar: $('#time_calendar'),
-        onChange: function (date, text, mode) {
-            var dat = new Date($('#time_calendar').calendar('get date'));
-            console.log(dat.getHours() + ':' + dat.getMinutes());
-            //$(".ui.form").form('validate field', 'time1');
-        },
         onHide: function (date, text, mode) {
+            //Se obtiene la hora seleccionada.
+            var dat = new Date($('#time_calendar1').calendar('get date'));
+            //Formato a horas.
+            var hora = dat.getHours() + ':' + dat.getMinutes();
+            console.log(hora);
+            //Petición Post para verificar si la hora de retorno seleccionada es una hora hábil.
+            $.post('/solicitud_nueva/esHoraHabil', {
+                hora
+            }, function (habil) {
+                // Si la hora de retorno seleccionada NO es hábil, muestra mensaje de advertencia.
+                if (habil == 'no'){
+                    $('body')
+                    .toast({
+                        title: '¡Atención!',
+                        position: 'top right',
+                        class: 'warning',
+                        showProgress: 'top',
+                        classProgress: 'red',
+                        progressUp: false,
+                        closeIcon: true,
+                        displayTime: 5000,
+                        message: 'La hora de retorno seleccionada no es hora hábil. Se generará la hoja de misión oficial FOLO-13.',
+                        pauseOnHover: false,
+                        transition: {
+                            showMethod: 'zoom',
+                            showDuration: 100,
+                            hideMethod: 'fade',
+                            hideDuration: 500
+                        }
+                    }); 
+                }
+            });
             $(".ui.form").form('validate field', 'time1');
         }
     });

@@ -31,6 +31,25 @@ class address_services {
     }
   };
 
+  //Obtiene el nombre del municipio y departamento, a traves del cod de municipio
+  async getMunicipioYDto(cod_mun) {
+    try {
+      var ubicaciones = new Object();
+      var mun = await UbicacionesGeograficas.findByPk(cod_mun, {
+        attributes: ['CodigoUbicacionGeograficaSuperior', 'NombreUbicacionGeografica']
+      });
+      var dpto = await UbicacionesGeograficas.findByPk(mun.CodigoUbicacionGeograficaSuperior, {
+        attributes: ['NombreUbicacionGeografica']
+      });
+
+      ubicaciones.Municipio = mun.NombreUbicacionGeografica;
+      ubicaciones.Departamento = dpto.NombreUbicacionGeografica;
+
+      return ubicaciones;
+    } catch (err) {
+      console.log(err)
+    }
+  }
   //Gets Municipios list based on the selected department
   async getMunicipiosByDepartamento(req, res) {
     try {
