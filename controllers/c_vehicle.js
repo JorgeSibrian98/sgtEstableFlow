@@ -454,6 +454,9 @@ class Vehicle_controller {
             console.log(fileName);
             const token = Authorize.decode_token(req.cookies.token);
             var columns = [{
+                text: 'Código activo fijo',
+                bold: true
+            },{
                 text: 'Marca',
                 bold: true
             }, {
@@ -505,6 +508,7 @@ class Vehicle_controller {
             //console.log(vehiculos);
             vehiculos.forEach(v => {
                 var bodyRow = [];
+                bodyRow.push(v.CodigoActivoFijo.trim());
                 bodyRow.push(v.MarcaVehiculo.trim());
                 bodyRow.push(v.ModeloVehiculo.trim());
                 bodyRow.push(v.ColorVehiculo.trim());
@@ -526,49 +530,56 @@ class Vehicle_controller {
                 },
                 pageSize: 'A4',
                 pageOrientation: 'landscape',
+                pageMargins: [35, 85, 30, 45],
                 footer: function (currentPage, pageCount) {
                     return [{
-                            text: 'Fecha de generación: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
+                            text: 'Fecha de impresión: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
                             alignment: 'right',
                             fontSize: '9',
                             italics: true,
-                            margin: [15, 0]
+                            margin: [20, 0]
                         },
                         {
                             text: 'Generado por: ' + token.user.NombresUsuario + ' ' + token.user.ApellidosUsuario,
                             alignment: 'right',
                             fontSize: '9',
                             italics: true,
-                            margin: [15, 0]
+                            margin: [20, 0]
                         },
                         {
                             text: 'Página ' + currentPage.toString() + ' de ' + pageCount.toString(),
                             alignment: 'right',
                             fontSize: '9',
                             italics: true,
-                            margin: [15, 0]
+                            margin: [20, 0]
                         }
                     ];
                 },
-                content: [{
+                header: function () {
+                   return [{
                         image: 'public/images/logopgr1.png',
                         fit: [60, 60],
                         absolutePosition: {
-                            x: 50,
-                            y: 20
+                            x: 55,
+                            y: 10
                         },
-                        writable: true,
                     },
                     {
                         text: 'Procuraduría General de la República - Unidad de Transporte\n\n\n\n\n',
                         alignment: 'center',
-                        fontSize: '12'
-                    },
+                        fontSize: '12',
+                        absolutePosition: {
+                            x: 0,
+                            y: 35
+                        },
+                    }]
+                },
+                content: [
                     {
                         table: {
                             headerRows: 1,
                             dontBreakRows: true,
-                            widths: [50, 55, 58, 'auto', 80, 'auto', 'auto', 'auto', 'auto', 'auto'],
+                            widths: [80, 50, 55, 58, 'auto', 80, 80, 'auto', 'auto', 'auto', 'auto'],
                             body: bodyData,
                         },
                     }

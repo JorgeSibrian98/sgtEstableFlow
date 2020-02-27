@@ -67,6 +67,7 @@ class folo6_controllers {
         try {
             let folo = await this.foloInfo(req);
             console.dir("EN SHOW RECIBI ESTO" + JSON.stringify(folo));
+            var IDFOLO = folo.IDFolo;
             var fechaSolicitud = folo.FechaCreacion;
             var unidadSolicitante = folo.emp.unit;
             var personaSolicitante = folo.emp.NombresUsuario + ', ' + folo.emp.ApellidosUsuario;
@@ -203,6 +204,39 @@ class folo6_controllers {
                         title: 'Solicitud de transporte FOLO-06 ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
                     },
                     pageSize: 'LETTER',
+                    pageMargins: [35, 100, 35, 40],
+                    header: function () {
+                        return [{
+                            image: 'public/images/logopgr1.png',
+                            fit: [60, 60],
+                            absolutePosition: {
+                                x: 35,
+                                y: 10
+                            },
+                        },
+                        {
+                            text: 'PROCURADURÍA GENERAL DE LA REPÚBLICA\nSOLICITUD DE SERVICIO DE TRANSPORTE',
+                            alignment: 'center',
+                            bold: true,
+                            italics: true,
+                            fontSize: '16',
+                            absolutePosition: {
+                                x: 0,
+                                y: 25
+                            },
+                        },
+                        {
+                            text: 'ID FOLO-06: ' + IDFOLO + '                                                                                                                                              FOLO-06',
+                            alignment: 'left',
+                            bold: true,
+                            italics: true,
+                            margin: [35, 0],
+                            absolutePosition: {
+                                x: 35,
+                                y: 77
+                            },
+                        }]
+                    },
                     footer: function (currentPage, pageCount) {
                         return [{
                                 text: 'Fecha de generación: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
@@ -227,35 +261,7 @@ class folo6_controllers {
                             }
                         ];
                     },
-                    content: [{
-                            image: 'public/images/logopgr1.png',
-                            fit: [60, 60],
-                            absolutePosition: {
-                                x: 70,
-                                y: 20
-                            },
-                            writable: true,
-                        },
-                        {
-                            text: 'PROCURADURÍA GENERAL DE LA REPÚBLICA',
-                            alignment: 'center',
-                            bold: true,
-                            italics: true,
-                            fontSize: '16'
-                        },
-                        {
-                            text: 'SOLICITUD DE SERVICIO DE TRANSPORTE',
-                            alignment: 'center',
-                            bold: true,
-                            italics: true,
-                            fontSize: '16'
-                        },
-                        {
-                            text: '\n\nFOLO-06',
-                            alignment: 'right',
-                            bold: true,
-                            italics: true
-                        },
+                    content: [
                         {
                             text: [{
                                 text: 'Fecha de solicitud: ',
@@ -438,6 +444,39 @@ class folo6_controllers {
                         title: 'Solicitud de transporte FOLO-06 ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
                     },
                     pageSize: 'LETTER',
+                    pageMargins: [35, 100, 35, 40],
+                    header: function () {
+                        return [{
+                            image: 'public/images/logopgr1.png',
+                            fit: [60, 60],
+                            absolutePosition: {
+                                x: 35,
+                                y: 10
+                            },
+                        },
+                        {
+                            text: 'PROCURADURÍA GENERAL DE LA REPÚBLICA\nSOLICITUD DE SERVICIO DE TRANSPORTE',
+                            alignment: 'center',
+                            bold: true,
+                            italics: true,
+                            fontSize: '16',
+                            absolutePosition: {
+                                x: 0,
+                                y: 25
+                            },
+                        },
+                        {
+                            text: 'ID FOLO-06: ' + IDFOLO + '                                                                                                                                              FOLO-06',
+                            alignment: 'left',
+                            bold: true,
+                            italics: true,
+                            margin: [35, 0],
+                            absolutePosition: {
+                                x: 35,
+                                y: 77
+                            },
+                        }]
+                    },
                     footer: function (currentPage, pageCount) {
                         return [{
                                 text: 'Fecha de generación: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
@@ -462,35 +501,7 @@ class folo6_controllers {
                             }
                         ];
                     },
-                    content: [{
-                            image: 'public/images/logopgr1.png',
-                            fit: [60, 60],
-                            absolutePosition: {
-                                x: 70,
-                                y: 20
-                            },
-                            writable: true,
-                        },
-                        {
-                            text: 'PROCURADURÍA GENERAL DE LA REPÚBLICA',
-                            alignment: 'center',
-                            bold: true,
-                            italics: true,
-                            fontSize: '16'
-                        },
-                        {
-                            text: 'SOLICITUD DE SERVICIO DE TRANSPORTE',
-                            alignment: 'center',
-                            bold: true,
-                            italics: true,
-                            fontSize: '16'
-                        },
-                        {
-                            text: '\n\nFOLO-06',
-                            alignment: 'right',
-                            bold: true,
-                            italics: true
-                        },
+                    content: [
                         {
                             text: [{
                                 text: 'Fecha de solicitud: ',
@@ -678,59 +689,64 @@ class folo6_controllers {
                         title: 'Solicitud de transporte FOLO-06 ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
                     },
                     pageSize: 'LETTER',
+                    pageMargins: [35, 100, 35, 40],
+                    header: function () {
+                        return [{
+                            image: 'public/images/logopgr1.png',
+                            fit: [60, 60],
+                            absolutePosition: {
+                                x: 35,
+                                y: 10
+                            },
+                        },
+                        {
+                            text: 'PROCURADURÍA GENERAL DE LA REPÚBLICA\nSOLICITUD DE SERVICIO DE TRANSPORTE',
+                            alignment: 'center',
+                            bold: true,
+                            italics: true,
+                            fontSize: '16',
+                            absolutePosition: {
+                                x: 0,
+                                y: 25
+                            },
+                        },
+                        {
+                            text: 'ID FOLO-06: ' + IDFOLO + '                                                                                                                                              FOLO-06',
+                            alignment: 'left',
+                            bold: true,
+                            italics: true,
+                            margin: [35, 0],
+                            absolutePosition: {
+                                x: 35,
+                                y: 77
+                            },
+                        }]
+                    },
                     footer: function (currentPage, pageCount) {
                         return [{
-                                text: 'Fecha de generación: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
+                                text: 'Fecha de impresión: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
                                 alignment: 'right',
                                 fontSize: '9',
                                 italics: true,
-                                margin: [15, 0]
+                                margin: [20, 0]
                             },
                             {
                                 text: 'Generado por: ' + token.user.NombresUsuario + ' ' + token.user.ApellidosUsuario,
                                 alignment: 'right',
                                 fontSize: '9',
                                 italics: true,
-                                margin: [15, 0]
+                                margin: [20, 0]
                             },
                             {
                                 text: 'Página ' + currentPage.toString() + ' de ' + pageCount.toString(),
                                 alignment: 'right',
                                 fontSize: '9',
                                 italics: true,
-                                margin: [15, 0]
+                                margin: [20, 0]
                             }
                         ];
                     },
-                    content: [{
-                            image: 'public/images/logopgr1.png',
-                            fit: [60, 60],
-                            absolutePosition: {
-                                x: 70,
-                                y: 20
-                            },
-                            writable: true,
-                        },
-                        {
-                            text: 'PROCURADURÍA GENERAL DE LA REPÚBLICA',
-                            alignment: 'center',
-                            bold: true,
-                            italics: true,
-                            fontSize: '16'
-                        },
-                        {
-                            text: 'SOLICITUD DE SERVICIO DE TRANSPORTE',
-                            alignment: 'center',
-                            bold: true,
-                            italics: true,
-                            fontSize: '16'
-                        },
-                        {
-                            text: '\n\nFOLO-06',
-                            alignment: 'right',
-                            bold: true,
-                            italics: true
-                        },
+                    content: [
                         {
                             text: [{
                                 text: 'Fecha de solicitud: ',
@@ -895,6 +911,39 @@ class folo6_controllers {
                         title: 'Solicitud de transporte FOLO-06 ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
                     },
                     pageSize: 'LETTER',
+                    pageMargins: [35, 100, 35, 40],
+                    header: function () {
+                        return [{
+                            image: 'public/images/logopgr1.png',
+                            fit: [60, 60],
+                            absolutePosition: {
+                                x: 35,
+                                y: 10
+                            },
+                        },
+                        {
+                            text: 'PROCURADURÍA GENERAL DE LA REPÚBLICA\nSOLICITUD DE SERVICIO DE TRANSPORTE',
+                            alignment: 'center',
+                            bold: true,
+                            italics: true,
+                            fontSize: '16',
+                            absolutePosition: {
+                                x: 0,
+                                y: 25
+                            },
+                        },
+                        {
+                            text: 'ID FOLO-06: ' + IDFOLO + '                                                                                                                                              FOLO-06',
+                            alignment: 'left',
+                            bold: true,
+                            italics: true,
+                            margin: [35, 0],
+                            absolutePosition: {
+                                x: 35,
+                                y: 77
+                            },
+                        }]
+                    },
                     footer: function (currentPage, pageCount) {
                         return [{
                                 text: 'Fecha de generación: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
@@ -919,35 +968,7 @@ class folo6_controllers {
                             }
                         ];
                     },
-                    content: [{
-                            image: 'public/images/logopgr1.png',
-                            fit: [60, 60],
-                            absolutePosition: {
-                                x: 70,
-                                y: 20
-                            },
-                            writable: true,
-                        },
-                        {
-                            text: 'PROCURADURÍA GENERAL DE LA REPÚBLICA',
-                            alignment: 'center',
-                            bold: true,
-                            italics: true,
-                            fontSize: '16'
-                        },
-                        {
-                            text: 'SOLICITUD DE SERVICIO DE TRANSPORTE',
-                            alignment: 'center',
-                            bold: true,
-                            italics: true,
-                            fontSize: '16'
-                        },
-                        {
-                            text: '\n\nFOLO-06',
-                            alignment: 'right',
-                            bold: true,
-                            italics: true
-                        },
+                    content: [
                         {
                             text: [{
                                 text: 'Fecha de solicitud: ',
@@ -1109,6 +1130,7 @@ class folo6_controllers {
         //Misma documentación del método anterior.
         try {
             let folo = await this.foloInfo(req);
+            var IDFOLO = folo.IDFolo;
             var fechaSolicitud = folo.FechaCreacion;
             var unidadSolicitante = folo.emp.unit;
             var personaSolicitante = folo.emp.NombresUsuario + ', ' + folo.emp.ApellidosUsuario;
@@ -1136,6 +1158,39 @@ class folo6_controllers {
                     title: 'Hoja de Misión Oficial FOLO-13 ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
                 },
                 pageSize: 'LETTER',
+                pageMargins: [35, 130, 35, 40],
+                    header: function () {
+                        return [{
+                            image: 'public/images/logopgr1.png',
+                            fit: [60, 60],
+                            absolutePosition: {
+                                x: 35,
+                                y: 10
+                            },
+                        },
+                        {
+                            text: 'FORMULARIO CONTROL DE MISIONES OFICIALES\nPARA DÍAS Y HORAS NO HÁBILES\nUNIDAD DE LOGÍSTICA\nPROCURADURÍA GENERAL DE LA REPÚBLICA',
+                            alignment: 'center',
+                            bold: true,
+                            italics: true,
+                            fontSize: '16',
+                            absolutePosition: {
+                                x: 0,
+                                y: 25
+                            },
+                        },
+                        {
+                            text: 'ID FOLO-06: ' + IDFOLO + '                                                                                                                                              FOLO-13',
+                            alignment: 'left',
+                            bold: true,
+                            italics: true,
+                            margin: [35, 0],
+                            absolutePosition: {
+                                x: 35,
+                                y: 115
+                            },
+                        }]
+                    },
                 footer: [{
                     text: 'Fecha de generación: ' + today.getDate() + '/' + month + '/' + today.getFullYear(),
                     alignment: 'right',
@@ -1151,52 +1206,10 @@ class folo6_controllers {
                     margin: [15, 0]
                 },
             ],
-                content: [{
-                        image: 'public/images/logopgr1.png',
-                        fit: [60, 60],
-                        absolutePosition: {
-                            x: 50,
-                            y: 20
-                        },
-                        writable: true,
-                    },
-                    {
-                        text: 'FORMULARIO CONTROL DE MISIONES OFICIALES',
-                        alignment: 'center',
-                        bold: true,
-                        italics: true,
-                        fontSize: '16'
-                    },
-                    {
-                        text: 'PARA DÍAS Y HORAS NO HÁBILES',
-                        alignment: 'center',
-                        bold: true,
-                        italics: true,
-                        fontSize: '16'
-                    },
-                    {
-                        text: 'UNIDAD DE LOGÍSTICA',
-                        alignment: 'center',
-                        bold: true,
-                        italics: true,
-                        fontSize: '16'
-                    },
-                    {
-                        text: 'PROCURADURÍA GENERAL DE LA REPÚBLICA',
-                        alignment: 'center',
-                        bold: true,
-                        italics: true,
-                        fontSize: '16'
-                    },
-                    {
-                        text: '\n\nFOLO-13',
-                        alignment: 'right',
-                        bold: true,
-                        italics: true
-                    },
+                content: [
                     {
                         text: [{
-                            text: 'Fecha: ',
+                            text: '\nFecha: ',
                             bold: true
                         }, '' + fechaSolicitud]
                     },
